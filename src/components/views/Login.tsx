@@ -1,18 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
-import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import Starscape from "components/stuff/Starscape";
+import "styles/views/Login.scss";
 
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
 const FormField = (props) => {
   return (
     <div className="login field">
@@ -40,23 +35,19 @@ const Login = () => {
   const [password, setPassword] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
 
-  const doLogin = async () => {
-    try {
-      // const requestBody = JSON.stringify({ username, password });
-      // const response = await api.post("/login", requestBody);
-      // const user = new User(response.data);
-      // const receivedToken = null
-      // user.token = receivedToken;
-      // // Store the token into the local storage.
-      // localStorage.setItem("token", user.token);
-      // localStorage.setItem("currUserID", user.id);
-      localStorage.setItem("token", "placeHolder");
+  const doLogin = () => {
+    // try {
+    //   // Your login logic goes here
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
-    } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
-    }
+    //   // Placeholder for demonstration
+    //   localStorage.setItem("token", "placeHolder");
+
+    //   // Navigate to the route /game after successful login
+    //   navigate("/game");
+    // } catch (error) {
+    //   alert(`Something went wrong during the login: \n${handleError(error)}`);
+    // }
+    alert("You logged in!");
   };
 
   const doRegistration = () => {
@@ -101,7 +92,4 @@ const Login = () => {
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default Login;

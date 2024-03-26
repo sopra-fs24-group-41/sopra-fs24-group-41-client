@@ -21,7 +21,7 @@
   border-radius: $borderRadius;
   cursor: pointer;
   opacity: 1;
-  color: $background;
-  background-color: $accent;
+  color: $buttonCol;
+  background-color: $buttonColDark;
   transition: all 0.3s ease;
 }
