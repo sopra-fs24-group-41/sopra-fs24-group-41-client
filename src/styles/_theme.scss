@@ -28,13 +28,15 @@ $SMALL_WIDTH: 768px;
 /* Adjust the path to the font file according to your project structure */
 @font-face {
   font-family: 'Pocket Calculator';
-  src: url('./fonts/pocket_calcuatlor.ttf') format('truetype');
+  font-size: medium;
+  src: url('./fonts/pocket_calcuatlor.ttf');
 }
 
 /* Fonts */
 /* Assign the font family to variables */
 $fontDefault: 'Pocket Calculator', sans-serif;
 $fontMono: 'Pocket Calculator', monospace;
+
 
 /* a standard drop shadow */
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);

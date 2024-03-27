@@ -93,6 +93,3 @@ const Login = () => {
 };
 
 export default Login;
-//I would have liked to have this screen behind the login box
-//Otherwise, this is the current login box design, I just changed the colors and the font.
-//For M3, this should be enough but maybe you guys disagree?

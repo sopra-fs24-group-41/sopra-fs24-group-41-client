@@ -33,6 +33,7 @@
     height: 35px;
     padding-left: 15px;
     margin-left: -4px;
+    margin-right: +4px;
     border: none;
     border-radius: 0.75em;
     margin-bottom: 20px;
@@ -47,7 +48,7 @@
   }
   &.button-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 2em;
   }
 }
