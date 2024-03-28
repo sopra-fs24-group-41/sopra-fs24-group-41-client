@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "./components/views/Header";
 import AppRouter from "./components/routing/routers/AppRouter";
+import Starscape from "./components/add/Starscape";
+import "styles/views/Starscape.scss";
 
 /**
  * Happy coding!
@@ -13,6 +15,9 @@ const App = () => {
     <div>
       <Header height="100" />
       <AppRouter />
+      <div className="starscape">
+        <Starscape />
+      </div>
     </div>
   );
 };
