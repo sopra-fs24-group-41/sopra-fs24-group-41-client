@@ -1,18 +1,27 @@
 import React from "react";
 import Header from "./components/views/Header";
 import AppRouter from "./components/routing/routers/AppRouter";
+import Starscape from "components/stuff/Starscape";
 
-/**
- * Happy coding!
- * React Template by Lucas Pelloni
- * Overhauled by Kyrill Hux
- * Updated by Marco Leder
- */
 const App = () => {
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <Header height="100" />
-      <AppRouter />
+      <div style={{ position: "relative", zIndex: "0" }}>
+        <AppRouter />
+      </div>
+      {/* <div
+        style={{
+          position: "absolute",
+          top: "0",
+          left: "0",
+          width: "5%",
+          height: "5%",
+          zIndex: "-1",
+        }}
+      >
+        <Starscape />
+      </div> */}
     </div>
   );
 };
