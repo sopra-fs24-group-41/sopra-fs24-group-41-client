@@ -57,7 +57,7 @@ const Login = () => {
   return (
     <BaseContainer>
       <div className="login container">
-        <div className="login form">
+        <form className="login form" onSubmit={doLogin}>
           <FormField
             label="Username"
             value={username}
@@ -74,6 +74,7 @@ const Login = () => {
               disabled={!username || !password}
               width="100%"
               onClick={() => doLogin()}
+              style={{ fontSize: "16px" }}
             >
               Login
             </Button>
@@ -82,11 +83,12 @@ const Login = () => {
               disabled={username || password}
               width="100%"
               onClick={() => doRegistration()}
+              style={{ fontSize: "16px" }}
             >
               Sign up
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     </BaseContainer>
   );

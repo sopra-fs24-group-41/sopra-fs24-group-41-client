@@ -66,7 +66,7 @@ const Registration = () => {
   return (
     <BaseContainer>
       <div className="login container">
-        <div className="login form">
+        <form className="login form" onSubmit={doRegistration}>
           <FormField
             label="Username"
             value={username}
@@ -83,11 +83,12 @@ const Registration = () => {
               disabled={!username || !password}
               width="100%"
               onClick={() => doRegistration()} //Navigates to game
+              style={{ fontSize: "16px" }}
             >
               Sign Up
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     </BaseContainer>
   );
