@@ -32,8 +32,8 @@
   &.input {
     height: 35px;
     padding-left: 15px;
-    margin-left: -4px;
-    margin-right: +4px;
+    margin-left: 0px;
+    margin-right: 0px;
     border: none;
     border-radius: 0.75em;
     margin-bottom: 20px;
@@ -42,6 +42,7 @@
   }
   &.label {
     color: $textColor;
+    margin-left: 4px;
     margin-bottom: 10px;
     text-transform: lowercase;
     font-weight: 300;
