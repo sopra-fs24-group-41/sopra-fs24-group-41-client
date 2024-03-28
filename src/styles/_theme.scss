@@ -2,16 +2,18 @@
   This file contains the most basic variables that control how your application will look.
  */
 
-/* Theme Colors
+/* Theme Colors */
 
-   these values control the colors of your application.
+/* these values control the colors of your application.
    feel free to play around with these and see what other look you can come up with! :D
 */
 
-$accent: #97ABFF;
-$accentDark: #123597;
-$textColor: white;
-$background: #262632;
+$accent: #000000;
+$accentDark: #000000;
+$textColor: rgb(88, 80, 133);
+$background: #9b9b9b;
+$buttonCol: #676767;
+$buttonColDark: #2e2e2e;
 
 /* some constants */
 
@@ -20,21 +22,30 @@ $SMALL_LAPTOPS_WIDTH: 970px;
 $TABLETS_WIDTH: 750px;
 $SMALL_WIDTH: 768px;
 
-/* some standard elements */
-/* fonts */
-$fontDefault: "M PLUS Rounded 1c", sans-serif;
-$fontMono: "Roboto Mono", monospace;
+/* Font Importing */
+/* No need to import fonts from Google Fonts */
+/* Importing local font file */
+/* Adjust the path to the font file according to your project structure */
+@font-face {
+  font-family: 'Pocket Calculator';
+  font-size: medium;
+  src: url('./fonts/pocket_calcuatlor.ttf');
+}
+
+/* Fonts */
+/* Assign the font family to variables */
+$fontDefault: 'Pocket Calculator', sans-serif;
+$fontMono: 'Pocket Calculator', monospace;
+
 
 /* a standard drop shadow */
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
-
 $borderRadius: 0.75em;
 
-/* mixins
+/* mixins */
 
-  these allow you to create small snippets that you can insert with a one-liner in other stylesheets
-  for an example, see styles/views/Login.scss
-*/
+/* These allow you to create small snippets that you can insert with a one-liner in other stylesheets */
+/* For an example, see styles/views/Login.scss */
 @mixin center {
   display: flex;
   align-items: center;
