@@ -2,11 +2,29 @@
 
 .react-logo {
   fill: $background;
-  animation: spin 20s linear infinite;
+  animation: spin 20s linear infinite, changeColor 5s linear infinite; // Add color change animation
 }
 
 @keyframes spin {
   100% {
     transform: rotate(360deg);
   }
+}
+
+@keyframes changeColor {
+  0% {
+    fill: $background;
+  }
+
+  // Start with the background color
+  50% {
+    fill: #b0ebff;
+  }
+
+  // Change to your desired color
+  100% {
+    fill: $background;
+  }
+
+  // Return to the background color
 }

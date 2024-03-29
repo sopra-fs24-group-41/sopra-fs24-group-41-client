@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import gsap from "gsap";
 
-const Starscape = ({ densityRatio = 0.5, sizeLimit = 5, defaultAlpha = 0.2, scaleLimit = 2, proximityRatio = 0.1 }) => {
+const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scaleLimit = 2, proximityRatio = 0.2 }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const starsRef = useRef(null);
