@@ -59,7 +59,6 @@ const Login = () => {
         <form
           className="login form"
           onSubmit={() => doLogin}
-          action={"javascript:void(0);"}
         >
           <FormField
             label="Username"

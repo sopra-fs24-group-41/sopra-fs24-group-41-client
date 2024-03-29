@@ -20,7 +20,7 @@ const LobbyItem = ({
     className="player container"
     onClick={() => onSelect(lobby)}
     style={{
-      border: isSelected ? "1px solid blue" : "none",
+      border: isSelected ? "1px solid #1E90FF" : "none",
     }}
   >
     <div className="player username">{lobby.lobbyName}</div>
@@ -52,7 +52,11 @@ const LobbyOverview = () => {
     fetchLobbies();
   }, []);
 
-  const selectLobby = (lobby:Lobby) => {setSelectedLobby(lobby)}
+  const selectLobby = (lobby: Lobby) => {
+    setSelectedLobby((prevSelectedLobby) =>
+      prevSelectedLobby === lobby ? null : lobby
+    );
+  };
 
   let content = <Spinner />;
 
