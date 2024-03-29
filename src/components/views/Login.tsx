@@ -78,7 +78,7 @@ const Login = () => {
             </Button>
 
             <Button
-              disabled={username || password}
+              disabled={username && password}
               width="100%"
               onClick={() => doRegistration()}
             >
