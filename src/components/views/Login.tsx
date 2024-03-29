@@ -56,7 +56,11 @@ const Login = () => {
   return (
     <BaseContainer>
       <div className="login container">
-        <form className="login form" onSubmit={doLogin}>
+        <form
+          className="login form"
+          onSubmit={() => doLogin}
+          action={"javascript:void(0);"}
+        >
           <FormField
             label="Username"
             value={username}
