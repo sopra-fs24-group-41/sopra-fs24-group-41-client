@@ -56,10 +56,7 @@ const Login = () => {
   return (
     <BaseContainer>
       <div className="login container">
-        <form
-          className="login form"
-          onSubmit={() => doLogin}
-        >
+        <form className="login form" onSubmit={() => doLogin}>
           <FormField
             label="Username"
             value={username}
@@ -86,6 +83,12 @@ const Login = () => {
               onClick={() => doRegistration()}
             >
               Sign up
+            </Button>
+          </div>
+
+          <div className="login return-button-container">
+            <Button onClick={() => navigate("/lobbyoverview")}>
+              Return to Lobby Overview
             </Button>
           </div>
         </form>

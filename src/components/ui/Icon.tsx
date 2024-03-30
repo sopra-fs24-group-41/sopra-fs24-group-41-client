@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types"; 
 import "../../styles/ui/Icon.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
@@ -44,7 +44,7 @@ const Icon = ({ onClick }) => {
 };
 
 Icon.propTypes = {
-  onClick: PropTypes.func.isRequired, // Validate onClick prop as a function
+  onClick: PropTypes.func.isRequired, 
 };
 
 export default Icon;

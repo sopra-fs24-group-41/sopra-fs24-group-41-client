@@ -37,11 +37,9 @@ const LobbyOverview = () => {
   const [lobbies, setLobbies] = useState<Lobby[]>(null);
   const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
   const [LogRegToggle, setLoginRegisterVisible] = useState(false); // State to toggle LoginRegister visibility
-  const navigate = useNavigate();
 
   useEffect(() => {
     //Dummy stand in, should be replaced.
-
     const fetchLobbies = async () => {
       setTimeout(() => {
         const dummyLobbies: Lobby[] = [
@@ -55,12 +53,14 @@ const LobbyOverview = () => {
     fetchLobbies();
   }, []);
 
+  //Allows selection / deselection
   const selectLobby = (lobby: Lobby) => {
     setSelectedLobby((prevSelectedLobby) =>
       prevSelectedLobby === lobby ? null : lobby
     );
   };
 
+  //Allows selection / deselection
   const someFunc = () => {
     setLoginRegisterVisible((prevState) => !prevState);
   };
