@@ -6,6 +6,8 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/LobbyOverview.scss";
 import { Lobby } from "types";
+import Icon from "../ui/Icon";
+import LoginRegister from "components/ui/LoginRegister";
 
 const LobbyItem = ({
   lobby,
@@ -17,13 +19,13 @@ const LobbyItem = ({
   isSelected: boolean;
 }) => (
   <div
-    className="player container"
+    className="lobby container"
     onClick={() => onSelect(lobby)}
     style={{
       border: isSelected ? "1px solid #1E90FF" : "none",
     }}
   >
-    <div className="player username">{lobby.lobbyName}</div>
+    <div className="lobby lobby-name">{lobby.lobbyName}</div>
   </div>
 );
 
@@ -34,6 +36,7 @@ LobbyItem.propTypes = {
 const LobbyOverview = () => {
   const [lobbies, setLobbies] = useState<Lobby[]>(null);
   const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
+  const [LogRegToggle, setLoginRegisterVisible] = useState(false); // State to toggle LoginRegister visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,12 +61,16 @@ const LobbyOverview = () => {
     );
   };
 
+  const someFunc = () => {
+    setLoginRegisterVisible((prevState) => !prevState);
+  };
+
   let content = <Spinner />;
 
   if (lobbies) {
     content = (
       <div className="game">
-        <ul className="game user-list">
+        <ul className="game lobby-list">
           {lobbies.map((lobby: Lobby) => (
             <li key={lobby.lobbyName}>
               <LobbyItem
@@ -74,23 +81,41 @@ const LobbyOverview = () => {
             </li>
           ))}
         </ul>
-        <Button width="100%" onClick={() => logout()} disabled={!selectedLobby}>
-          Join Lobby
-        </Button>
+        <div className="login button-container">
+          <Button
+            width="100%"
+            onClick={() => joinLobby()}
+            disabled={!selectedLobby}
+          >
+            Join Lobby
+          </Button>
+
+          <Button
+            width="100%"
+            onClick={() => joinLobby()}
+            disabled={selectedLobby}
+          >
+            Create Lobby
+          </Button>
+        </div>
       </div>
     );
   }
 
-  const logout = () => {
-    navigate("/login");
+  const joinLobby = () => {
+    alert("To be implemented!");
   };
 
   return (
-    <BaseContainer className="game container">
-      <h2>Lobby Overview</h2>
-      <p className="game paragraph">Select a Lobby to Join</p>
-      {content}
-    </BaseContainer>
+    <div className="container-wrapper">
+      <BaseContainer className="game container">
+        <h2>Lobby Overview</h2>
+        <p className="game paragraph">Select a Lobby to Join</p>
+        {content}
+      </BaseContainer>
+      <Icon onClick={() => someFunc()} />
+      {LogRegToggle && <LoginRegister/>}
+    </div>
   );
 };
 

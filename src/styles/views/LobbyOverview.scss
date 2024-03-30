@@ -9,6 +9,7 @@
 
 .game {
     &.container {
+        z-index: 1;
         background: $background;
         padding: 1.5em;
         border-radius: $borderRadius;
@@ -18,13 +19,15 @@
         box-shadow: $dropShadow;
     }
 
-    &.user-list {
+    &.lobby-list {
         list-style: none;
         padding-left: 0;
+        text-align: center;
     }
 
     &.user-item {
         display: flex;
+        text-align: center;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -36,8 +39,9 @@
     }
 }
 
-.player {
+.lobby {
     &.container {
+        text-align: center;
         margin: 0.5em 0;
         width: 20em;
         padding: 10px;
@@ -47,16 +51,27 @@
         background: lighten($background, 5);
     }
 
-    &.username {
-        font-weight: 500;
-        color: $accent;
-        align-items: center;
+    &.lobby-name {
+        text-align: center;
+        margin: auto;
+        color: $accentDark;
+        text-transform: uppercase;
     }
+}
 
-    &.id {
-        margin-left: auto;
-        margin-right: 10px;
-        font-family: $fontMono;
-        font-weight: 300;
+.logreg {
+    &.container {
+    position: fixed;
+        top: 0;
+        z-index: 0;
+        max-width: 60px;
+        max-height: 60px;
     }
+}
+
+
+.container-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
 }
