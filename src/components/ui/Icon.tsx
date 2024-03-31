@@ -5,7 +5,7 @@ import BaseContainer from "components/ui/BaseContainer";
 
 const Icon = ({ onClick }) => {
   return (
-    <BaseContainer className="logreg container">
+    <BaseContainer className="icon-pos container">
       <button className="icon-button" onClick={onClick}>
         <svg
           width="70"

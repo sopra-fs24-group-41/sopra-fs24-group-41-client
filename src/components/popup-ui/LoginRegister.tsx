@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/LoginRegister.scss";
+import "styles/popup-ui/LoginRegister.scss";
 import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {

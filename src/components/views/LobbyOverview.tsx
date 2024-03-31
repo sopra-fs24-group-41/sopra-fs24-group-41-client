@@ -7,8 +7,10 @@ import PropTypes from "prop-types";
 import "styles/views/LobbyOverview.scss";
 import { Lobby } from "types";
 import Icon from "../ui/Icon";
-import LoginRegister from "components/ui/LoginRegister";
+import LoginRegister from "components/popup-ui/LoginRegister";
 
+//Adds CSS + onSelect functionality to each Lobby displayed in the list
+//(Selection functionality)
 const LobbyItem = ({
   lobby,
   onSelect,
@@ -36,7 +38,7 @@ LobbyItem.propTypes = {
 const LobbyOverview = () => {
   const [lobbies, setLobbies] = useState<Lobby[]>(null);
   const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
-  const [LogRegToggle, setLoginRegisterVisible] = useState(false); // State to toggle LoginRegister visibility
+  const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
 
   useEffect(() => {
     //Dummy stand in, should be replaced.
@@ -59,18 +61,25 @@ const LobbyOverview = () => {
       prevSelectedLobby === lobby ? null : lobby
     );
   };
+  /*
+  1. Take previous input
+  2. Verify if previous input === current input: If yes, set lobby to null
+  3. Else, set lobby to the current lobby*/
 
-  //Allows selection / deselection
-  const someFunc = () => {
-    setLoginRegisterVisible((prevState) => !prevState);
+  //Allows toggling, true/false
+  const iconClick = () => {
+    setLoginRegisterPopup((prevState) => !prevState);
   };
+  /*
+  1. Take previous state
+  2. Return the negation of it. (Allows toggling of LoginRegisterPopup variable)*/
 
   let content = <Spinner />;
 
   if (lobbies) {
     content = (
-      <div className="game">
-        <ul className="game lobby-list">
+      <div className="lobbyoverview">
+        <ul className="lobbyoverview lobby-list">
           {lobbies.map((lobby: Lobby) => (
             <li key={lobby.lobbyName}>
               <LobbyItem
@@ -110,13 +119,15 @@ const LobbyOverview = () => {
     <div className="container-wrapper">
       <BaseContainer className="game container">
         <h2>Lobby Overview</h2>
-        <p className="game paragraph">Select a Lobby to Join</p>
+        <p className="lobbyoverview paragraph">Select a Lobby to Join</p>
         {content}
       </BaseContainer>
-      <Icon onClick={() => someFunc()} />
-      {LogRegToggle && <LoginRegister/>}
+      <Icon onClick={() => iconClick()} />
+      {LoginRegisterPopup && <LoginRegister />}
     </div>
   );
 };
+/*{LoginRegisterPopup && <LoginRegister />}: 
+Conditional rendering, based on Truth value of LoginRegisterPopup*/
 
 export default LobbyOverview;

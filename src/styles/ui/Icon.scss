@@ -25,3 +25,13 @@
     }
 
 }
+
+.icon-pos {
+    &.container {
+        position: fixed;
+        top: 0;
+        z-index: 0;
+        max-width: 60px;
+        max-height: 60px;
+    }
+}

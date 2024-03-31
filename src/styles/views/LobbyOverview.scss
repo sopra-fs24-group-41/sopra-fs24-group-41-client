@@ -7,7 +7,7 @@
   for more information visit https://sass-lang.com/guide
  */
 
-.game {
+.lobbyoverview {
     &.container {
         z-index: 1;
         background: $background;
@@ -58,17 +58,6 @@
         text-transform: uppercase;
     }
 }
-
-.logreg {
-    &.container {
-    position: fixed;
-        top: 0;
-        z-index: 0;
-        max-width: 60px;
-        max-height: 60px;
-    }
-}
-
 
 .container-wrapper {
     position: relative;

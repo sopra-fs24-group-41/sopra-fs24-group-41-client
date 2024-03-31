@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./components/views/Header";
 import AppRouter from "./components/routing/routers/AppRouter";
 import Starscape from "./components/add/Starscape";
-import "styles/views/Starscape.scss";
+import "styles/add/Starscape.scss";
 
 /**
  * Happy coding!
