@@ -6,6 +6,7 @@ import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../views/Login";
 import Registration from "../../views/Registration";
 import LobbyOverview from "../../views/LobbyOverview"
+import Profile from "../../views/Profile"
 
 /**
  * Main router of your application.
@@ -26,6 +27,8 @@ const AppRouter = () => {
         <Route path="/login" element={<Login/>} />
 
         <Route path="/registration" element={<Registration/>} />
+
+        <Route path="/profile" element={<Profile/>} />
 
         <Route path="/" element={
           <Navigate to="/lobbyoverview" replace />

@@ -8,6 +8,8 @@ import "styles/views/LobbyOverview.scss";
 import { Lobby } from "types";
 import Icon from "../ui/Icon";
 import LoginRegister from "components/popup-ui/LoginRegister";
+import ProfileIcon from "../ui/ProfileIcon";
+import ProfilePopup from "components/popup-ui/ProfilePopup";
 
 //Adds CSS + onSelect functionality to each Lobby displayed in the list
 //(Selection functionality)
@@ -123,7 +125,12 @@ const LobbyOverview = () => {
         {content}
       </BaseContainer>
       <Icon onClick={() => iconClick()} />
-      {LoginRegisterPopup && <LoginRegister />}
+      {LoginRegisterPopup && localStorage.getItem("token") === null && (
+        <LoginRegister />
+      )}
+      {LoginRegisterPopup && localStorage.getItem("token") !== null && (
+        <ProfilePopup />
+      )}
     </div>
   );
 };

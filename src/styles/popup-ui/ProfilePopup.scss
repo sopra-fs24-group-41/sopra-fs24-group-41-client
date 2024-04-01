@@ -1,0 +1,19 @@
+@import "../theme";
+
+.profilepopup {
+    &.container {
+        position: fixed;
+        top: 55px;
+        background: $background;
+        padding: 1.5em;
+        border-radius: $borderRadius;
+        margin-top: 2em;
+        min-height: 70px;
+        /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    }
+
+    &.button-container {
+        display: flex;
+        flex-direction: column;
+    }
+}
