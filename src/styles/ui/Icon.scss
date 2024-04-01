@@ -1,0 +1,37 @@
+// Icon.scss
+@import "../theme";
+
+.icon-button {
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.4;
+
+        &:hover {
+            transform: none;
+        }
+    }
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    .icon-svg {
+        width: 70px; // Adjust size as needed
+        height: 90px; // Adjust size as needed
+    }
+
+}
+
+.icon-pos {
+    &.container {
+        position: fixed;
+        top: 0;
+        z-index: 0;
+        max-width: 60px;
+        max-height: 60px;
+    }
+}

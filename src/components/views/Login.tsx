@@ -49,18 +49,10 @@ const Login = () => {
     alert("You logged in!");
   };
 
-  const doRegistration = () => {
-    navigate("/registration");
-  };
-
   return (
     <BaseContainer>
       <div className="login container">
-        <form
-          className="login form"
-          onSubmit={() => doLogin}
-          action={"javascript:void(0);"}
-        >
+        <form className="login form" onSubmit={() => doLogin}>
           <FormField
             label="Username"
             value={username}
@@ -84,9 +76,15 @@ const Login = () => {
             <Button
               disabled={username && password}
               width="100%"
-              onClick={() => doRegistration()}
+              onClick={() => navigate("/registration")}
             >
-              Sign up
+              No Account? Sign up here
+            </Button>
+          </div>
+
+          <div className="login return-button-container">
+            <Button onClick={() => navigate("/lobbyoverview")}>
+              Return to Lobby Overview
             </Button>
           </div>
         </form>

@@ -55,7 +55,7 @@ const Registration = () => {
       //   localStorage.setItem("currUserID", JSON.stringify(user.id));
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
+      navigate("/lobbyoverview");
     } catch (error) {
       alert(
         `Something went wrong during the registration: \n${handleError(error)}`
@@ -83,9 +83,21 @@ const Registration = () => {
               disabled={!username || !password}
               width="100%"
               onClick={() => doRegistration()} //Navigates to game
-              style={{ fontSize: "16px" }}
             >
-              Sign Up
+              Sign up
+            </Button>
+
+            <Button
+              disabled={username && password}
+              width="100%"
+              onClick={() => navigate("/login")}
+            >
+              Already signed up? Login here
+            </Button>
+          </div>
+          <div className="login return-button-container">
+            <Button onClick={() => navigate("/lobbyoverview")}>
+              Return to Lobby Overview
             </Button>
           </div>
         </form>

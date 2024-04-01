@@ -3,3 +3,8 @@ export type User = {
   name: string;
   id: number;
 };
+
+export type Lobby = {
+  lobbyName: string;
+  code: string;
+};
