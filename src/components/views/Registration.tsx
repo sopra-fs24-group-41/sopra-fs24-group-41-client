@@ -83,9 +83,16 @@ const Registration = () => {
               disabled={!username || !password}
               width="100%"
               onClick={() => doRegistration()} //Navigates to game
-              style={{ fontSize: "16px" }}
             >
-              Sign Up
+              Sign up
+            </Button>
+
+            <Button
+              disabled={username && password}
+              width="100%"
+              onClick={() => navigate("/login")}
+            >
+              Already signed up? Login here
             </Button>
           </div>
           <div className="login return-button-container">

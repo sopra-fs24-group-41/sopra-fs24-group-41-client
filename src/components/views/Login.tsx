@@ -49,10 +49,6 @@ const Login = () => {
     alert("You logged in!");
   };
 
-  const doRegistration = () => {
-    navigate("/registration");
-  };
-
   return (
     <BaseContainer>
       <div className="login container">
@@ -80,9 +76,9 @@ const Login = () => {
             <Button
               disabled={username && password}
               width="100%"
-              onClick={() => doRegistration()}
+              onClick={() => navigate("/registration")}
             >
-              Sign up
+              No Account? Sign up here
             </Button>
           </div>
 
