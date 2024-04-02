@@ -46,7 +46,10 @@ const Login = () => {
     // } catch (error) {
     //   alert(`Something went wrong during the login: \n${handleError(error)}`);
     // }
-    alert("You logged in!");
+    alert("You logged in!")
+    localStorage.setItem("token", "1")
+    navigate("/lobbyoverview")
+
   };
 
   return (

@@ -14,7 +14,7 @@
         justify-content: center;
         width: 100%;
         max-width: 30em;
-        height: 20em;
+        height: 23em;
         font-size: 18px;
         font-weight: 300;
         padding-left: 37px;
@@ -68,6 +68,11 @@
 
     &.table {
         margin-top: 10%;
+        background: lighten($background, 10);
+        border-radius: 0.75em;
+        padding: 10px;
+
+
 
 }
 

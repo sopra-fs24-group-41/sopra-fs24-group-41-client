@@ -32,10 +32,10 @@ const Profile = () => {
   const tableData = [
     {
       label: "Username:",
-      value: "Jason", // Example username
+      value: "xxGamerxx",
     },
-    { label: "Creation Date:", value: "31.03.2024" }, // Example creation date
-    { label: "Status:", value: "Online" }, // Example status
+    { label: "Creation Date:", value: "31.03.2024" },
+    { label: "Status:", value: "Online" },
     {
       label: "Birth Date:",
       value: format(birthday, "dd-MM-yyyy"),
@@ -53,6 +53,9 @@ const Profile = () => {
         <Button onClick={handleEditBirthday}>Edit</Button>
       ),
     },
+    { label: "Wins:", value: "69" },
+    { label: "Losses:", value: "42" },
+    { label: "Favourite Word:", value: "Zaddy" },
   ];
 
   return (
