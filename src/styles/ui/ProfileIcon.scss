@@ -15,6 +15,15 @@
         border-radius: 25%;
         border: 5px solid rgb(108, 108, 108)
     }
+
+     @media only screen and (max-width: 768px) {
+        position: relative;
+        top: 5%;
+        max-width: 60px;
+        max-height: 60px;
+        cursor: pointer;
+
+     }
 }
 
 
