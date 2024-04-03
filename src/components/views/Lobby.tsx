@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
@@ -40,8 +39,8 @@ const gamemodes= [
 
 let lobbyOwner: Boolean;
 lobbyOwner = true;
+// @ts-ignore
 const LobbyPage = () => {
-    const navigate = useNavigate();
     const [selectedGamemode, setSelectedGamemode] = useState<Gamemode | null>(null);
 
     const selectGamemode = (gamemode: Gamemode) => {
@@ -88,12 +87,15 @@ const LobbyPage = () => {
                     <p className="lobby p">Select a Gamemode</p>
                     {content}
                 </div>
+                <div className="user container">
+                    <h2>List of users</h2>
+                    <p> Jason</p>
+                    <p> Derulo</p>
+                </div>
             </BaseContainer>
         </div>
     );
+
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default LobbyPage;

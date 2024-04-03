@@ -9,6 +9,7 @@
 
 .lobby {
   &.container {
+    float: left;
     background: $background;
     padding: 1.5em;
     border-radius: $borderRadius;
@@ -22,14 +23,6 @@
     list-style: none;
     padding-left: 0;
     text-align: center;
-  }
-
-  &.user-item {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
   }
 
   & p,
@@ -61,11 +54,24 @@
     color: $textColor;
 
   }
+
+}
+
+.user {
+  &.container {
+    float: left;
+    background: $background;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+  }
 }
 
 .container-wrapper {
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-self: center;
 }
