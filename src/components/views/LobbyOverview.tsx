@@ -50,7 +50,6 @@ const LobbyOverview = () => {
           { lobbyName: "Lobby 1", code: "ABC123" },
           { lobbyName: "Lobby 2", code: "DEF456" },
           { lobbyName: "Lobby 3", code: "GHI789" },
-          { lobbyName: "Lobby 4", code: "GHI789" },
         ];
         setLobbies(dummyLobbies);
       }, 1000); // Simulated delay of 1 second

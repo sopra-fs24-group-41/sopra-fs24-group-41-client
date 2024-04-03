@@ -14,7 +14,7 @@
         justify-content: center;
         width: 100%;
         max-width: 30em;
-        height: 23em;
+        height: 25em;
         font-size: 18px;
         font-weight: 300;
         padding-left: 37px;
@@ -73,5 +73,18 @@
         padding: 10px;
 
 }
+}
 
+.datepicker {
+    position: relative;
+    left: 0%;
+    z-index: 999;
+}
+
+.dateInput {
+    border: none;
+    border-radius: $borderRadius;
+    padding: 3px;
+    background: lighten($background, 25);
+    color: inherit;
 }

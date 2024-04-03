@@ -1,8 +1,8 @@
 .profile-icon {
     position: relative;
     top: 10%;
-    max-width: 60px;
-    max-height: 60px;
+    max-width: 150px;
+    max-height: 150px;
     cursor: pointer;
 
     &:hover {
@@ -10,8 +10,8 @@
     }
 
     img {
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
         border-radius: 25%;
         border: 5px solid rgb(108, 108, 108)
     }
