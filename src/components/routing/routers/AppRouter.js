@@ -6,6 +6,7 @@ import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../views/Login";
 import Registration from "../../views/Registration";
 import LobbyOverview from "../../views/LobbyOverview"
+import Lobby from "../../views/Lobby";
 
 /**
  * Main router of your application.
@@ -14,25 +15,29 @@ import LobbyOverview from "../../views/LobbyOverview"
  * The main difference between these two routes is the following:
  * /login renders another component without any sub-route
  * /game renders a Router that contains other sub-routes that render in turn other react components
- * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial 
+ * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
 const AppRouter = () => {
   return (
-    <BrowserRouter>
-      <Routes>
+      <BrowserRouter>
+        <Routes>
 
-        <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview"/>} />
+          <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview"/>} />
 
-        <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login/>} />
 
-        <Route path="/registration" element={<Registration/>} />
+          <Route path="/registration" element={<Registration/>} />
 
-        <Route path="/" element={
-          <Navigate to="/lobbyoverview" replace />
-        }/>
+          <Route path="/lobby" element={<Lobby/>}>
+            <Route path="/lobby/:lobbyID" element={<Lobby/>} />
+          </Route>
 
-      </Routes>
-    </BrowserRouter>
+          <Route path="/" element={
+            <Navigate to="/lobbyoverview" replace />
+          }/>
+
+        </Routes>
+      </BrowserRouter>
   );
 };
 

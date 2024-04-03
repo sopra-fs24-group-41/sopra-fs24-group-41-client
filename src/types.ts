@@ -8,3 +8,8 @@ export type Lobby = {
   lobbyName: string;
   code: string;
 };
+
+export type Gamemode = {
+  gamemodeName: string;
+  description: string;
+};
