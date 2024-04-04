@@ -65,7 +65,7 @@
         border-radius: $borderRadius;
         display: flex;
         align-items: center;
-        background: lighten($background, 5);
+        background: lighten($background, 10);
     }
 
     &.container-selected{
@@ -76,8 +76,9 @@
         display: flex;
         border-radius: $borderRadius;
         align-items: center;
-        background: lighten($background, 10);
-        border: 0 0 5px #1E90FF; // Light-up effect with box-shadow
+        background: lighten($background, 25);
+        border: solid rgb(0, 0, 0)
+
     }
 
     &.lobby-name {

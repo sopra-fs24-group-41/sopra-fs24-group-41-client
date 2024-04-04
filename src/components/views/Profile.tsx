@@ -4,13 +4,13 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import "styles/views/Profile.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { format } from "date-fns/format";
+import { format, isValid } from "date-fns";
 import ProfileIcon from "components/ui/ProfileIcon";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("xxGamerxx");
-  const [birthday, setBirthday] = useState(new Date("2001-04-01"));
+  const [birthday, setBirthday] = useState<string>("not given");
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEdit = () => {
@@ -21,28 +21,40 @@ const Profile = () => {
     setIsEditing(!isEditing);
   };
 
+  const formatDate = (dateString: string) => {
+    if (isValid(new Date(dateString))) {
+      return format(new Date(dateString), "dd-MM-yyyy");
+    } else {
+      return "not given";
+    }
+  };
+
   const tableData = [
     {
       label: "Username:",
       value: isEditing ? (
-        <input className="input-css" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input
+          className="input-css"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       ) : (
         username
       ),
     },
-    { label: "Creation Date:", value: "31.03.2024" },
+    { label: "Creation Date:", value: "31-03-2024" },
     { label: "Status:", value: "Online" },
     {
       label: "Birth Date:",
       value: isEditing ? (
         <input
-          className = "input-css"
+          className="input-css"
           type="date"
-          value={format(birthday, "yyyy-MM-dd")}
-          onChange={(e) => setBirthday(new Date(e.target.value))}
+          value={birthday}
+          onChange={(e) => setBirthday(e.target.value)}
         />
       ) : (
-        format(birthday, "dd-MM-yyyy")
+        formatDate(birthday)
       ),
     },
     { label: "Wins:", value: "69" },
@@ -59,9 +71,7 @@ const Profile = () => {
             <tbody>
               {tableData.map((row, index) => (
                 <tr key={index}>
-                  <td>
-                    {row.label}
-                  </td>
+                  <td>{row.label}</td>
                   <td>{row.value}</td>
                 </tr>
               ))}
