@@ -9,20 +9,14 @@ import ProfileIcon from "components/ui/ProfileIcon";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [username_, setUsername] = useState("xxGamerxx");
-  const [birthday, setBirthday] = useState(new Date("2001-04-01")); 
+  const [username, setUsername] = useState("xxGamerxx");
+  const [birthday, setBirthday] = useState(new Date("2001-04-01"));
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUsername, setEditedUsername] = useState("xxGamerxx");
-  const [editedBirthday, setEditedBirthday] = useState(new Date("2001-04-01"));
-
-  const saveChanges = () => {
-    setUsername(editedUsername);
-    setBirthday(editedBirthday);
-  };
 
   const handleEdit = () => {
     if (isEditing) {
-      saveChanges();
+      setUsername(username);
+      setBirthday(birthday);
     }
     setIsEditing(!isEditing);
   };
@@ -32,11 +26,11 @@ const Profile = () => {
       label: "Username:",
       value: isEditing ? (
         <input
-          value={editedUsername}
-          onChange={(e) => setEditedUsername(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
       ) : (
-        username_
+        username
       ),
     },
     { label: "Creation Date:", value: "31.03.2024" },
@@ -46,8 +40,8 @@ const Profile = () => {
       value: isEditing ? (
         <input
           type="date"
-          value={editedBirthday}
-          onChange={(date) => setEditedBirthday(date.target.value)}
+          value={format(birthday, "yyyy-MM-dd")}
+          onChange={(e) => setBirthday(new Date(e.target.value))}
         />
       ) : (
         format(birthday, "dd-MM-yyyy")
@@ -67,7 +61,7 @@ const Profile = () => {
             <tbody>
               {tableData.map((row, index) => (
                 <tr key={index}>
-                  <td style={{ paddingRight: "15px", fontWeight: "bold" }}>
+                  <td>
                     {row.label}
                   </td>
                   <td>{row.value}</td>

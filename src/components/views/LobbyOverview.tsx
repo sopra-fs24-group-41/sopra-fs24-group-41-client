@@ -23,16 +23,12 @@ const LobbyItem = ({
   isSelected: boolean;
 }) => (
   <div
-    className="lobby container"
+    className={`lobby container${isSelected ? "-selected" : ""}`}
     onClick={() => onSelect(lobby)}
-    style={{
-      border: isSelected ? "1px solid #1E90FF" : "none",
-    }}
   >
     <div className="lobby lobby-name">{lobby.lobbyName}</div>
   </div>
 );
-
 LobbyItem.propTypes = {
   lobby: PropTypes.object,
 };

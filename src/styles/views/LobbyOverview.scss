@@ -57,6 +57,7 @@
 
 .lobby {
     &.container {
+        &:hover {transform: translateY(-2px);}
         text-align: center;
         margin: 0.5em 0;
         width: 20em;
@@ -65,6 +66,18 @@
         display: flex;
         align-items: center;
         background: lighten($background, 5);
+    }
+
+    &.container-selected{
+        text-align: center;
+        margin: 0.5em 0;
+        width: 20em;
+        padding: 10px;
+        display: flex;
+        border-radius: $borderRadius;
+        align-items: center;
+        background: lighten($background, 10);
+        border: 0 0 5px #1E90FF; // Light-up effect with box-shadow
     }
 
     &.lobby-name {

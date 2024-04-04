@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "../../styles/ui/Icon.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
+
 const Icon = ({ onClick }) => {
   return (
     <BaseContainer className="icon-pos container">
