@@ -78,16 +78,10 @@
 }
 }
 
-.datepicker {
-    position: relative;
-    left: 0%;
-    z-index: 999;
-}
-
-.dateInput {
+.input-css{
     border: none;
     border-radius: $borderRadius;
-    padding: 3px;
+    padding: 1px;
     background: lighten($background, 25);
     color: inherit;
 }

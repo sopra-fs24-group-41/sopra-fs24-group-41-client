@@ -25,7 +25,7 @@ const Profile = () => {
     {
       label: "Username:",
       value: isEditing ? (
-        <input value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input className="input-css" value={username} onChange={(e) => setUsername(e.target.value)} />
       ) : (
         username
       ),
@@ -36,6 +36,7 @@ const Profile = () => {
       label: "Birth Date:",
       value: isEditing ? (
         <input
+          className = "input-css"
           type="date"
           value={format(birthday, "yyyy-MM-dd")}
           onChange={(e) => setBirthday(new Date(e.target.value))}
