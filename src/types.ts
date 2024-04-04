@@ -13,3 +13,9 @@ export type Gamemode = {
   gamemodeName: string;
   description: string;
 };
+
+export type Player = {
+  name: string;
+  icon: string;
+  token: string;
+}

@@ -3,7 +3,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {Gamemode} from "../../types";
+import {Gamemode, Player} from "../../types";
 
 const GamemodeItem = ({
     gamemode,
@@ -15,11 +15,8 @@ const GamemodeItem = ({
     isSelected: boolean;
 }) => (
     <div
-        className="gamemode container"
+        className={`gamemode container${isSelected ? " selected" : ""}`}
         onClick={() => onSelect(gamemode)}
-        style={{
-            border: isSelected ? "1px solid #1E90FF" : "none",
-        }}
     >
         <div className="gamemode name">{gamemode.gamemodeName}</div>
         <div className="gamemode description">{gamemode.description}</div>
@@ -37,11 +34,17 @@ const gamemodes= [
     { gamemodeName: "Wombo Combo!!", description: "Make some bomb combos" },
 ];
 
+const players= [
+    { name: "Rhinoceron", icon: "/images/RedSquid.jpg", token: "1"},
+    { name: "Froggy", icon: "/images/BlueFrog.jpg", token: "2"},
+    { name: "The big rock", icon: "/images/PinkBunny.jpg", token: "3"},
+];
+
 let lobbyOwner: Boolean;
 lobbyOwner = true;
-// @ts-ignore
+
 const LobbyPage = () => {
-    const [selectedGamemode, setSelectedGamemode] = useState<Gamemode | null>(null);
+    const [selectedGamemode, setSelectedGamemode] = useState<Gamemode >(null);
 
     const selectGamemode = (gamemode: Gamemode) => {
         setSelectedGamemode((prevSelectedGamemode) =>
@@ -53,10 +56,9 @@ const LobbyPage = () => {
         alert("To be implemented!");
     };
 
-    let content;
-    content = (
+    let content = (
         <div>
-            <ul className="lobby gamemode-list">
+            <ul className="gamemode list">
                 {gamemodes.map((gamemode: Gamemode) => (
                     <li key={gamemode.gamemodeName}>
                         <GamemodeItem
@@ -71,7 +73,7 @@ const LobbyPage = () => {
                 <Button
                     width="100%"
                     onClick={() => startGame()}
-                    disabled={!selectedGamemode && !lobbyOwner}
+                    disabled={!selectedGamemode || !lobbyOwner}
                 >
                     Start Game
                 </Button>
@@ -79,18 +81,35 @@ const LobbyPage = () => {
         </div>
     );
 
+    let usercontent = (
+        <div>
+            <ul className="player list">
+                {players.map((player: Player) => (
+                    <li key={player.token}>
+                        <div className="player container">
+                            <div className="player icon">
+                                <img src={player.icon} alt="player icon"/>
+
+                            </div>
+                            {player.name}
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
     return (
         <div className="container-wrapper">
             <BaseContainer>
-                <div className="lobby container">
+                <div className="lobbypage container">
                     <h2>Grealish Lobby</h2>
                     <p className="lobby p">Select a Gamemode</p>
                     {content}
                 </div>
-                <div className="user container">
-                    <h2>List of users</h2>
-                    <p> Jason</p>
-                    <p> Derulo</p>
+                <div className="lobbypage container">
+                    <h2>List of players</h2>
+                    {usercontent}
                 </div>
             </BaseContainer>
         </div>
