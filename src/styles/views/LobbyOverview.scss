@@ -23,6 +23,9 @@
         list-style: none;
         padding-left: 0;
         text-align: center;
+        max-height: 170px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     &.user-item {
@@ -37,10 +40,24 @@
     h2 {
         margin: 0.5em 0;
     }
+
+    @media only screen and (max-width: 768px) {
+            &.container {
+                    z-index: 1;
+                    background: $background;
+                    padding: 1.2em;
+                    border-radius: $borderRadius;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    box-shadow: $dropShadow;
+                }
+    }
 }
 
 .lobby {
     &.container {
+        &:hover {transform: translateY(-2px);}
         text-align: center;
         margin: 0.5em 0;
         width: 20em;
@@ -48,7 +65,20 @@
         border-radius: $borderRadius;
         display: flex;
         align-items: center;
-        background: lighten($background, 5);
+        background: lighten($background, 10);
+    }
+
+    &.container-selected{
+        text-align: center;
+        margin: 0.5em 0;
+        width: 20em;
+        padding: 10px;
+        display: flex;
+        border-radius: $borderRadius;
+        align-items: center;
+        background: lighten($background, 25);
+        border: solid rgb(0, 0, 0)
+
     }
 
     &.lobby-name {

@@ -37,8 +37,8 @@ FormField.propTypes = {
 
 const Registration = () => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const doRegistration = async () => {
     try {
@@ -92,7 +92,9 @@ const Registration = () => {
               width="100%"
               onClick={() => navigate("/login")}
             >
-              Already signed up? Login here
+              <span style={{ fontSize: "16px" }}>
+                Already signed up? Login here
+              </span>
             </Button>
           </div>
           <div className="login return-button-container">
