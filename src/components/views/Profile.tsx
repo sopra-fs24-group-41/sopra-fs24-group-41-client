@@ -25,10 +25,7 @@ const Profile = () => {
     {
       label: "Username:",
       value: isEditing ? (
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <input value={username} onChange={(e) => setUsername(e.target.value)} />
       ) : (
         username
       ),
