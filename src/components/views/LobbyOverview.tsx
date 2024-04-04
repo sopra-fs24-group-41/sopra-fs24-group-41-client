@@ -8,6 +8,8 @@ import "styles/views/LobbyOverview.scss";
 import { Lobby } from "types";
 import Icon from "../ui/Icon";
 import LoginRegister from "components/popup-ui/LoginRegister";
+import ProfileIcon from "../ui/ProfileIcon";
+import ProfilePopup from "components/popup-ui/ProfilePopup";
 
 //Adds CSS + onSelect functionality to each Lobby displayed in the list
 //(Selection functionality)
@@ -21,16 +23,12 @@ const LobbyItem = ({
   isSelected: boolean;
 }) => (
   <div
-    className="lobby container"
+    className={`lobby container${isSelected ? "-selected" : ""}`}
     onClick={() => onSelect(lobby)}
-    style={{
-      border: isSelected ? "1px solid #1E90FF" : "none",
-    }}
   >
     <div className="lobby lobby-name">{lobby.lobbyName}</div>
   </div>
 );
-
 LobbyItem.propTypes = {
   lobby: PropTypes.object,
 };
@@ -117,13 +115,18 @@ const LobbyOverview = () => {
 
   return (
     <div className="container-wrapper">
-      <BaseContainer className="game container">
+      <BaseContainer className="lobbyoverview container">
         <h2>Lobby Overview</h2>
-        <p className="lobbyoverview paragraph">Select a Lobby to Join</p>
+        <p>Select a Lobby to Join</p>
         {content}
       </BaseContainer>
       <Icon onClick={() => iconClick()} />
-      {LoginRegisterPopup && <LoginRegister />}
+      {LoginRegisterPopup && localStorage.getItem("token") === null && (
+        <LoginRegister />
+      )}
+      {LoginRegisterPopup && localStorage.getItem("token") !== null && (
+        <ProfilePopup />
+      )}
     </div>
   );
 };
