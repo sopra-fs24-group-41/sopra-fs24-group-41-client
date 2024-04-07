@@ -23,6 +23,7 @@
   & p,
   h2 {
     margin: 0.5em 0;
+    text-decoration: underline;
   }
 
   &.game-and-players-container {
@@ -91,7 +92,6 @@
 
 .player {
   &.container {
-    padding-right: 50px;
     background: lighten($background, 20);
     padding: 4px;
     border-radius: $borderRadius;
@@ -139,11 +139,11 @@
 .player-list-container {
   float: left;
   background: darken($background, 4);
-  padding: 1.5em;
-  padding-bottom: 0px;
+
   border-radius: $borderRadius;
   display: flex;
   flex-direction: column;
+  transform: translateY(24px);
 }
 
 .button-container {

@@ -2,16 +2,20 @@
 
 .quitpopup {
     &.container {
+        z-index: 6;
         position: fixed;
         top: 50%;
-        left: 15%;
+        left: 50%;
         transform: translate(-50%, -50%);
-        background: $background;
+        background: lighten($buttonColDark, 4);
         border-radius: $borderRadius;
-        min-height: 70px;
-        max-width: 250px;
+        max-width: 240px;
+        border: 4px solid rgb(154,154,154);
+        text-align: center;
+    }
 
-        
+    h2 {
+        color: lighten($buttonCol, 40)
     }
 
     &.button-container {
