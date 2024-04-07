@@ -8,38 +8,57 @@
  */
 
 .lobbypage {
-
   &.container {
-    float: left;
+    padding-top: 1.5em;
     background: $background;
-    padding: 1.5em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     box-shadow: $dropShadow;
-    margin-left: 30px;
+    padding-right: 2em;
+    padding-bottom: 2em;
   }
 
   & p,
   h2 {
     margin: 0.5em 0;
   }
+
+  &.game-and-players-container {
+    width: auto;
+  }
 }
 
 .gamemode {
 
-  &:hover {transform: translateY(-2px);}
+  &.standard {
+
+    float: left;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 30px;
+  }
   &.container {
+    &:hover {
+      transform: translateY(-2px);
+    }
+
     text-align: start;
     margin: 0.5em 0;
     width: auto;
-    padding: 20px;
+    padding: 12px;
+    padding-left: 30px;
+    padding-right: 30px;
     border-radius: $borderRadius;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     background: lighten($background, 20);
     cursor: pointer;
+    height: 70px;
 
     &.selected {
       background: lighten($background, 25);
@@ -47,7 +66,7 @@
     }
   }
 
-    &.name {
+  &.name {
     text-align: center;
     margin: auto;
     color: $accentDark;
@@ -56,45 +75,57 @@
 
   &.description {
     color: $textColor;
-
-  }
-
-  &.list {
-    list-style: none;
+    margin-top: 5px;
     text-align: center;
-  }
-
-}
-
-.player {
-
-  &.container {
-    float: left;
-    background: lighten($background, 20);
-    padding: 20px;
-    border-radius: $borderRadius;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    width: 200px;
   }
 
   &.list {
     list-style: none;
     padding-left: 0;
+    text-align: center;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.player {
+  &.container {
+    padding-right: 50px;
+    background: lighten($background, 20);
+    padding: 4px;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: 200px;
+    height: 60px;
+  }
+
+  &.list {
+    list-style: none;
+    padding-left: 0;
+    text-align: center;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  &.name {
+    margin-top: 15px;
   }
 
   &.icon {
     position: relative;
-    top: 10%;
-    max-width: 150px;
-    max-height: 150px;
+
+    max-width: 80px;
+    max-height: 80px;
 
     img {
-      width: 75px;
-      height: 75px;
+      width: 50px;
+      height: 50px;
       border-radius: 25%;
-      border: 5px solid rgb(108, 108, 108)
+      border: 5px solid rgb(26, 26, 26)
     }
   }
 }
@@ -104,3 +135,38 @@
   display: flex;
   justify-content: space-between;
 }
+
+.player-list-container {
+  float: left;
+  background: darken($background, 4);
+  padding: 1.5em;
+  padding-bottom: 0px;
+  border-radius: $borderRadius;
+  display: flex;
+  flex-direction: column;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 1em;
+  align-items: center;
+
+}
+
+.button {
+  width: 240px;
+  position: relative;
+  transform: translateX(+8%);
+
+  &:hover {
+    transform: translateY(-2px) translateX(+8%);
+
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
