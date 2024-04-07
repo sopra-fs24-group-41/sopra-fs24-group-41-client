@@ -7,11 +7,8 @@ import PropTypes from "prop-types";
 import {Gamemode, Player} from "../../types";
 import {useNavigate} from "react-router-dom";
 
-const GamemodeItem = ({
-    gamemode,
-    onSelect,
-    isSelected,
-}: {
+const GamemodeItem = ({gamemode, onSelect, isSelected,}:
+    {
     gamemode: Gamemode;
     onSelect: (gamemode: Gamemode) => void;
     isSelected: boolean;

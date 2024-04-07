@@ -5,27 +5,27 @@ import PropTypes from "prop-types";
 import LobbyOverview from "../../views/LobbyOverview"
 
 const GameRouter = () => {
-  return (
-    <div style={{display: "flex", flexDirection: "column"}}>
-      <Routes>
+    return (
+        <div style={{display: "flex", flexDirection: "column"}}>
+            <Routes>
 
-        <Route path="" element={<LobbyOverview />} />
+                <Route path="" element={<LobbyOverview />} />
 
-        <Route path="dashboard" element={<LobbyOverview />} />
+                <Route path="dashboard" element={<LobbyOverview />} />
 
-        <Route path="*" element={<Navigate to="dashboard" replace />} />
+                <Route path="*" element={<Navigate to="dashboard" replace />} />
 
-      </Routes>
-   
-    </div>
-  );
+            </Routes>
+
+        </div>
+    );
 };
 /*
 * Don't forget to export your component!
  */
 
 GameRouter.propTypes = {
-  base: PropTypes.string
+    base: PropTypes.string
 }
 
 export default GameRouter;

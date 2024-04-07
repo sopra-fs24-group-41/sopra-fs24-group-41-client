@@ -5,21 +5,21 @@ import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePopup = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const Logout = () =>{
-    localStorage.removeItem("token");
-    window.location.reload();
-  }
+    const Logout = () =>{
+        localStorage.removeItem("token");
+        window.location.reload();
+    }
 
-  return (
-    <BaseContainer className="profilepopup container">
-      <div className="profilepopup button-container">
-        <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
-        <Button onClick={() => Logout()}>Logout</Button>
-      </div>
-    </BaseContainer>
-  );
+    return (
+        <BaseContainer className="profilepopup container">
+            <div className="profilepopup button-container">
+                <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
+                <Button onClick={() => Logout()}>Logout</Button>
+            </div>
+        </BaseContainer>
+    );
 };
 
 export default ProfilePopup;

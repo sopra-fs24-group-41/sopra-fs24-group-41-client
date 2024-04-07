@@ -18,27 +18,27 @@ import Lobby from "../../views/Lobby";
  * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
 const AppRouter = () => {
-  return (
-      <BrowserRouter>
-        <Routes>
+    return (
+        <BrowserRouter>
+            <Routes>
 
-          <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview"/>} />
+                <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview"/>} />
 
-          <Route path="/login" element={<Login/>} />
+                <Route path="/login" element={<Login/>} />
 
-          <Route path="/registration" element={<Registration/>} />
+                <Route path="/registration" element={<Registration/>} />
 
-          <Route path="/lobby" element={<Lobby/>}>
-            <Route path="/lobby/:lobbyID" element={<Lobby/>} />
-          </Route>
+                <Route path="/lobby" element={<Lobby/>}>
+                    <Route path="/lobby/:lobbyID" element={<Lobby/>} />
+                </Route>
 
-          <Route path="/" element={
-            <Navigate to="/lobbyoverview" replace />
-          }/>
+                <Route path="/" element={
+                    <Navigate to="/lobbyoverview" replace />
+                }/>
 
-        </Routes>
-      </BrowserRouter>
-  );
+            </Routes>
+        </BrowserRouter>
+    );
 };
 
 /*

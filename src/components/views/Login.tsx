@@ -8,94 +8,94 @@ import PropTypes from "prop-types";
 import "styles/views/Login.scss";
 
 const FormField = (props) => {
-  return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
-      <input
-        className="login input"
-        placeholder="enter here.."
-        type={props.type}
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
+    return (
+        <div className="login field">
+            <label className="login label">{props.label}</label>
+            <input
+                className="login input"
+                placeholder="enter here.."
+                type={props.type}
+                value={props.value}
+                onChange={(e) => props.onChange(e.target.value)}
+            />
+        </div>
+    );
 };
 
 FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-  type: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    type: PropTypes.string,
 };
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [password, setPassword] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+    const navigate = useNavigate();
+    const [password, setPassword] = useState<string>("");
+    const [username, setUsername] = useState<string>("");
 
-  const doLogin = () => {
-    // try {
-    //   // Your login logic goes here
+    const doLogin = () => {
+        // try {
+        //   // Your login logic goes here
 
-    //   // Placeholder for demonstration
-    //   localStorage.setItem("token", "placeHolder");
+        //   // Placeholder for demonstration
+        //   localStorage.setItem("token", "placeHolder");
 
-    //   // Navigate to the route /game after successful login
-    //   navigate("/game");
-    // } catch (error) {
-    //   alert(`Something went wrong during the login: \n${handleError(error)}`);
-    // }
-    alert("You logged in!")
-    localStorage.setItem("token", "1")
-    navigate("/lobbyoverview")
+        //   // Navigate to the route /game after successful login
+        //   navigate("/game");
+        // } catch (error) {
+        //   alert(`Something went wrong during the login: \n${handleError(error)}`);
+        // }
+        alert("You logged in!")
+        localStorage.setItem("token", "1")
+        navigate("/lobbyoverview")
 
-  };
+    };
 
-  return (
-    <BaseContainer>
-      <div className="login container">
-        <form className="login form" onSubmit={() => doLogin}>
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un: string) => setUsername(un)}
-          />
-          <FormField
-            label="Password"
-            value={password}
-            onChange={(pw) => setPassword(pw)}
-            type="password"
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !password}
-              width="100%"
-              onClick={() => doLogin()}
-            >
-              Login
-            </Button>
+    return (
+        <BaseContainer>
+            <div className="login container">
+                <form className="login form" onSubmit={() => doLogin}>
+                    <FormField
+                        label="Username"
+                        value={username}
+                        onChange={(un: string) => setUsername(un)}
+                    />
+                    <FormField
+                        label="Password"
+                        value={password}
+                        onChange={(pw) => setPassword(pw)}
+                        type="password"
+                    />
+                    <div className="login button-container">
+                        <Button
+                            disabled={!username || !password}
+                            width="100%"
+                            onClick={() => doLogin()}
+                        >
+                            Login
+                        </Button>
 
-            <Button
-              disabled={username && password}
-              width="100%"
-              onClick={() => navigate("/registration")}
-            >
+                        <Button
+                            disabled={username && password}
+                            width="100%"
+                            onClick={() => navigate("/registration")}
+                        >
               <span style={{ fontSize: "16px" }}>
                 No account? Sign up here
               </span>
-            </Button>
-          </div>
+                        </Button>
+                    </div>
 
-          <div className="login return-button-container">
-            <Button onClick={() => navigate("/lobbyoverview")}>
-              Return to Lobby Overview
-            </Button>
-          </div>
-        </form>
-      </div>
-    </BaseContainer>
-  );
+                    <div className="login return-button-container">
+                        <Button onClick={() => navigate("/lobbyoverview")}>
+                            Return to Lobby Overview
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </BaseContainer>
+    );
 };
 
 export default Login;

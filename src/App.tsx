@@ -11,15 +11,15 @@ import "styles/add/Starscape.scss";
  * Updated by Marco Leder
  */
 const App = () => {
-  return (
-    <div>
-      <Header height="100" />
-      <AppRouter />
-      <div className="starscape">
-        <Starscape />
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <Header height="100" />
+            <AppRouter />
+            <div className="starscape">
+                <Starscape />
+            </div>
+        </div>
+    );
 };
 
 export default App;

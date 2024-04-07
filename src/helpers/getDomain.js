@@ -7,8 +7,8 @@ import { isProduction } from "./isProduction"
  * @returns {string}
  */
 export const getDomain = () => {
-  const prodUrl = "https://sopra-fs24-group-41-server.oa.r.appspot.com/"
-  const devUrl = "http://localhost:8080"
+    const prodUrl = "https://sopra-fs24-group-41-server.oa.r.appspot.com/"
+    const devUrl = "http://localhost:8080"
 
-  return isProduction() ? prodUrl : devUrl
+    return isProduction() ? prodUrl : devUrl
 }
