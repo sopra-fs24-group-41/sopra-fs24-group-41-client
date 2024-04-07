@@ -97,11 +97,10 @@
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: flex-start;
     width: 200px;
     height: 60px;
   }
-
   &.list {
     list-style: none;
     padding-left: 0;
