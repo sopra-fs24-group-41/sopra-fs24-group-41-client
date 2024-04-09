@@ -13,11 +13,7 @@ import ProfilePopup from "components/popup-ui/ProfilePopup";
 
 //Adds CSS + onSelect functionality to each Lobby displayed in the list
 //(Selection functionality)
-const LobbyItem = ({
-                       lobby,
-                       onSelect,
-                       isSelected,
-                   }: {
+const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;

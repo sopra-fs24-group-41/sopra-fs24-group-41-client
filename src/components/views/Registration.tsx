@@ -92,9 +92,9 @@ const Registration = () => {
                             width="100%"
                             onClick={() => navigate("/login")}
                         >
-              <span style={{ fontSize: "16px" }}>
-                Already signed up? Login here
-              </span>
+                            <span style={{ fontSize: "16px" }}>
+                            Already signed up? Login here
+                            </span>
                         </Button>
                     </div>
                     <div className="login return-button-container">
