@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import {Gamemode, Player} from "../../types";
 import {useNavigate} from "react-router-dom";
 import IMAGES from "../../assets/images/index1.js"
+import CopyButton from "../ui/CopyButton";
 
 const GamemodeItem = ({gamemode, onSelect, isSelected,}:
     {
@@ -150,12 +151,17 @@ const LobbyPage = () => {
                     </div>
                 </div>
             </BaseContainer>
+            <div>
+                <CopyButton copyText="Lobby code"/>
+            </div>
             {quitPopup && (
                 <context.Provider value={{ quitPopup, setQuitPopup }}>
                     <QuitPopup />
                 </context.Provider>)
             }
+
         </div>
+
 
     );
 }

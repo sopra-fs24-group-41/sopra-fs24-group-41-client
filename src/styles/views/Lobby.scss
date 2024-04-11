@@ -9,6 +9,10 @@
 
 .lobbypage {
   &.container {
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%);
     padding-top: 1.5em;
     background: $background;
     border-radius: $borderRadius;
@@ -169,4 +173,6 @@
     pointer-events: none;
   }
 }
+
+
 
