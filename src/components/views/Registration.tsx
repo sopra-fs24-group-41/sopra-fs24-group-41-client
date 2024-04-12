@@ -42,17 +42,19 @@ const Registration = () => {
 
     const doRegistration = async () => {
         try {
-            //   const requestBody = JSON.stringify({ username, password });
-            //   const response = await api.post("/users", requestBody);
-
-            //   // Get the returned user and update a new object.
-            //   const user = new User(response.data);
-            //   const receivedToken = null
-            //   user.token = receivedToken;
-
-            //   // Store the token into the local storage.
-            //   localStorage.setItem("token", user.token);
-            //   localStorage.setItem("currUserID", JSON.stringify(user.id));
+            const requestBodyRegistration = JSON.stringify({ username, password });
+            const responseRegistration = await api.post(
+                "/users",
+                requestBodyRegistration
+            );
+            console.log(responseRegistration.data);
+            const requestBodyLogin = JSON.stringify({ username, password });
+            const responseLogin = await api.post("/logins", requestBodyLogin);
+            // Get the returned user and update a new object.
+            const user = new User(responseLogin.data);
+            // Store the token into the local storage.
+            localStorage.setItem("username", user.username);
+            localStorage.setItem("token", user.token);
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
             navigate("/lobbyoverview");
@@ -66,7 +68,8 @@ const Registration = () => {
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={doRegistration}>
+                <form className="login form" onSubmit={(e) => {
+                    e.preventDefault(), doRegistration();}}>
                     <FormField
                         label="Username"
                         value={username}
@@ -82,7 +85,7 @@ const Registration = () => {
                         <Button
                             disabled={!username || !password}
                             width="100%"
-                            onClick={() => doRegistration()} //Navigates to game
+                            type="submit"
                         >
                             Sign up
                         </Button>

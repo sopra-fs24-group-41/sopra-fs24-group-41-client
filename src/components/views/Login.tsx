@@ -34,28 +34,28 @@ const Login = () => {
     const [password, setPassword] = useState<string>("");
     const [username, setUsername] = useState<string>("");
 
-    const doLogin = () => {
-        // try {
-        //   // Your login logic goes here
+    const doLogin = async () => {
+        try {
+            // Your login logic goes here
+            const requestBodyLogin = JSON.stringify({ username, password });
+            const responseLogin = await api.post("/logins", requestBodyLogin);
+            console.log(responseLogin.data);
 
-        //   // Placeholder for demonstration
-        //   localStorage.setItem("token", "placeHolder");
-
-        //   // Navigate to the route /game after successful login
-        //   navigate("/game");
-        // } catch (error) {
-        //   alert(`Something went wrong during the login: \n${handleError(error)}`);
-        // }
-        alert("You logged in!")
-        localStorage.setItem("token", "1")
-        navigate("/lobbyoverview")
-
+            // Placeholder for demonstration
+            localStorage.setItem("token", responseLogin.data.token);
+            localStorage.setItem("username", username);
+            // Navigate to the route /game after successful login
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+        alert("You logged in!");
+        navigate("/lobbyoverview");
     };
 
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={() => doLogin}>
+                <form className="login form" onSubmit={(e) => {e.preventDefault(), doLogin();}}>
                     <FormField
                         label="Username"
                         value={username}
@@ -71,7 +71,7 @@ const Login = () => {
                         <Button
                             disabled={!username || !password}
                             width="100%"
-                            onClick={() => doLogin()}
+                            type="submit"
                         >
                             Login
                         </Button>
