@@ -17,7 +17,7 @@ const ProfilePopup = () => {
             console.log(requestBody);
             await api.post("/logouts", requestBody);
             localStorage.removeItem("token");
-            window.location.reload();
+            navigate("/login");
         } catch (error) {
             alert(`Something went wrong during the logout: \n${handleError(error)}`);
         }

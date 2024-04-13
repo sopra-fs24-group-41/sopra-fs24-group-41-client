@@ -15,7 +15,6 @@ const Profile = () => {
     const user = localStorage.getItem("currentUser");
     localStorage.setItem("test", user);
     const [username, setUsername] = useState();
-    const [birthday, setBirthday] = useState<string>("not given");
     const [isEditing, setIsEditing] = useState(false);
     const [userData, setUserData] = useState({username: "...", status: "..."});
 
@@ -23,12 +22,12 @@ const Profile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const uName = localStorage.getItem("username");
-                setUsername(uName);
-                const response = await api.get("/users/" + uName);
+                const userID = localStorage.getItem("userID");
+                const response = await api.get("/users/" + userID);
                 const userdata = new User(response.data);
                 console.log(userdata);
-                setUserData(userdata)
+                setUserData(userdata);
+                setUsername(userdata.username);
             } catch (error) {
                 alert("Server Connection Lost");
                 navigate("/lobbyoverview");
@@ -41,7 +40,6 @@ const Profile = () => {
     const handleEdit = () => {
         if (isEditing) {
             setUsername(username);
-            setBirthday(birthday);
         }
         setIsEditing(!isEditing);
     };
@@ -69,21 +67,8 @@ const Profile = () => {
         },
         { label: "Creation Date:", value: "31-03-2024" },
         { label: "Status:", value: userData.status },
-        {
-            label: "Birth Date:",
-            value: isEditing ? (
-                <input
-                    className="input-css"
-                    type="date"
-                    value={birthday}
-                    onChange={(e) => setBirthday(e.target.value)}
-                />
-            ) : (
-                formatDate(birthday)
-            ),
-        },
-        { label: "Wins:", value: "69" },
-        { label: "Losses:", value: "42" },
+        { label: "Wins:", value: userData.wins },
+        { label: "Losses:", value: userData.losses },
         { label: "Favourite Word:", value: "Zaddy" },
     ];
 

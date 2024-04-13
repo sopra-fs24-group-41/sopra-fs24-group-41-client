@@ -13,6 +13,16 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
+const validUsername = (un) => {
+    if(un.length > 20){
+        alert("Invalid username, must be less than 20 characters");
+        
+        return ""
+    }
+
+    return un;
+}
+
 const FormField = (props) => {
     return (
         <div className="login field">
@@ -47,13 +57,12 @@ const Registration = () => {
                 "/users",
                 requestBodyRegistration
             );
-            console.log(responseRegistration.data);
             const requestBodyLogin = JSON.stringify({ username, password });
             const responseLogin = await api.post("/logins", requestBodyLogin);
             // Get the returned user and update a new object.
             const user = new User(responseLogin.data);
             // Store the token into the local storage.
-            localStorage.setItem("username", user.username);
+            localStorage.setItem("userID", user.id);
             localStorage.setItem("token", user.token);
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
@@ -72,7 +81,7 @@ const Registration = () => {
                     e.preventDefault(), doRegistration();}}>
                     <FormField
                         label="Username"
-                        value={username}
+                        value={validUsername(username)}
                         onChange={(un: string) => setUsername(un)}
                     />
                     <FormField

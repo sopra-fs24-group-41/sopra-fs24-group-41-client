@@ -39,17 +39,14 @@ const Login = () => {
             // Your login logic goes here
             const requestBodyLogin = JSON.stringify({ username, password });
             const responseLogin = await api.post("/logins", requestBodyLogin);
-            console.log(responseLogin.data);
 
             // Placeholder for demonstration
             localStorage.setItem("token", responseLogin.data.token);
-            localStorage.setItem("username", username);
+            localStorage.setItem("userID", responseLogin.data.id);
             // Navigate to the route /game after successful login
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
-        alert("You logged in!");
-        navigate("/lobbyoverview");
     };
 
     return (
