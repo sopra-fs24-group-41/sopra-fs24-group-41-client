@@ -65,7 +65,6 @@ const WordBoard = () => {
     console.log(newWordList);
   };
 
-  // TODO: fix keys (use index of `for` loop instead of words themselves)
   const createWordMatrix = () => {
     let result = [];
     let wordRow = [];
@@ -78,7 +77,7 @@ const WordBoard = () => {
       }
       wordRow.push(
         <Word
-          key={wordList[i]}
+          key={i}
           onClick={() => {
             addWordToMerge(wordList[i]);
           }}
