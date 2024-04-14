@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
@@ -10,11 +10,25 @@ import { User } from "types";
 import WordBoard from "./WordBoard";
 import WordMergeBar from "./WordMergeBar";
 
+export const nextWordIndexContext = createContext(123);
+export const mergeWordListContext = createContext([]);
+
 const Game = () => {
+  const [nextWordIndex, setNextWordIndex] = useState(0);
+  const [mergeWordList, setMergeWordList] = useState<String>([]);
+
   return (
     <BaseContainer className="game container">
-      <WordMergeBar></WordMergeBar>
-      <WordBoard></WordBoard>
+      <nextWordIndexContext.Provider
+        value={{ nextWordIndex, setNextWordIndex }}
+      >
+        <mergeWordListContext.Provider
+          value={{ mergeWordList, setMergeWordList }}
+        >
+          <WordMergeBar></WordMergeBar>
+          <WordBoard></WordBoard>
+        </mergeWordListContext.Provider>
+      </nextWordIndexContext.Provider>
     </BaseContainer>
   );
 };

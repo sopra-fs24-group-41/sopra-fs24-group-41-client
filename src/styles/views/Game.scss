@@ -49,7 +49,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #303030;
+    background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
   }
@@ -61,13 +61,10 @@
 }
 
 .word {
-  max-width: 25em;
   padding: 0.5em;
   border-radius: $borderRadius/2;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  background-color: black;
   margin: 0.5em;
   box-shadow: $dropShadow;
 }
