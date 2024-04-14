@@ -6,6 +6,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import {Gamemode, Player} from "../../types";
 import {useNavigate} from "react-router-dom";
+import IMAGES from "../../assets/images/index1.js"
 
 const GamemodeItem = ({gamemode, onSelect, isSelected,}:
     {
@@ -34,9 +35,9 @@ const gamemodes= [
 ];
 
 const players= [
-    { name: "Rhinoceron", icon: "/images/RedSquid.jpg", token: "1"},
-    { name: "Froggy", icon: "/images/BlueFrog.jpg", token: "2"},
-    { name: "The big rock", icon: "/images/PinkBunny.jpg", token: "3"},
+    { name: "Rhinoceron", icon: IMAGES.RedSquid, token: "1"},
+    { name: "Froggy", icon: IMAGES.BlueFrog, token: "2"},
+    { name: "The big rock", icon: IMAGES.PinkBunny, token: "3"},
 ];
 
 let lobbyOwner = true;

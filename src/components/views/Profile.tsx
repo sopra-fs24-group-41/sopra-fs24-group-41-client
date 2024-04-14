@@ -15,6 +15,7 @@ const Profile = () => {
     const user = localStorage.getItem("currentUser");
     localStorage.setItem("test", user);
     const [username, setUsername] = useState();
+    const [favourite, setFavourite] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [userData, setUserData] = useState({username: "...", status: "..."});
 
@@ -23,11 +24,19 @@ const Profile = () => {
         const fetchData = async () => {
             try {
                 const userID = localStorage.getItem("userID");
-                const response = await api.get("/users/" + userID);
+                let response = await api.get("/users/" + userID);
+                response.data.creationDate = handleDate(response.data.creationDate);
                 const userdata = new User(response.data);
                 console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
+
+                if (!userdata.favourite) {
+                    setFavourite("Zaddy");
+                } else {
+                    setFavourite(userdata.favourite);
+                }
+  
             } catch (error) {
                 alert("Server Connection Lost");
                 navigate("/lobbyoverview");
@@ -35,22 +44,45 @@ const Profile = () => {
         };
         fetchData();
     }, []);
+
+    const updateUserData = async (username, favourite) => {
+        try {
+            const token = localStorage.getItem("token"); 
+            const userID = localStorage.getItem("userID");
+            const config = {
+                headers: {
+                    "Authorization": token,
+                    "Content-Type": "application/json"
+                }
+            };
+    
+            const response = await api.put("/users/" + userID, {
+                username: username,
+                favourite: favourite, 
+            }, config);
+            
+            console.log("User data updated successfully:", response.data);
+        } catch (error) {
+            alert("Failed to update user data");
+            console.error("Error updating user data:", error);
+        }
+    };
     
 
     const handleEdit = () => {
         if (isEditing) {
             setUsername(username);
+            setFavourite(favourite);
         }
         setIsEditing(!isEditing);
+        updateUserData(username, favourite);
     };
 
-    const formatDate = (dateString: string) => {
-        if (isValid(new Date(dateString))) {
-            return format(new Date(dateString), "dd-MM-yyyy");
-        } else {
-            return "not given";
-        }
-    };
+    const handleDate = (dateString) =>{
+        const dateObject = new Date(dateString);
+
+        return format(dateObject, "dd-MM-yyyy");
+    }
 
     const tableData = [
         {
@@ -65,11 +97,22 @@ const Profile = () => {
                 username
             ),
         },
-        { label: "Creation Date:", value: "31-03-2024" },
+        { label: "Creation Date:", value: userData.creationDate},
         { label: "Status:", value: userData.status },
         { label: "Wins:", value: userData.wins },
         { label: "Losses:", value: userData.losses },
-        { label: "Favourite Word:", value: "Zaddy" },
+        {
+            label: "Favourite Word:",
+            value: isEditing ? (
+                <input
+                    className="input-css"
+                    value={favourite}
+                    onChange={(e) => setFavourite(e.target.value)}
+                />
+            ) : (
+                favourite
+            ),
+        },
     ];
 
     return (

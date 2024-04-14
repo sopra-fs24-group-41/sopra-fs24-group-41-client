@@ -5,11 +5,11 @@ import React from "react";
 const ImageDropdown = ({ images, onSelectImage }) => {
     return (
         <div className="image-dropdown-menu">
-            {images.map((image, index) => (
+            {Object.keys(images).map((key) => (
                 <img
-                    key={index}
-                    src={`/images/${image}`}
-                    onClick={() => onSelectImage(image)}
+                    key={key}
+                    src={images[key]}
+                    onClick={() => onSelectImage(key)}
                 />
             ))}
         </div>
@@ -17,7 +17,7 @@ const ImageDropdown = ({ images, onSelectImage }) => {
 };
 
 ImageDropdown.propTypes = {
-    images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    images: PropTypes.object.isRequired,
     onSelectImage: PropTypes.func.isRequired,
 };
 
