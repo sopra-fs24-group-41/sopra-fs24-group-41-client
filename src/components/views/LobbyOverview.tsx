@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
-import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/LobbyOverview.scss";
 import { Lobby } from "types";
 import Icon from "../ui/Icon";
 import LoginRegister from "components/popup-ui/LoginRegister";
-import ProfileIcon from "../ui/ProfileIcon";
 import ProfilePopup from "components/popup-ui/ProfilePopup";
 
-//Adds CSS + onSelect functionality to each Lobby displayed in the list
-//(Selection functionality)
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
@@ -33,6 +29,7 @@ const LobbyOverview = () => {
     const [lobbies, setLobbies] = useState<Lobby[]>(null);
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
+    const [lobbyCode, setLobbyCode] = useState<String>(null);
 
     useEffect(() => {
         //Dummy stand in, should be replaced.
@@ -41,7 +38,7 @@ const LobbyOverview = () => {
                 const dummyLobbies: Lobby[] = [
                     { lobbyName: "Lobby 1", code: "ABC123" },
                     { lobbyName: "Lobby 2", code: "DEF456" },
-                    { lobbyName: "Lobby 3", code: "GHI789" },
+                    { lobbyName: "Lobby 3", code: "GHI789" }
                 ];
                 setLobbies(dummyLobbies);
             }, 1000); // Simulated delay of 1 second
@@ -60,14 +57,25 @@ const LobbyOverview = () => {
     2. Verify if previous input === current input: If yes, set lobby to null
     3. Else, set lobby to the current lobby*/
 
-    //Allows toggling, true/false
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
-    /*
-    1. Take previous state
-    2. Return the negation of it. (Allows toggling of LoginRegisterPopup variable)*/
 
+    const joinLobby = () => {
+        if (selectedLobby && lobbyCode) {
+            alert("Please select either a lobby or enter a game code to join a lobby")
+
+        } else if (lobbyCode) {
+            alert("Joining a lobby through entering a lobby code");
+        }
+        else if (selectedLobby) {
+            alert("Joining a lobby through selection");
+        }
+    }
+
+    const createLobby = () => {
+        alert("Creating lobbies is to be implemented!");
+    }
     let content = <Spinner />;
 
     if (lobbies) {
@@ -84,30 +92,39 @@ const LobbyOverview = () => {
                         </li>
                     ))}
                 </ul>
-                <div className="login button-container">
-                    <Button
-                        width="100%"
-                        onClick={() => joinLobby()}
-                        disabled={!selectedLobby}
-                    >
-                        Join Lobby
-                    </Button>
+                <div>
+                    <p> Or enter a lobby code: </p>
+                    <form>
+                        <input
+                            className={`lobby input-container ${lobbyCode ? "has-input" : ""}`}
+                            name="lobbyCode"
+                            value={lobbyCode}
+                            onChange={(lobbyCode) => setLobbyCode(lobbyCode.target.value)}
+                            onSubmit={joinLobby}
+                        />
+                    </form>
 
-                    <Button
-                        width="100%"
-                        onClick={() => joinLobby()}
-                        disabled={selectedLobby}
-                    >
+                    <div className="login button-container">
+                        <Button
+                            width="100%"
+                            onClick={() => joinLobby()}
+                            disabled={!selectedLobby && !lobbyCode }
+                        >
+                        Join Lobby
+                        </Button>
+
+                        <Button
+                            width="100%"
+                            onClick={() => createLobby()}
+                            disabled={selectedLobby || lobbyCode}
+                        >
                         Create Lobby
-                    </Button>
+                        </Button>
+                    </div>
                 </div>
             </div>
         );
     }
-
-    const joinLobby = () => {
-        alert("To be implemented!");
-    };
 
     return (
         <div className="container-wrapper">
@@ -126,7 +143,5 @@ const LobbyOverview = () => {
         </div>
     );
 };
-/*{LoginRegisterPopup && <LoginRegister />}: 
-Conditional rendering, based on Truth value of LoginRegisterPopup*/
 
 export default LobbyOverview;
