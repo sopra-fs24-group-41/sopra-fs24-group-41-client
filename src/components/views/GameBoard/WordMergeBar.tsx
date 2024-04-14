@@ -7,10 +7,22 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
-import WordBoard from "./WordBoard";
+import Word from "./Word";
 
 const WordMergeBar = () => {
-  return <BaseContainer className="wordmergebar container"></BaseContainer>;
+  const [firstWord, setFirstWord] = useState<String>("");
+  const [secondWord, setSecondWord] = useState<String>("");
+  const [targetWord, setTargetWord] = useState<String>("");
+
+  return (
+    <BaseContainer className="wordmergebar container">
+      <Word key={1} content={firstWord}></Word>
+      <div className="wordmergebar symbol">+</div>
+      <Word key={2} content={secondWord}></Word>
+      <div className="wordmergebar symbol">=</div>
+      <Word key={3} content={targetWord}></Word>
+    </BaseContainer>
+  );
 };
 
 export default WordMergeBar;
