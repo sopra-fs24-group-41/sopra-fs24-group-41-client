@@ -7,15 +7,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
-
-const Word = ({ key, content }) => {
-  return <div className="word">{content}</div>;
-};
-
-Word.propTypes = {
-  key: PropTypes.string,
-  content: PropTypes.string,
-};
+import Word from "./Word";
 
 const WordRow = ({ key, words }) => {
   return <div className="wordrow"> {words} </div>;
