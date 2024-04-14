@@ -7,22 +7,10 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
+import WordBoard from "./WordBoard";
 
 const WordMergeBar = () => {
   return <BaseContainer className="wordmergebar container"></BaseContainer>;
 };
 
-const WordBoard = () => {
-  return <BaseContainer className="wordboard container">text</BaseContainer>;
-};
-
-const Game = () => {
-  return (
-    <BaseContainer className="game container">
-      <WordMergeBar></WordMergeBar>
-      <WordBoard></WordBoard>
-    </BaseContainer>
-  );
-};
-
-export default Game;
+export default WordMergeBar;
