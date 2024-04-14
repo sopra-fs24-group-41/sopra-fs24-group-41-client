@@ -27,7 +27,7 @@ WordRow.propTypes = {
 };
 
 const WordBoard = () => {
-  const [wordList, setWordList] = useState<String>([]);
+  const [wordList, setWordList] = useState<String>(["Water", "Fire", "Earth", "Wind"]);
 
   const addWord = (word: string) => {
     setWordList([...wordList, word]);
