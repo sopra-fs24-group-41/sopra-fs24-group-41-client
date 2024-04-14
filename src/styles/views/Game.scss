@@ -9,8 +9,6 @@
 
 .game {
   &.container {
-    max-width: 30em;
-    // padding: 1em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
@@ -22,8 +20,6 @@
 
 .wordmergebar {
   &.container {
-    max-width: 25em;
-    padding: 0.5em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
@@ -34,7 +30,6 @@
   }
 
   &.symbol {
-    padding: 0.25em;
     font-size: 5em;
     text-align: center;
     display: flex;
@@ -43,7 +38,6 @@
 
 .wordboard {
   &.container {
-    // max-width: 25em;
     padding: 0.5em;
     border-radius: $borderRadius;
     display: flex;

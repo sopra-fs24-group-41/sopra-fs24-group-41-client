@@ -31,7 +31,13 @@ const WordBoard = () => {
   ]);
 
   const addWordToWordBoard = (word: string) => {
-    setWordList([...wordList, word]);
+    let i;
+    // See first if the given word is already discovered.
+    for (i = 0; i < wordList.length; i++)
+        if (word === wordList[i])
+            break;
+    if (i === wordList.length)
+        setWordList([...wordList, word]);
   };
 
   const getMergeResult = (word1: string, word2: string) => {
@@ -60,9 +66,6 @@ const WordBoard = () => {
 
     setNextWordIndex(newWordIndex);
     setMergeWordList(newWordList);
-
-    console.log(newWordIndex);
-    console.log(newWordList);
   };
 
   const createWordMatrix = () => {
