@@ -9,6 +9,7 @@
 
 .game {
   &.container {
+    margin: 1em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
