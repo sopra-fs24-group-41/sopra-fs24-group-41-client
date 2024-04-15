@@ -1,6 +1,6 @@
 import React from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
-import Game from "../../views/Game";
+import Game from "../../views/GameBoard/Game";
 import PropTypes from "prop-types";
 import LobbyOverview from "../../views/LobbyOverview"
 
