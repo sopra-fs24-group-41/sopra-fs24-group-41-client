@@ -60,7 +60,7 @@
 
 .word {
   padding: 0.5em;
-  border-radius: $borderRadius/2;
+  border-radius: calc(#{$borderRadius}/2);
   display: flex;
   align-items: center;
   margin: 0.5em;
