@@ -51,6 +51,7 @@ const LobbyOverview = () => {
         setSelectedLobby((prevSelectedLobby) =>
             prevSelectedLobby === lobby ? null : lobby
         );
+        setLobbyCode(null);
     };
     /*
     1. Take previous input
@@ -62,10 +63,8 @@ const LobbyOverview = () => {
     };
 
     const joinLobby = () => {
-        if (selectedLobby && lobbyCode) {
-            alert("Please select either a lobby or enter a game code to join a lobby")
 
-        } else if (lobbyCode) {
+        if (lobbyCode) {
             alert("Joining a lobby through entering a lobby code");
         }
         else if (selectedLobby) {
@@ -98,8 +97,10 @@ const LobbyOverview = () => {
                         <input
                             className={`lobby input-container ${lobbyCode ? "has-input" : ""}`}
                             name="lobbyCode"
-                            value={lobbyCode}
-                            onChange={(lobbyCode) => setLobbyCode(lobbyCode.target.value)}
+                            value={lobbyCode || ""}
+                            onChange={(lobbyCode) => {
+                                setLobbyCode(lobbyCode.target.value);
+                                setSelectedLobby(null)}}
                             onSubmit={joinLobby}
                         />
                     </form>
