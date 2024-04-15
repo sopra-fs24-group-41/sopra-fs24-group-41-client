@@ -9,51 +9,60 @@
 
 .game {
   &.container {
-    background: black;
-    padding: 1.5em;
+    margin: 1em auto;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: $background;
     box-shadow: $dropShadow;
-  }
-  &.user-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  &.user-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  & p,h2 {
-    margin: 0.5em 0;
   }
 }
 
-.player {
+.wordmergebar {
   &.container {
-    margin: 0.5em 0;
-    width: 20em;
-    padding: 10px;
     border-radius: $borderRadius;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    background: lighten($background, 5);
+    background-color: #454545;
+    margin: 0.5em;
+    box-shadow: $dropShadow;
   }
-  &.name {
-    font-weight: 300;
-    margin-left: 5px;
+
+  &.symbol {
+    font-size: 5em;
+    text-align: center;
+    display: flex;
   }
-  &.username {
-    font-weight: 500;
-    color: $accent;
+}
+
+.wordboard {
+  &.container {
+    padding: 0.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #101010;
+    margin: 0.5em;
+    box-shadow: $dropShadow;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 30em; 
   }
-  &.id {
-    margin-left: auto;
-    margin-right: 10px;
-    font-family: $fontMono;
-    font-weight: 300;
-  }
+}
+
+.wordrow {
+  display: flex;
+  flex-direction: row;
+}
+
+.word {
+  padding: 0.5em;
+  border-radius: $borderRadius/2;
+  display: flex;
+  align-items: center;
+  margin: 0.5em;
+  box-shadow: $dropShadow;
 }
