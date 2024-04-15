@@ -92,6 +92,7 @@
 
 .player {
   &.container {
+    margin: 0.5em 0;
     background: lighten($background, 20);
     padding: 4px;
     border-radius: $borderRadius;
