@@ -34,7 +34,6 @@
 .gamemode {
 
   &.standard {
-
     float: left;
     padding: 1.5em;
     border-radius: $borderRadius;
@@ -101,6 +100,7 @@
     align-items: flex-start;
     width: 200px;
     height: 60px;
+    
   }
   &.list {
     list-style: none;
@@ -113,6 +113,9 @@
 
   &.name {
     margin-top: 15px;
+    font-weight: 300;
+    margin-left: 5px;
+    
   }
 
   &.icon {
@@ -160,10 +163,7 @@
   position: relative;
   transform: translateX(+8%);
 
-  &:hover {
-    transform: translateY(-2px) translateX(+8%);
 
-  }
 
   &:disabled {
     pointer-events: none;
