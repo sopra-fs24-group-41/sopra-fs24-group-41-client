@@ -30,12 +30,7 @@ const Profile = () => {
                 console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
-
-                if (!userdata.favourite) {
-                    setFavourite("Zaddy");
-                } else {
-                    setFavourite(userdata.favourite);
-                }
+                !userData.favourite ? setFavourite("Zaddy") : setFavourite(userData.favourite)
   
             } catch (error) {
                 alert("Server Connection Lost");

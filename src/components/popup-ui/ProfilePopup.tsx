@@ -19,7 +19,13 @@ const ProfilePopup = () => {
             localStorage.removeItem("token");
             navigate("/login");
         } catch (error) {
-            alert(`Something went wrong during the logout: \n${handleError(error)}`);
+            if (error.response && error.response.status === 404) {
+                alert("Logout endpoint not found, the server was restarted");
+            } else {
+                alert(`Something went wrong during the logout: \n${handleError(error)}`);
+            }
+            localStorage.removeItem("token");
+            window.location.reload();
         }
     };
 
