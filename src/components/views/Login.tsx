@@ -34,28 +34,25 @@ const Login = () => {
     const [password, setPassword] = useState<string>("");
     const [username, setUsername] = useState<string>("");
 
-    const doLogin = () => {
-        // try {
-        //   // Your login logic goes here
-
-        //   // Placeholder for demonstration
-        //   localStorage.setItem("token", "placeHolder");
-
-        //   // Navigate to the route /game after successful login
-        //   navigate("/game");
-        // } catch (error) {
-        //   alert(`Something went wrong during the login: \n${handleError(error)}`);
-        // }
-        alert("You logged in!")
-        localStorage.setItem("token", "1")
-        navigate("/lobbyoverview")
-
+    const doLogin = async () => {
+        try {
+            const requestBodyLogin = JSON.stringify({ username, password });
+            const responseLogin = await api.post("/logins", requestBodyLogin);
+            // Get the returned user and update a new object.
+            const user = new User(responseLogin.data);
+            // Store the token into the local storage.
+            localStorage.setItem("userID", user.id);
+            localStorage.setItem("token", user.token);
+            navigate("/lobbyoverview");
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
     };
 
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={() => doLogin}>
+                <form className="login form" onSubmit={(e) => {e.preventDefault(), doLogin();}}>
                     <FormField
                         label="Username"
                         value={username}
@@ -71,7 +68,7 @@ const Login = () => {
                         <Button
                             disabled={!username || !password}
                             width="100%"
-                            onClick={() => doLogin()}
+                            type="submit"
                         >
                             Login
                         </Button>
