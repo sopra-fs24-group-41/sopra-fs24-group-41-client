@@ -11,93 +11,95 @@ import Word from "./Word";
 import { nextWordIndexContext, mergeWordListContext } from "./Game";
 
 const WordRow = ({ key, words }) => {
-  return <div className="wordrow"> {words} </div>;
+    return <div className="wordrow"> {words} </div>;
 };
 
 WordRow.propTypes = {
-  key: PropTypes.string,
-  words: PropTypes.node,
+    key: PropTypes.string,
+    words: PropTypes.node,
 };
 
 const WordBoard = () => {
-  const { nextWordIndex, setNextWordIndex } = useContext(nextWordIndexContext);
-  const { mergeWordList, setMergeWordList } = useContext(mergeWordListContext);
+    const { nextWordIndex, setNextWordIndex } =
+        useContext(nextWordIndexContext);
+    const { mergeWordList, setMergeWordList } =
+        useContext(mergeWordListContext);
 
-  const [wordList, setWordList] = useState<String>([
-    "Water",
-    "Fire",
-    "Earth",
-    "Wind",
-  ]);
+    const [wordList, setWordList] = useState<String>([
+        "Water",
+        "Fire",
+        "Earth",
+        "Wind",
+    ]);
 
-  const addWordToWordBoard = (word: string) => {
-    let i;
-    // See first if the given word is already discovered.
-    for (i = 0; i < wordList.length; i++)
-        if (word === wordList[i])
-            break;
-    if (i === wordList.length)
-        setWordList([...wordList, word]);
-  };
+    const addWordToWordBoard = (word: string) => {
+        let i;
+        // See first if the given word is already discovered.
+        for (i = 0; i < wordList.length; i++) if (word === wordList[i]) break;
+        if (i === wordList.length) setWordList([...wordList, word]);
+    };
 
-  const getMergeResult = (word1: string, word2: string) => {
-    return word1 + word2;
-  };
+    const getMergeResult = (word1: string, word2: string) => {
+        return word1 + word2;
+    };
 
-  const addWordToMerge = (word: string) => {
-    let newWordIndex = nextWordIndex;
-    let newWordList = mergeWordList;
+    const addWordToMerge = (word: string) => {
+        let newWordIndex = nextWordIndex;
+        let newWordList = mergeWordList;
 
-    if (newWordIndex === 2) {
-      newWordList = ["", "", ""];
-      newWordIndex = 0;
-    }
+        if (newWordIndex === 2) {
+            newWordList = ["", "", ""];
+            newWordIndex = 0;
+        }
 
-    newWordList[newWordIndex] = word;
-    newWordIndex++;
+        newWordList[newWordIndex] = word;
+        newWordIndex++;
 
-    if (newWordIndex === 2) {
-      newWordList[newWordIndex] = getMergeResult(
-        newWordList[0],
-        newWordList[1]
-      );
-      addWordToWordBoard(newWordList[newWordIndex]);
-    }
+        if (newWordIndex === 2) {
+            newWordList[newWordIndex] = getMergeResult(
+                newWordList[0],
+                newWordList[1]
+            );
+            addWordToWordBoard(newWordList[newWordIndex]);
+        }
 
-    setNextWordIndex(newWordIndex);
-    setMergeWordList(newWordList);
-  };
+        setNextWordIndex(newWordIndex);
+        setMergeWordList(newWordList);
+    };
 
-  const createWordMatrix = () => {
-    let result = [];
-    let wordRow = [];
-    for (let i = 0; i < wordList.length; i++) {
-      if (i > 0 && i % 8 === 0) {
+    const createWordMatrix = () => {
+        let result = [];
+        let wordRow = [];
+        for (let i = 0; i < wordList.length; i++) {
+            if (i > 0 && i % 8 === 0) {
+                result.push(
+                    <WordRow key={wordRow.toString()} words={wordRow}></WordRow>
+                );
+                wordRow = [];
+            }
+            wordRow.push(
+                <Word
+                    key={i}
+                    onClick={() => {
+                        addWordToMerge(wordList[i]);
+                    }}
+                >
+                    {wordList[i]}
+                </Word>
+            );
+        }
         result.push(
-          <WordRow key={wordRow.toString()} words={wordRow}></WordRow>
+            <WordRow key={wordRow.toString()} words={wordRow}></WordRow>
         );
-        wordRow = [];
-      }
-      wordRow.push(
-        <Word
-          key={i}
-          onClick={() => {
-            addWordToMerge(wordList[i]);
-          }}
-        >
-          {wordList[i]}
-        </Word>
-      );
-    }
-    result.push(<WordRow key={wordRow.toString()} words={wordRow}></WordRow>);
-    return result;
-  };
 
-  return (
-    <BaseContainer className="wordboard container">
-      {createWordMatrix()}
-    </BaseContainer>
-  );
+        return result;
+    };
+
+    return (
+        <BaseContainer className="wordboard container">
+            {createWordMatrix()}
+        </BaseContainer>
+    );
 };
 
 export default WordBoard;

@@ -9,8 +9,12 @@ import "styles/views/Game.scss";
 import "styles/ui/Button.scss";
 import { User } from "types";
 
-const Word = props => {
-  return <Button {...props} className="word">{props.children}</Button>;
+const Word = (props) => {
+    return (
+        <Button {...props} className="word">
+            {props.children}
+        </Button>
+    );
 };
 
 Word.propTypes = {

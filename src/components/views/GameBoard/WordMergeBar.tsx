@@ -11,23 +11,23 @@ import Word from "./Word";
 import { mergeWordListContext } from "./Game";
 
 const WordMergeBar = () => {
-  const { mergeWordList } = useContext(mergeWordListContext);
+    const { mergeWordList } = useContext(mergeWordListContext);
 
-  const formatWord = (word: string, placeholder: string) => {
-    if (word !== null && word !== undefined && word !== "")
-      return word;
-    return placeholder.repeat(10);
-  }
+    const formatWord = (word: string, placeholder: string) => {
+        if (word !== null && word !== undefined && word !== "") return word;
 
-  return (
-    <BaseContainer className="wordmergebar container">
-      <Word key={1}>{formatWord(mergeWordList[0], "-")}</Word>
-      <div className="wordmergebar symbol">+</div>
-      <Word key={2}>{formatWord(mergeWordList[1], "-")}</Word>
-      <div className="wordmergebar symbol">=</div>
-      <Word key={3}>{formatWord(mergeWordList[2], "?")}</Word>
-    </BaseContainer>
-  );
+        return placeholder.repeat(10);
+    };
+
+    return (
+        <BaseContainer className="wordmergebar container">
+            <Word key={1}>{formatWord(mergeWordList[0], "-")}</Word>
+            <div className="wordmergebar symbol">+</div>
+            <Word key={2}>{formatWord(mergeWordList[1], "-")}</Word>
+            <div className="wordmergebar symbol">=</div>
+            <Word key={3}>{formatWord(mergeWordList[2], "?")}</Word>
+        </BaseContainer>
+    );
 };
 
 export default WordMergeBar;

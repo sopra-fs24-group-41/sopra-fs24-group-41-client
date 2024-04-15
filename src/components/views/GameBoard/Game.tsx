@@ -11,26 +11,27 @@ import WordBoard from "./WordBoard";
 import WordMergeBar from "./WordMergeBar";
 
 export const nextWordIndexContext = createContext(123);
+
 export const mergeWordListContext = createContext([]);
 
 const Game = () => {
-  const [nextWordIndex, setNextWordIndex] = useState(0);
-  const [mergeWordList, setMergeWordList] = useState<String>([]);
+    const [nextWordIndex, setNextWordIndex] = useState(0);
+    const [mergeWordList, setMergeWordList] = useState<String>([]);
 
-  return (
-    <BaseContainer className="game container">
-      <nextWordIndexContext.Provider
-        value={{ nextWordIndex, setNextWordIndex }}
-      >
-        <mergeWordListContext.Provider
-          value={{ mergeWordList, setMergeWordList }}
-        >
-          <WordMergeBar></WordMergeBar>
-          <WordBoard></WordBoard>
-        </mergeWordListContext.Provider>
-      </nextWordIndexContext.Provider>
-    </BaseContainer>
-  );
+    return (
+        <BaseContainer className="game container">
+            <nextWordIndexContext.Provider
+                value={{ nextWordIndex, setNextWordIndex }}
+            >
+                <mergeWordListContext.Provider
+                    value={{ mergeWordList, setMergeWordList }}
+                >
+                    <WordMergeBar></WordMergeBar>
+                    <WordBoard></WordBoard>
+                </mergeWordListContext.Provider>
+            </nextWordIndexContext.Provider>
+        </BaseContainer>
+    );
 };
 
 export default Game;
