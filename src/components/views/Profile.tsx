@@ -113,7 +113,7 @@ const Profile = () => {
                     onChange={(e) => setFavourite(e.target.value)}
                 />
             ) : (
-                favourite
+                favourite === "" ? "Zaddy" : favourite
             ),
         },
     ];
