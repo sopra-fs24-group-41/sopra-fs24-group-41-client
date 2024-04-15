@@ -9,7 +9,7 @@
 
 .game {
   &.container {
-    margin: 1em;
+    margin: 1em auto;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
@@ -47,6 +47,9 @@
     background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 30em; 
   }
 }
 
