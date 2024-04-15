@@ -46,6 +46,8 @@ const Profile = () => {
     }, []);
 
     const updateUserData = async (username, favourite) => {
+        const prevUsername = userData.username;
+        const prevFavourite = userData.favourite;
         try {
             const token = localStorage.getItem("token"); 
             const userID = localStorage.getItem("userID");
@@ -63,8 +65,9 @@ const Profile = () => {
             
             console.log("User data updated successfully:", response.data);
         } catch (error) {
-            alert("Failed to update user data");
-            console.error("Error updating user data:", error);
+            alert("Failed to update user data:\n" + error.response.data.message);
+            setUsername(prevUsername);
+            setFavourite("Zaddy");
         }
     };
     
