@@ -8,10 +8,26 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
 import Word from "./Word";
-import { mergeWordListContext } from "./Game";
+import { nextWordIndexContext, mergeWordListContext } from "./Game";
 
 const WordMergeBar = () => {
-    const { mergeWordList } = useContext(mergeWordListContext);
+    const { nextWordIndex, setNextWordIndex } =
+        useContext(nextWordIndexContext);
+    const { mergeWordList, setMergeWordList } =
+        useContext(mergeWordListContext);
+
+    const removeWord = () => {
+        // Assumption: this is always executed only when `nextWordIndex` = 1.
+        if (nextWordIndex !== 1)
+            return;
+
+        let newNextWordIndex = 0;
+        let newMergeWordList = mergeWordList;
+        newMergeWordList[newNextWordIndex] = "";
+
+        setNextWordIndex(newNextWordIndex);
+        setMergeWordList(newMergeWordList);
+    }
 
     const formatWord = (word: string, placeholder: string) => {
         if (word !== null && word !== undefined && word !== "") return word;
@@ -21,7 +37,7 @@ const WordMergeBar = () => {
 
     return (
         <BaseContainer className="wordmergebar container">
-            <Word key={1}>{formatWord(mergeWordList[0], "-")}</Word>
+            <Word key={1} onClick={removeWord}>{formatWord(mergeWordList[0], "-")}</Word>
             <div className="wordmergebar symbol">+</div>
             <Word key={2}>{formatWord(mergeWordList[1], "-")}</Word>
             <div className="wordmergebar symbol">=</div>
