@@ -13,6 +13,7 @@ const players = [
         losses: "1",
         total_wins: "100",
         total_losses: "1",
+        words_generated: "100",
     },
     {
         name: "Froggy",
@@ -20,6 +21,7 @@ const players = [
         token: "2",
         wins: "0",
         losses: "70",
+        words_generated: "100",
     },
     {
         name: "The big rock",
@@ -27,6 +29,7 @@ const players = [
         token: "3",
         wins: "1",
         losses: "69",
+        words_generated: "100",
     },
 ];
 
@@ -55,20 +58,20 @@ const Result = () => {
                                 <img src={player.icon} alt="player icon" />
                             </div>
                             <div className="player-details">
-                                <div className="player-name">{player.name}</div>
+                                <div className="player-name">
+                                    {" "}
+                                    <div>{player.name}</div>{" "}
+                                    <div>Wins: {player.wins}</div>
+                                </div>
                                 {selectedPlayer === player && (
                                     <div className="player-info">
-                                        <div>
-                                            Wins: {player.wins} Losses:{" "}
-                                            {player.losses}
-                                        </div>
-                                        {player.total_wins &&
-                                            player.total_losses && (
+                                        <div>Losses: {player.losses},</div>
+                                        <div>Words Generated: {player.words_generated}</div>
+
+                                        {player.total_wins && player.total_losses && (
                                             <div>
-                                              Total Wins:{" "}
-                                                {player.total_wins}, Total
-                                              Losses:{" "}
-                                                {player.total_losses}
+                                                <div>Total Wins: {player.total_wins},</div>
+                                                <div>Total Losses: {player.total_losses}</div>
                                             </div>
                                         )}
                                     </div>

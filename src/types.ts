@@ -22,6 +22,7 @@ export type Player = {
   losses: string;
   total_wins: string;
   total_losses: string;
+  words_generated: string;
 }
 
 
