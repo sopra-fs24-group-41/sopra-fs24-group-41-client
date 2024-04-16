@@ -1,93 +1,93 @@
 @import "../theme";
 
 .res {
-  list-style: none;
   padding-left: 0;
+  z-index: 1;
 
-    &.container {
-        max-width: fit-content;
-        z-index: 1;
-        background: $background;
-        padding: 1.5em;
-        border-radius: $borderRadius;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: $dropShadow;
+  &-container {
+    max-width: 300px;
+    background: $background;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
 
-    &.list{
-      padding-left: 0;
+    .res-list {
+      width: 300px;
+      position: relative;
+      z-index: 1;
       list-style: none;
-      padding-left: 400;
       text-align: center;
-      max-height: 30px;
       overflow-y: auto;
-      overflow-x: hidden;
-    }
-
 
     }
 
-    & p,
     h2 {
-        text-align: center;
-        margin: 0.5em 0;
+      text-align: center;
+      margin: 0.5em 0;
     }
 
     @media only screen and (max-width: 768px) {
-            &.container {
-                    z-index: 1;
-                    background: $background;
-                    padding: 1.2em;
-                    border-radius: $borderRadius;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    box-shadow: $dropShadow;
-                }
-    }
-}
-
-
-
-.player {
-    &.container {
-        align-items: center;
-
-    &:hover {transform: translateY(-2px);}
-      background: lighten($background, 20);
-      padding: 4px;
+      z-index: 1;
+      background: $background;
+      padding: 1.2em;
       border-radius: $borderRadius;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+    }
+  }
+
+  .player-container {
+    z-index: 4;
+    transition: transform 0.3s;
+    margin: 0.5em 0;
+    background: lighten($background, 20);
+    padding: 4px;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 200px;
+    height: max-content;
+
+    &.selected {
+      background: lighten($background, 40);
+      width: max-content;
+      max-width: max-content;
+      height: max-content;
+      z-index: 10;
+    }
+
+    .player-details{
+      text-align: left;
       align-items: flex-start;
-      width: 200px;
-      height: 60px;
     }
-    &.list {
-      list-style: none;
-      padding-left: 0;
-      text-align: center;
-      max-height: 400px;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-  
-    &.name {
+
+    .player-name {
       margin-top: 15px;
+      margin-left: 5px;
     }
-  
-    &.icon {
+
+    .player-icon {
       position: relative;
-  
       max-width: 80px;
       max-height: 80px;
-  
+
       img {
         width: 50px;
         height: 50px;
         border-radius: 25%;
-        border: 5px solid rgb(26, 26, 26)
+        border: 5px solid rgb(26, 26, 26);
       }
     }
+
+    .player-info {
+      margin-top: 5px;
+      margin-left: 5px;
+    }
   }
+}

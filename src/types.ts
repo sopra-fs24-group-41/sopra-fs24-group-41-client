@@ -18,4 +18,10 @@ export type Player = {
   name: string;
   icon: string;
   token: string;
+  wins: string;
+  losses: string;
+  total_wins: string;
+  total_losses: string;
 }
+
+

@@ -1,31 +1,78 @@
-import React, {createContext, useState} from "react";
-import { Button } from "components/ui/Button";
+import React, { useState } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import {Player} from "../../types";
-import {useNavigate} from "react-router-dom";
-import IMAGES from "../../assets/images/index1.js"
+import { Player } from "../../types";
+import IMAGES from "../../assets/images/index1.js";
 
-const players= [
-    { name: "Rhinoceron", icon: IMAGES.RedSquid, token: "1"},
-    { name: "Froggy", icon: IMAGES.BlueFrog, token: "2"},
-    { name: "The big rock", icon: IMAGES.PinkBunny, token: "3"},
+const players = [
+    {
+        name: "Rhinoceron",
+        icon: IMAGES.RedSquid,
+        token: "1",
+        wins: "69",
+        losses: "1",
+        total_wins: "100",
+        total_losses: "1",
+    },
+    {
+        name: "Froggy",
+        icon: IMAGES.BlueFrog,
+        token: "2",
+        wins: "0",
+        losses: "70",
+    },
+    {
+        name: "The big rock",
+        icon: IMAGES.PinkBunny,
+        token: "3",
+        wins: "1",
+        losses: "69",
+    },
 ];
 
-
 const Result = () => {
+    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+    const handlePlayerHover = (player: Player) => {
+        setSelectedPlayer(player);
+    };
+
     const usercontent = (
-        <div className = "res">
-            <h2> Results </h2>
-            <ul className = "res list">
+        <div className="res">
+            <h2>Results</h2>
+            <ul className="res-list">
                 {players.map((player: Player) => (
-                    <li key={player.token}>
-                        <div className="player container">
-                            <div className="player icon">
-                                <img src={player.icon} alt="player icon"/>
+                    <li
+                        key={player.token}
+                        onMouseEnter={() => handlePlayerHover(player)}
+                        onMouseLeave={() => setSelectedPlayer(null)}
+                    >
+                        <div
+                            className={`player-container ${
+                                selectedPlayer === player ? "selected" : ""
+                            }`}
+                        >
+                            <div className="player-icon">
+                                <img src={player.icon} alt="player icon" />
                             </div>
-                            <div className="player name">{player.name}
+                            <div className="player-details">
+                                <div className="player-name">{player.name}</div>
+                                {selectedPlayer === player && (
+                                    <div className="player-info">
+                                        <div>
+                                            Wins: {player.wins} Losses:{" "}
+                                            {player.losses}
+                                        </div>
+                                        {player.total_wins &&
+                                            player.total_losses && (
+                                            <div>
+                                              Total Wins:{" "}
+                                                {player.total_wins}, Total
+                                              Losses:{" "}
+                                                {player.total_losses}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </li>
@@ -35,12 +82,10 @@ const Result = () => {
     );
 
     return (
-        <BaseContainer className="res container">
-            <div className="res list">
-                {usercontent} 
-            </div>
-        </BaseContainer>)
-}
+        <BaseContainer className="res-container">
+            <div>{usercontent}</div>
+        </BaseContainer>
+    );
+};
 
-
-export default Result
+export default Result;
