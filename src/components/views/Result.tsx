@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Player } from "../../types";
 import IMAGES from "../../assets/images/index1.js";
+import { useLocation } from "react-router-dom";
 
 const players = [
     {
@@ -33,12 +34,39 @@ const players = [
     },
 ];
 
-const result = {WIN: "You Won!", LOSS: "You Lost..."};
-const result_status = true;
-const winner = "Froggy";
+const changeBack = (status, location) => {
+    if (location.pathname !== "/result") {
+        return 0;
+    }
+    if (status) return 2;
+    else return 1;
+};
+
+const result = { WIN: "You Won!", LOSS: "You Lost..." };
+let winner = "Froggy";
+let current = "Froggy"; //Determine Winner OR Loser by changing tis variable!
+const result_status = winner === current ? true : false;
+
+export const ResContext = createContext<number>(
+    changeBack(result_status, location)
+);
+
+const renderPlayer = (pName) => {
+    if (pName === winner) return "player-container winner";
+    if (pName === current) return "player-container loser";
+    else return "player-container";
+};
+
+const renderIcon = (pName) => {
+    if (pName === winner) return "winner";
+    if (pName === current) return "loser";
+    else return "player-icon";
+};
 
 const Result = () => {
+    const location = useLocation();
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+    const [res, setRes] = useState();
     const handlePlayerHover = (player: Player) => {
         setSelectedPlayer(player);
     };
@@ -55,11 +83,11 @@ const Result = () => {
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
                         <div
-                            className={`player-container ${
-                                selectedPlayer === player ? "selected" : ""
-                            }`}
+                            className={`player-container ${renderPlayer(
+                                player.name
+                            )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
-                            <div className="player-icon">
+                            <div className={renderIcon(player.name)}>
                                 <img src={player.icon} alt="player icon" />
                             </div>
                             <div className="player-details">
@@ -71,12 +99,20 @@ const Result = () => {
                                 {selectedPlayer === player && (
                                     <div className="player-info">
                                         <div>Losses: {player.losses},</div>
-                                        <div>Words Generated: {player.words_generated}</div>
+                                        <div>
+                                            Words Generated:{" "}
+                                            {player.words_generated}
+                                        </div>
 
-                                        {player.total_wins && player.total_losses && (
+                                        {player.total_wins &&
+                                            player.total_losses && (
                                             <div>
-                                                <div>Total Wins: {player.total_wins},</div>
-                                                <div>Total Losses: {player.total_losses}</div>
+                                                <div>
+                                                    Total Wins:{" "}{player.total_wins},
+                                                </div>
+                                                <div>
+                                                    Total Losses:{" "}{player.total_losses}
+                                                </div>
                                             </div>
                                         )}
                                     </div>
@@ -91,7 +127,9 @@ const Result = () => {
 
     return (
         <BaseContainer className="res-container">
-            <div>{usercontent}</div>
+            <ResContext.Provider value={res}>
+                <div>{usercontent}</div>
+            </ResContext.Provider>
         </BaseContainer>
     );
 };

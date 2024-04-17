@@ -60,6 +60,36 @@
     width: 200px;
     height: max-content;
 
+    &.winner {
+      z-index: 4;
+      transition: transform 0.3s;
+      margin: 0.5em 0;
+      background: lighten(blue, 40);
+      padding: 4px;
+      border-radius: $borderRadius;
+      border: 5px solid rgb(115, 164, 255);
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 200px;
+      height: max-content;
+    }
+
+    &.loser {
+      z-index: 4;
+      transition: transform 0.3s;
+      margin: 0.5em 0;
+      background: lighten(red, 40);
+      padding: 4px;
+      border-radius: $borderRadius;
+      border: 5px solid rgb(255, 136, 115);
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 200px;
+      height: max-content;
+    }
+
     &.selected {
       background: lighten($background, 40);
       width: max-content;
@@ -92,19 +122,61 @@
         border: 5px solid rgb(26, 26, 26);
       }
 
-      .winner{
-        position: relative;
-        max-width: 80px;
-        max-height: 80px;
-  
-        img {
-          width: 50px;
-          height: 50px;
-          border-radius: 25%;
-          border: 5px solid rgb(26, 26, 26);
-        }
-      }
     }
+
+    .winner{
+      position: relative;
+      max-width: 80px;
+      max-height: 80px;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 25%;
+        border: 5px solid transparent;
+        animation: pulseBorder 5s linear infinite; 
+    }
+    
+    @keyframes pulseBorder {
+        0% {
+            border-color: rgb(0, 0, 0); /* Starting color (red) */
+        }
+        50% {
+            border-color: rgb(72, 176, 255); /* Midpoint color (green) */
+        }
+        100% {
+            border-color: rgb(0, 0, 0); /* Ending color (red) */
+        }
+
+    }
+  }
+
+  .loser{
+    position: relative;
+    max-width: 80px;
+    max-height: 80px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 25%;
+      border: 5px solid transparent;
+      animation: pulseBorder2 5s linear infinite; 
+  }
+  
+  @keyframes pulseBorder2 {
+      0% {
+          border-color: rgb(0, 0, 0); /* Starting color (red) */
+      }
+      50% {
+          border-color: rgb(255, 118, 72); /* Midpoint color (green) */
+      }
+      100% {
+          border-color: rgb(0, 0, 0); /* Ending color (red) */
+      }
+
+  }
+}
 
     .player-info {
       margin-top: 5px;
