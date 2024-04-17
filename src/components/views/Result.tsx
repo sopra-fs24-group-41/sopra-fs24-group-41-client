@@ -24,7 +24,7 @@ const players = [
         words_generated: "100",
     },
     {
-        name: "The big rock",
+        name: "Bunny",
         icon: IMAGES.PinkBunny,
         token: "3",
         wins: "1",
@@ -32,6 +32,10 @@ const players = [
         words_generated: "100",
     },
 ];
+
+const result = {WIN: "You Won!", LOSS: "You Lost..."};
+const result_status = true;
+const winner = "Froggy";
 
 const Result = () => {
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -41,7 +45,8 @@ const Result = () => {
 
     const usercontent = (
         <div className="res">
-            <h2>Results</h2>
+            <h2>{result_status ? result.WIN : result.LOSS}</h2>
+            <p>Results</p>
             <ul className="res-list">
                 {players.map((player: Player) => (
                     <li
