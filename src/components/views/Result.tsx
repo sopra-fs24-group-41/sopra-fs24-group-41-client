@@ -44,7 +44,7 @@ const changeBack = (status, location) => {
 
 const result = { WIN: "You Won!", LOSS: "You Lost..." };
 let winner = "Froggy";
-let current = "Froggy"; //Determine Winner OR Loser by changing tis variable!
+let current = "Bunny"; //Determine Winner OR Loser by changing tis variable!
 const result_status = winner === current ? true : false;
 
 export const ResContext = createContext<number>(
@@ -98,7 +98,7 @@ const Result = () => {
                                 </div>
                                 {selectedPlayer === player && (
                                     <div className="player-info">
-                                        <div>Losses: {player.losses},</div>
+                                        <div>Losses: {player.losses}</div>
                                         <div>
                                             Words Generated:{" "}
                                             {player.words_generated}
@@ -108,7 +108,7 @@ const Result = () => {
                                             player.total_losses && (
                                             <div>
                                                 <div>
-                                                    Total Wins:{" "}{player.total_wins},
+                                                    Total Wins:{" "}{player.total_wins}
                                                 </div>
                                                 <div>
                                                     Total Losses:{" "}{player.total_losses}
