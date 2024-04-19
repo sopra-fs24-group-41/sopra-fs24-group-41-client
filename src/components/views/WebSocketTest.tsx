@@ -37,14 +37,14 @@ const WebSocketTest = () => {
     }
 
     const showGreeting = (m) => {
-        setGreetings([...greetings, m]);
+        setGreetings((prev) => [...prev, m]);
         console.log(m)
         console.log(greetings)
     }
 
     return (
         <BaseContainer className="overview container">
-            <h2>Websocket Testw</h2>
+            <h2>Websocket Test</h2>
             <p className="greeting">
                 <Button onClick={() => stompClient.activate()}>
                     connect
