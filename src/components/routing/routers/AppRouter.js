@@ -10,6 +10,7 @@ import Lobby from "../../views/Lobby";
 import Profile from "../../views/Profile";
 import Result from "../../views/Result";
 import Game from "../../views/GameBoard/Game";
+import WebSocketTest from "../../views/WebSocketTest"
 
 
 /**
@@ -41,6 +42,8 @@ const AppRouter = () => {
                 <Route path="/lobby" element={<Lobby/>}>
                     <Route path="/lobby/:lobbyID" element={<Lobby/>} />
                 </Route>
+
+                <Route path="/test" element={<WebSocketTest/>} />
 
                 <Route path="/" element={
                     <Navigate to="/lobbyoverview" replace />
