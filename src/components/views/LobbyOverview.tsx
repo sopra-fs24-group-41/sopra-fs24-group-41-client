@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/LobbyOverview.scss";
-import { Lobby } from "types";
+import Lobby from "../../models/Lobby.js";
 import Icon from "../ui/Icon";
 import LoginRegister from "components/popup-ui/LoginRegister";
 import ProfilePopup from "components/popup-ui/ProfilePopup";
+import { api, handleError } from "helpers/api";
+import { useNavigate } from "react-router-dom";
 
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
@@ -18,7 +19,7 @@ const LobbyItem = ({ lobby, onSelect, isSelected }: {
         className={`lobby container${isSelected ? "-selected" : ""}`}
         onClick={() => onSelect(lobby)}
     >
-        <div className="lobby lobby-name">{lobby.lobbyName}</div>
+        <div className="lobby lobby-name">{lobby.name}</div>
     </div>
 );
 LobbyItem.propTypes = {
@@ -26,22 +27,26 @@ LobbyItem.propTypes = {
 };
 
 const LobbyOverview = () => {
-    const [lobbies, setLobbies] = useState<Lobby[]>(null);
+    const navigate = useNavigate();
+    const [lobbies, setLobbies] = useState<Lobby[]>([]);
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
     const [lobbyCode, setLobbyCode] = useState<String>(null);
+    const userToken = localStorage.getItem("token");
+
 
     useEffect(() => {
-        //Dummy stand in, should be replaced.
         const fetchLobbies = async () => {
-            setTimeout(() => {
-                const dummyLobbies: Lobby[] = [
-                    { lobbyName: "Lobby 1", code: "ABC123" },
-                    { lobbyName: "Lobby 2", code: "DEF456" },
-                    { lobbyName: "Lobby 3", code: "GHI789" }
-                ];
-                setLobbies(dummyLobbies);
-            }, 1000); // Simulated delay of 1 second
+
+            try {
+                const response = await api.get("/lobbies/");
+                const lobbyData = response.data.map(lobby => new Lobby(lobby));
+                console.log(lobbyData);
+                setLobbies(lobbyData);
+
+            } catch (error) {
+                alert("Unable to display lobby data");
+            }
         };
         fetchLobbies();
     }, []);
@@ -51,41 +56,62 @@ const LobbyOverview = () => {
         setSelectedLobby((prevSelectedLobby) =>
             prevSelectedLobby === lobby ? null : lobby
         );
-        setLobbyCode(null);
+        setLobbyCode(lobby.lobbyCode);
     };
-    /*
-    1. Take previous input
-    2. Verify if previous input === current input: If yes, set lobby to null
-    3. Else, set lobby to the current lobby*/
 
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
 
-    const joinLobby = () => {
+    const joinLobby = async () => {
 
-        if (lobbyCode) {
-            alert("Joining a lobby through entering a lobby code");
-        }
-        else if (selectedLobby) {
-            alert("Joining a lobby through selection");
+        try {
+            const requestbody = [];
+
+            /* For some reason it is necessary to make the post request with
+             * a requestbody, if i leave it out, the post request returns an error. */
+
+            const config = {headers: {userToken: userToken}};
+            const response = await api.post("/lobbies/" + lobbyCode + "/players", requestbody, config);
+            console.log(response);
+            navigate("/lobby/" + lobbyCode)
+        } catch (error) {
+            handleError(error);
+            alert(("Unable to join lobby with lobbycode: " + lobbyCode));
         }
     }
 
-    const createLobby = () => {
-        alert("Creating lobbies is to be implemented!");
-    }
-    let content = <Spinner />;
+    const  createLobby = async () => {
 
-    if (lobbies) {
+        try {
+            const requestbody = {"anonymous" : false}
+            const config = {headers: {userToken: userToken}}
+            const response = await api.post("/lobbies", requestbody, config);
+            const createdLobby = response.data.lobby;
+            console.log(createdLobby);
+
+            navigate("/lobby/" + createdLobby.code);
+        }     catch (error) {
+            handleError(error)
+            alert("There was en error creating your lobby, check the log for details");
+        }
+    }
+
+    let content;
+
+    if (lobbies !== []) {
+        console.log(lobbies)
         content = (
+
             <div className="lobbyoverview">
                 <ul className="lobbyoverview lobby-list">
                     {lobbies.map((lobby: Lobby) => (
                         <li key={lobby.lobbyName}>
                             <LobbyItem
                                 lobby={lobby}
-                                onSelect={selectLobby}
+                                onSelect= {() => {
+                                    selectLobby(lobby)
+                                    setLobbyCode(lobby.code)}}
                                 isSelected={lobby === selectedLobby}
                             />
                         </li>
@@ -100,7 +126,8 @@ const LobbyOverview = () => {
                             value={lobbyCode || ""}
                             onChange={(lobbyCode) => {
                                 setLobbyCode(lobbyCode.target.value);
-                                setSelectedLobby(null)}}
+                                setSelectedLobby(null)
+                            }}
                             onSubmit={joinLobby}
                         />
                     </form>
@@ -109,9 +136,9 @@ const LobbyOverview = () => {
                         <Button
                             width="100%"
                             onClick={() => joinLobby()}
-                            disabled={!selectedLobby && !lobbyCode }
+                            disabled={!selectedLobby && !lobbyCode}
                         >
-                        Join Lobby
+                            Join Lobby
                         </Button>
 
                         <Button
@@ -119,13 +146,19 @@ const LobbyOverview = () => {
                             onClick={() => createLobby()}
                             disabled={selectedLobby || lobbyCode}
                         >
-                        Create Lobby
+                            Create Lobby
                         </Button>
                     </div>
                 </div>
             </div>
-        );
-    }
+        ); }
+    else {
+        content = (
+            <div className="lobbyoverview">
+                <p color="red">Currently no open lobbies</p>
+            </div>
+        )}
+
 
     return (
         <div className="container-wrapper">
@@ -143,6 +176,7 @@ const LobbyOverview = () => {
             )}
         </div>
     );
-};
+    
+}
 
 export default LobbyOverview;

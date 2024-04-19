@@ -1,15 +1,17 @@
-import React, {createContext, useState} from "react";
+import React, {createContext, useState, useEffect} from "react";
 import { Button } from "components/ui/Button";
 import QuitPopup from "components/popup-ui/QuitPopup";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {Gamemode, Player} from "../../types";
-import {useNavigate} from "react-router-dom";
-import IMAGES from "../../assets/images/index1.js"
+import {Gamemode} from "../../types";
+import { useParams } from "react-router-dom";
 import CopyButton from "../ui/CopyButton";
+import Player from "../../models/Player.js";
+import Lobby from "../../models/Lobby.js"
+import {api, handleError} from "../../helpers/api.js";
 
-const GamemodeItem = ({gamemode, onSelect, isSelected,}:
+const GamemodeItem = ({gamemode, onSelect, isSelected}:
     {
     gamemode: Gamemode;
     onSelect: (gamemode: Gamemode) => void;
@@ -35,31 +37,36 @@ const gamemodes= [
     { gamemodeName: "Wombo Combo!!", description: "Make some bomb combos" },
 ];
 
-const players= [
-    { name: "Rhinoceron", icon: IMAGES.RedSquid, token: "1"},
-    { name: "Froggy", icon: IMAGES.BlueFrog, token: "2"},
-    { name: "The big rock", icon: IMAGES.PinkBunny, token: "3"},
-];
-
-let lobbyOwner = true;
-
-let lobby;
-// method to check whether a player is the lobby Owner, also can be shown in the game lobby screen when implemented.
-function isLobbyOwner(player: Player) {
-    return player === lobby.owner;
-}
-
-// helper method to check for the winner of last round
-function islastWinner(player: Player)  {
-    return player === lobby.lastWinner;
-}
-
 export const context = createContext();
 
 const LobbyPage = () => {
-    const navigate = useNavigate();
     const [selectedGamemode, setSelectedGamemode] = useState<Gamemode>(null);
     const [quitPopup, setQuitPopup] = useState(false);
+    const [players, setPlayers] = useState<Player>([]);
+    const [lobby, setLobby] = useState<Lobby>([]);
+    const params = useParams();
+    const lobbycode = params.lobbycode;
+
+    useEffect(() => {
+        const fetchLobbyAndPlayers = async () => {
+            try {
+                const response = await api.get("/lobbies/" + lobbycode);
+                const lobbyData = new Lobby(response.data);
+
+                const playerData = response.data.players.map(player => new Player(player));
+
+                setLobby(lobbyData);
+                setPlayers(playerData)
+                console.log(lobby);
+                console.log(players);
+
+            } catch (error) {
+                handleError(error)
+                alert("Unable to display lobby data");
+            }
+        };
+        fetchLobbyAndPlayers();
+    }, [selectedGamemode]); //By adding this dependency, everytime a gamemode is selected, the players get updated
 
 
     const selectGamemode = (gamemode: Gamemode) => {
@@ -72,9 +79,28 @@ const LobbyPage = () => {
         setQuitPopup((prevState) => !prevState);
     }
 
-    const startGame = () => {
-        alert("To be implemented!");
-    };
+    // Still need to implement check for if user is lobbyowner (had problems with this)
+    function isLobbyOwner(player: Player) {
+        return true;
+    }
+
+    const startGame = async () => {
+
+        try {
+            alert("Starting game needs to be implemented")
+            /*const response = await api.post("/lobbies/" + lobby.code + "/players");
+            const playerData = response.data.map(player => new Player(player));
+            const lobbyData = response.data.map(lobby => new Lobby(lobby));
+            console.log(playerData);
+            console.log(lobbyData)
+            setPlayers(playerData);
+            setLobby(lobbyData)*/
+
+        } catch (error) {
+            handleError(error)
+            alert("Unable to display lobby data");
+        }
+    }
 
     let content = (
         <div>
@@ -105,14 +131,13 @@ const LobbyPage = () => {
                             <div className="player icon">
                                 <img src={player.icon} alt="player icon"/>
                             </div>
-                            <div className="player name">{player.name}
+                            <div className={isLobbyOwner(player) ? "player owner-name" : "player name"}>
+                                {player.name}
                             </div>
                         </div>
                     </li>
                 ))}
             </ul>
-
-
         </div>
 
     );
@@ -122,7 +147,7 @@ const LobbyPage = () => {
         <div className="container-wrapper">
             <BaseContainer>
                 <div className="lobbypage container">
-                    <h2>Grealish Lobby</h2>
+                    <h2>{lobby.name}</h2>
                     <div className="lobbypage game-and-players-container">
                         <div className="gamemode standard">
                             {content}
@@ -138,7 +163,7 @@ const LobbyPage = () => {
                         <Button
                             className="button"
                             onClick={() => startGame()}
-                            disabled={!selectedGamemode || !lobbyOwner}
+                            disabled={!selectedGamemode || isLobbyOwner}
                         >
                             Start Game
                         </Button>
@@ -152,7 +177,7 @@ const LobbyPage = () => {
                 </div>
             </BaseContainer>
             <div>
-                <CopyButton copyText="Lobby code"/>
+                <CopyButton copyText={lobby.code}/>
             </div>
             {quitPopup && (
                 <context.Provider value={{ quitPopup, setQuitPopup }}>
@@ -161,8 +186,6 @@ const LobbyPage = () => {
             }
 
         </div>
-
-
     );
 }
 
