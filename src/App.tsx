@@ -3,6 +3,7 @@ import Header from "./components/views/Header";
 import AppRouter from "./components/routing/routers/AppRouter";
 import Starscape from "./components/add/Starscape";
 import "styles/add/Starscape.scss";
+import useStompWebSocket from "./components/hooks/useStompWebSocket";
 
 /**
  * Happy coding!
@@ -11,10 +12,12 @@ import "styles/add/Starscape.scss";
  * Updated by Marco Leder
  */
 const App = () => {
+    const stompWebSocketHook = useStompWebSocket();
+
     return (
         <div>
             <Header height="100" />
-            <AppRouter />
+            <AppRouter stompWebSocketHook={stompWebSocketHook} />
             <div className="starscape">
                 <Starscape />
             </div>

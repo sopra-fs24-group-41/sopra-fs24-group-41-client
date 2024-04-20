@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Button } from "components/ui/Button";
@@ -11,7 +11,7 @@ const WebSocketTest = () => {
         brokerURL: "ws://localhost:8080/welcome",
         onConnect: (frame) => {
             console.log("Connected: " + frame);
-            stompClient.subscribe("/topic/greetings", (greeting) => {
+            stompClient.subscribe("/topic/lobby/6244", (greeting) => {
                 console.log(greeting)
                 showGreeting(greeting.body);
             });
@@ -45,7 +45,7 @@ const WebSocketTest = () => {
     return (
         <BaseContainer className="overview container">
             <h2>Websocket Test</h2>
-            <p className="greeting">
+            <div className="greeting">
                 <Button onClick={() => stompClient.activate()}>
                     connect
                 </Button>
@@ -64,7 +64,7 @@ const WebSocketTest = () => {
                             {greeting}
                         </li>)}
                 </ul>
-            </p>
+            </div>
         </BaseContainer>
     )
 }

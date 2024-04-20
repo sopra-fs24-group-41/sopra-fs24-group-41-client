@@ -11,6 +11,8 @@ import Profile from "../../views/Profile";
 import Result from "../../views/Result";
 import Game from "../../views/GameBoard/Game";
 import WebSocketTest from "../../views/WebSocketTest"
+import StompWebSocketComponent from "../../views/StompWebSocketComponent";
+import PropTypes from "prop-types";
 
 
 /**
@@ -22,7 +24,7 @@ import WebSocketTest from "../../views/WebSocketTest"
  * /game renders a Router that contains other sub-routes that render in turn other react components
  * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
-const AppRouter = () => {
+const AppRouter = ({ stompWebSocketHook }) => {
     return (
         <BrowserRouter>
             <Routes>
@@ -45,6 +47,8 @@ const AppRouter = () => {
 
                 <Route path="/test" element={<WebSocketTest/>} />
 
+                <Route path="/websocket-demo" element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook}/>} />
+
                 <Route path="/" element={
                     <Navigate to="/lobbyoverview" replace />
                 }/>
@@ -53,6 +57,10 @@ const AppRouter = () => {
         </BrowserRouter>
     );
 };
+
+AppRouter.propTypes = {
+    stompWebSocketHook: PropTypes.object,
+}
 
 /*
 * Don't forget to export your component!
