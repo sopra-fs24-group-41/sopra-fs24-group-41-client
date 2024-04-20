@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 
 const StompWebSocketComponent = ({ stompWebSocketHook }) => {
     const [input, setInput] = useState("");
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
 
     const handleSubscribe = () => {
         stompWebSocketHook.subscribe(input);
@@ -19,19 +21,19 @@ const StompWebSocketComponent = ({ stompWebSocketHook }) => {
         setInput("");
     };
 
-    // useEffect(() => {
-    //     if (stompWebSocketHook && stompWebSocketHook.connected === true) {
-    //         setInput("/topic/greetings")
-    //         handleSubscribe();
-    //     }
-    //
-    //     return () => {
-    //         if (stompWebSocketHook && stompWebSocketHook.connected === true) {
-    //             setInput("/topic/greetings")
-    //             handleUnsubscribe();
-    //         }
-    //     }
-    // }, [stompWebSocketHook.connected]);
+    useEffect(() => {
+        if (stompWebSocketHook && stompWebSocketHook.connected === true) {
+            stompWebSocketHook.subscribe("/topic/greetings")
+            forceUpdate()
+        }
+
+        return () => {
+            if (stompWebSocketHook && stompWebSocketHook.connected === true) {
+                stompWebSocketHook.unsubscribe("/topic/greetings");
+                forceUpdate()
+            }
+        }
+    }, [stompWebSocketHook.connected]);
 
     return (
         <div>

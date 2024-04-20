@@ -1,9 +1,11 @@
-import React from "react";
+import { React, useRef } from "react";
 import Header from "./components/views/Header";
 import AppRouter from "./components/routing/routers/AppRouter";
 import Starscape from "./components/add/Starscape";
 import "styles/add/Starscape.scss";
 import useStompWebSocket from "./components/hooks/useStompWebSocket";
+import { Client } from "@stomp/stompjs";
+import { getDomain } from "./helpers/getDomain";
 
 /**
  * Happy coding!
@@ -12,7 +14,12 @@ import useStompWebSocket from "./components/hooks/useStompWebSocket";
  * Updated by Marco Leder
  */
 const App = () => {
-    const stompWebSocketHook = useStompWebSocket();
+    const client = useRef(new Client({
+        brokerURL: getDomain()+"/welcome",
+        reconnectDelay: 5000,
+    }));
+
+    const stompWebSocketHook = useStompWebSocket(client);
 
     return (
         <div>
