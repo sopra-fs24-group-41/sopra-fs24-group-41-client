@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const StompWebSocketComponent = ({ stompWebSocketHook }) => {
     const [input, setInput] = useState("");
+    const [destination, setDestination] = useState("/app/hello");
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
@@ -19,10 +20,16 @@ const StompWebSocketComponent = ({ stompWebSocketHook }) => {
     };
 
     const handleSendMessage = () => {
-        stompWebSocketHook.sendMessage("/app/hello", { message: input });
+        stompWebSocketHook.sendMessage(destination, input);
         setInput("");
         forceUpdate();
     };
+
+    const handleDestinationUpdate = () => {
+        setDestination(input);
+        setInput("");
+        forceUpdate();
+    }
 
     useEffect(() => {
         if (stompWebSocketHook && stompWebSocketHook.connected === true) {
@@ -61,9 +68,10 @@ const StompWebSocketComponent = ({ stompWebSocketHook }) => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
             />
-            <button onClick={handleSendMessage}>Send Message</button>
+            <button onClick={handleSendMessage}>Send Message to {destination}</button>
             <button onClick={handleSubscribe}>Subscribe</button>
             <button onClick={handleUnsubscribe}>Unsubscribe</button>
+            <button onClick={handleDestinationUpdate}>Update Message Destination</button>
         </div>
     );
 };

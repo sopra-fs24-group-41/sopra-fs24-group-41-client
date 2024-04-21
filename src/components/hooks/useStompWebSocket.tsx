@@ -14,6 +14,7 @@ const useStompWebSocket = (client) => {
 
         client.current.onWebSocketClose = function(e) {
             setConnected(false);
+            subscriptionsRef.current = {};
             console.log("Socket closed: ", e);
         };
 
@@ -35,12 +36,16 @@ const useStompWebSocket = (client) => {
 
     const subscribe = (destination) => {
         if (client.current.connected) {
-            const subscription = client.current.subscribe(destination, (message) => {
-                const receivedMessage = JSON.parse(message.body).message;
-                console.log(JSON.parse(message.body).message);
-                setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+            subscriptionsRef.current[destination] = client.current.subscribe(destination, (message) => {
+                try {
+                    const receivedMessage = JSON.parse(message.body);
+                    console.log(receivedMessage);
+                    setMessages((prevMessages) => [...prevMessages, receivedMessage.message]);
+                } catch (e) {
+                    console.log(message.body);
+                    setMessages((prevMessages) => [...prevMessages, message.body]);
+                }
             });
-            subscriptionsRef.current[destination] = subscription;
             console.log("subscribed to ", destination);
         } else {
             alert("no websocket connection");
