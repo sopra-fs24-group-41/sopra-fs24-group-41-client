@@ -20,7 +20,10 @@ const ProfileIcon = ({ Current, isEditing, SelectedImage }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(IMAGES[currValid(Current)]);
     const [imageX, setImageX] = useState();
-    SelectedImage(imageX);
+    
+    useEffect(() => {
+        SelectedImage(imageX);
+    }, [imageX, SelectedImage]);
 
 
     const handleIconClick = () => {

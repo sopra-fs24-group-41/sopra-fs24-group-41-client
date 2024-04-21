@@ -41,7 +41,7 @@ const Profile = () => {
 
     const updateUserData = async (username, favourite) => {
         const prevUsername = userData.username;
-        const prevFavourite = userData.favourite;
+        const prevFavourite = (userData.favourite === null) ? "Zaddy" : userData.favourite;
         const prevProfilePicture = userData.profilePicture;
         try {
             const token = localStorage.getItem("token"); 
