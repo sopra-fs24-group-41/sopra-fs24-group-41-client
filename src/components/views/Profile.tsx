@@ -57,6 +57,7 @@ const Profile = () => {
             }, config);
             
             console.log("User data updated successfully:", response.data);
+            setFavourite(favourite);
         } catch (error) {
             alert("Failed to update user data:\n" + error.response.data.message);
             setUsername(prevUsername);
