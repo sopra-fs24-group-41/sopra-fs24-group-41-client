@@ -27,7 +27,9 @@ const Profile = () => {
                 console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
-                !userData.favourite ? setFavourite("Zaddy") : setFavourite(userData.favourite)
+                console.log("userData.favourite:", userdata.favourite);
+                let fav = (userdata.favourite === null) ? "Zaddy" : userdata.favourite;
+                setFavourite(fav)
   
             } catch (error) {
                 alert("Server Connection Lost");
@@ -40,6 +42,7 @@ const Profile = () => {
     const updateUserData = async (username, favourite) => {
         const prevUsername = userData.username;
         const prevFavourite = userData.favourite;
+        const prevProfilePicture = userData.profilePicture;
         try {
             const token = localStorage.getItem("token"); 
             const userID = localStorage.getItem("userID");
@@ -61,7 +64,8 @@ const Profile = () => {
         } catch (error) {
             alert("Failed to update user data:\n" + error.response.data.message);
             setUsername(prevUsername);
-            setFavourite("Zaddy");
+            setFavourite(prevFavourite);
+            setProfilePicture(prevProfilePicture);
         }
     };
 
