@@ -10,6 +10,7 @@ class User {
         this.wins = null;
         this.losses = null;
         this.creationDate = null;
+        this.favourite = null;
         Object.assign(this, data);
     }
 }
