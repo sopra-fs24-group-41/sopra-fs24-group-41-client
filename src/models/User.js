@@ -11,6 +11,7 @@ class User {
         this.losses = null;
         this.creationDate = null;
         this.ownedLobby = null;
+        this.favourite = null;
         Object.assign(this, data);
     }
 }

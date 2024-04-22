@@ -9,16 +9,13 @@ import ProfileIcon from "components/ui/ProfileIcon";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
 
-
 const Profile = () => {
     const navigate = useNavigate();
-    const user = localStorage.getItem("currentUser");
-    localStorage.setItem("test", user);
     const [username, setUsername] = useState();
     const [favourite, setFavourite] = useState(null);
+    const [profilePicture, setProfilePicture] = useState();
     const [isEditing, setIsEditing] = useState(false);
     const [userData, setUserData] = useState({username: "...", status: "..."});
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,7 +27,9 @@ const Profile = () => {
                 console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
-                !userData.favourite ? setFavourite("Zaddy") : setFavourite(userData.favourite)
+                console.log("userData.favourite:", userdata.favourite);
+                let fav = (userdata.favourite === null) ? "Zaddy" : userdata.favourite;
+                setFavourite(fav)
   
             } catch (error) {
                 alert("Server Connection Lost");
@@ -42,7 +41,8 @@ const Profile = () => {
 
     const updateUserData = async (username, favourite) => {
         const prevUsername = userData.username;
-        const prevFavourite = userData.favourite;
+        const prevFavourite = (userData.favourite === null) ? "Zaddy" : userData.favourite;
+        const prevProfilePicture = userData.profilePicture;
         try {
             const token = localStorage.getItem("token"); 
             const userID = localStorage.getItem("userID");
@@ -55,17 +55,19 @@ const Profile = () => {
     
             const response = await api.put("/users/" + userID, {
                 username: username,
-                favourite: favourite, 
+                favourite: favourite,
+                profilePicture : profilePicture, 
             }, config);
             
             console.log("User data updated successfully:", response.data);
+            setFavourite(favourite);
         } catch (error) {
             alert("Failed to update user data:\n" + error.response.data.message);
             setUsername(prevUsername);
-            setFavourite("Zaddy");
+            setFavourite(prevFavourite);
+            setProfilePicture(prevProfilePicture);
         }
     };
-    
 
     const handleEdit = () => {
         if (isEditing) {
@@ -78,9 +80,15 @@ const Profile = () => {
 
     const handleDate = (dateString) =>{
         const dateObject = new Date(dateString);
-
+        
         return format(dateObject, "dd-MM-yyyy");
     }
+
+    const handleSelectImage = (image) => {
+        if (profilePicture !== image) {
+            setProfilePicture(image);
+        }            
+    };
 
     const tableData = [
         {
@@ -117,7 +125,7 @@ const Profile = () => {
         <BaseContainer>
             <div className="profile container">
                 <div className="profile back">
-                    <ProfileIcon />
+                    <ProfileIcon Current={userData.profilePicture} isEditing={isEditing} SelectedImage={handleSelectImage} />
                     <table className="profile table">
                         <tbody>
                             {tableData.map((row, index) => (

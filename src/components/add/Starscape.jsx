@@ -1,14 +1,27 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import {ResContext} from "../views/Result";
 import PropTypes from "prop-types"; // Import PropTypes
 import gsap from "gsap";
 
-const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scaleLimit = 2, proximityRatio = 0.2 }) => {
+const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scaleLimit = 2}) => {
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
     const starsRef = useRef(null);
     const vminRef = useRef(null);
     const scaleMapperRef = useRef(null);
     const alphaMapperRef = useRef(null);
+
+    const res = useContext(ResContext) || 0;
+    
+    const resChange = (res)=>{
+        if(res===1) return [45, 100, 50];
+        if(res===2) return [240, 100, 80];
+        else return [0, 100, 100];
+    }
+
+    //Values that should be changed
+    let proximityRatio = 0.2;
+    let [hue, saturation, lightness] = resChange(res);
 
     useEffect(() => {
         contextRef.current = canvasRef.current.getContext("2d");
@@ -32,7 +45,11 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
         const RENDER = () => {
             contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             starsRef.current.forEach(star => {
-                contextRef.current.fillStyle = `hsla(0, 100%, 100%, ${star.alpha})`;
+                
+                // Construct the HSL color string with the specified values
+                contextRef.current.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${star.alpha})`;
+                
+                // Draw the star
                 contextRef.current.beginPath();
                 contextRef.current.arc(star.x, star.y, (star.size / 2) * star.scale, 0, Math.PI * 2);
                 contextRef.current.fill();
@@ -45,6 +62,8 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
                 gsap.to(STAR, {
                     scale: scaleMapperRef.current(Math.min(DISTANCE, vminRef.current * proximityRatio)),
                     alpha: alphaMapperRef.current(Math.min(DISTANCE, vminRef.current * proximityRatio)),
+                    // scale: 1,
+                    // alpha: 1
                 });
             });
         };
