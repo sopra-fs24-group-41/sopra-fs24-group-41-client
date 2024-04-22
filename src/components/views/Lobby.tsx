@@ -4,11 +4,11 @@ import QuitPopup from "components/popup-ui/QuitPopup";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {Gamemode} from "../../types";
 import { useParams } from "react-router-dom";
 import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js"
+import Gamemode from "../../models/GameMode.js";
 import {api, handleError} from "../../helpers/api.js";
 
 const GamemodeItem = ({gamemode, onSelect, isSelected}:
@@ -21,7 +21,7 @@ const GamemodeItem = ({gamemode, onSelect, isSelected}:
         className={`gamemode container${isSelected ? " selected" : ""}`}
         onClick={() => onSelect(gamemode)}
     >
-        <div className="gamemode name">{gamemode.gamemodeName}</div>
+        <div className="gamemode name">{gamemode.name}</div>
         <div className="gamemode description">{gamemode.description}</div>
     </div>
 );
@@ -32,9 +32,9 @@ GamemodeItem.propTypes = {
 };
 
 const gamemodes= [
-    { gamemodeName: "Fusion Frenzy", description: "How fast are you?" },
-    { gamemodeName: "Casual", description: "chill and relaxed" },
-    { gamemodeName: "Wombo Combo!!", description: "Make some bomb combos" },
+    { name: "Fusion Frenzy", description: "How fast are you?" },
+    { name: "Casual", description: "chill and relaxed" },
+    { name: "Wombo Combo!!", description: "Make some bomb combos" },
 ];
 
 export const context = createContext();
@@ -52,12 +52,12 @@ const LobbyPage = () => {
             try {
                 const response = await api.get("/lobbies/" + lobbycode);
                 const lobbyData = new Lobby(response.data);
-
                 const playerData = response.data.players.map(player => new Player(player));
-
                 setLobby(lobbyData);
-                setPlayers(playerData)
+                setPlayers(playerData);
+                console.log("this is the lobby");
                 console.log(lobby);
+                console.log("this is the players");
                 console.log(players);
 
             } catch (error) {
@@ -66,7 +66,7 @@ const LobbyPage = () => {
             }
         };
         fetchLobbyAndPlayers();
-    }, [selectedGamemode]); //By adding this dependency, everytime a gamemode is selected, the players get updated
+    }, []);
 
 
     const selectGamemode = (gamemode: Gamemode) => {
@@ -98,7 +98,7 @@ const LobbyPage = () => {
 
         } catch (error) {
             handleError(error)
-            alert("Unable to display lobby data");
+            alert(handleError(error))
         }
     }
 
@@ -107,7 +107,7 @@ const LobbyPage = () => {
             <p>Select a Gamemode</p>
             <ul className="gamemode list">
                 {gamemodes.map((gamemode: Gamemode) => (
-                    <li key={gamemode.gamemodeName}>
+                    <li key={gamemode.name}>
                         <GamemodeItem
                             gamemode={gamemode}
                             onSelect={selectGamemode}
@@ -116,8 +116,6 @@ const LobbyPage = () => {
                     </li>
                 ))}
             </ul>
-
-
         </div>
     );
 
@@ -161,14 +159,14 @@ const LobbyPage = () => {
                     </div>
                     <div className="button-container">
                         <Button
-                            className="button"
+                            className="button-container button"
                             onClick={() => startGame()}
                             disabled={!selectedGamemode || isLobbyOwner}
                         >
                             Start Game
                         </Button>
                         <Button
-                            className="button"
+                            className="button-container button"
                             onClick={() => handleQuit()}
                         >
                             Quit

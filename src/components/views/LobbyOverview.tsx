@@ -39,13 +39,14 @@ const LobbyOverview = () => {
         const fetchLobbies = async () => {
 
             try {
-                const response = await api.get("/lobbies/");
+                const response = await api.get("/lobbies");
+                console.log(response)
                 const lobbyData = response.data.map(lobby => new Lobby(lobby));
-                console.log(lobbyData);
                 setLobbies(lobbyData);
 
             } catch (error) {
-                alert("Unable to display lobby data");
+                handleError(error);
+                alert(handleError(error));
             }
         };
         fetchLobbies();
@@ -56,7 +57,11 @@ const LobbyOverview = () => {
         setSelectedLobby((prevSelectedLobby) =>
             prevSelectedLobby === lobby ? null : lobby
         );
-        setLobbyCode(lobby.lobbyCode);
+        if (lobby === selectedLobby) {
+            setLobbyCode("");
+        } else {
+            setLobbyCode(lobby.code);
+        }
     };
 
     const iconClick = () => {
@@ -67,17 +72,14 @@ const LobbyOverview = () => {
 
         try {
             const requestbody = [];
-
-            /* For some reason it is necessary to make the post request with
-             * a requestbody, if i leave it out, the post request returns an error. */
-
             const config = {headers: {userToken: userToken}};
             const response = await api.post("/lobbies/" + lobbyCode + "/players", requestbody, config);
-            console.log(response);
-            navigate("/lobby/" + lobbyCode)
+            navigate("/lobby/" + lobbyCode);
+            localStorage.setItem("playerToken", response.data.playerToken);
+            localStorage.setItem("playerID", response.data.playerId);
         } catch (error) {
             handleError(error);
-            alert(("Unable to join lobby with lobbycode: " + lobbyCode));
+            alert(handleError(error));
         }
     }
 
@@ -89,11 +91,14 @@ const LobbyOverview = () => {
             const response = await api.post("/lobbies", requestbody, config);
             const createdLobby = response.data.lobby;
             console.log(createdLobby);
+            localStorage.setItem("playerToken", response.data.playerToken);
+            localStorage.setItem("playerID", response.data.playerId);
+            console.log(createdLobby);
 
             navigate("/lobby/" + createdLobby.code);
         }     catch (error) {
             handleError(error)
-            alert("There was en error creating your lobby, check the log for details");
+            alert(handleError(error))
         }
     }
 
@@ -109,9 +114,7 @@ const LobbyOverview = () => {
                         <li key={lobby.lobbyName}>
                             <LobbyItem
                                 lobby={lobby}
-                                onSelect= {() => {
-                                    selectLobby(lobby)
-                                    setLobbyCode(lobby.code)}}
+                                onSelect= {() => selectLobby(lobby)}
                                 isSelected={lobby === selectedLobby}
                             />
                         </li>

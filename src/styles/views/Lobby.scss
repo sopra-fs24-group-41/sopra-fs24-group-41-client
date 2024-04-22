@@ -126,14 +126,6 @@
     color: aqua;
   }
 
-  &.owner-name {
-    color: aqua;
-  }
-
-  &.owner-name {
-    color: aqua;
-  }
-
   &.icon {
     position: relative;
 
@@ -172,19 +164,18 @@
   gap: 1em;
   align-items: center;
 
-}
+  &.button {
+    width: 240px;
+    position: relative;
+    transform: translateX(+8%);
 
-.button {
-  width: 240px;
-  position: relative;
-  transform: translateX(+8%);
-
+    &:hover {
+      transform: translate(8%, -2px)
+    }
+  }
 
 
   &:disabled {
     pointer-events: none;
   }
 }
-
-
-

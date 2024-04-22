@@ -3,7 +3,8 @@
  */
 class Player {
     constructor(data = {}) {
-        this.username = null;
+        this.name = null;
+        this.id = null;
         this.token = null;
         this.wins = null;
         this.losses= null;
