@@ -26,7 +26,7 @@ const QuitPopup = () => {
             navigate("/lobbyoverview");
         } catch (error) {
             handleError(error);
-            alert("It didn't work it seems.");
+            alert("Something went wrong on the server side, please try again");
         }
     }
 
