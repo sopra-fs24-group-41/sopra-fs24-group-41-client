@@ -79,6 +79,7 @@ const LobbyPage = () => {
                 if (matchingUser) {
                     updatedPlayer.icon = matchingUser.profilePicture;
                 }
+                
                 return updatedPlayer;
             }); 
             setPlayers(updatedPlayers);
