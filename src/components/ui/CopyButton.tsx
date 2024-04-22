@@ -4,7 +4,7 @@ import { Button } from "./Button";
 import "styles/ui/CopyButton.scss";
 
 CopyButton.propTypes = {
-    copyText: PropTypes.number.isRequired
+    copyText: PropTypes.number
 }
 
 function CopyButton({ copyText }) {

@@ -10,6 +10,9 @@ import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js"
 import Gamemode from "../../models/GameMode.js";
 import {api, handleError} from "../../helpers/api.js";
+import { User } from "types";
+import IMAGES from "../../assets/images/index1.js"
+
 
 const GamemodeItem = ({gamemode, onSelect, isSelected}:
     {
@@ -44,30 +47,44 @@ const LobbyPage = () => {
     const [quitPopup, setQuitPopup] = useState(false);
     const [players, setPlayers] = useState<Player>([]);
     const [lobby, setLobby] = useState<Lobby>([]);
+    const [users, setUsers] = useState<User[]>(null);
     const params = useParams();
     const lobbycode = params.lobbycode;
 
     useEffect(() => {
+        // Fetch lobby and players data
         const fetchLobbyAndPlayers = async () => {
             try {
                 const response = await api.get("/lobbies/" + lobbycode);
+                const specialResponse = await api.get("/users");
                 const lobbyData = new Lobby(response.data);
                 const playerData = response.data.players.map(player => new Player(player));
                 setLobby(lobbyData);
                 setPlayers(playerData);
-                console.log("this is the lobby");
-                console.log(lobby);
-                console.log("this is the players");
-                console.log(players);
-
+                setUsers(specialResponse.data);
+    
             } catch (error) {
                 handleError(error)
                 alert("Unable to display lobby data");
             }
         };
         fetchLobbyAndPlayers();
-    }, []);
-
+    }, [lobbycode]); // Add lobbycode as a dependency
+    
+    useEffect(() => {
+        if (users) { 
+            const updatedPlayers = players.map(player => {
+                const updatedPlayer = { ...player }; //Make copy of players
+                const matchingUser = users.find(user => user.username === updatedPlayer.name); //Works like a for-loop
+                if (matchingUser) {
+                    updatedPlayer.icon = matchingUser.profilePicture;
+                }
+                return updatedPlayer;
+            }); 
+            setPlayers(updatedPlayers);
+        } 
+    }, [users]); 
+    
 
     const selectGamemode = (gamemode: Gamemode) => {
         setSelectedGamemode((prevSelectedGamemode) =>
@@ -127,7 +144,7 @@ const LobbyPage = () => {
                     <li key={player.token}>
                         <div className="player container">
                             <div className="player icon">
-                                <img src={player.icon} alt="player icon"/>
+                                <img src={IMAGES[player.icon]} alt={"player icon"}/>
                             </div>
                             <div className={isLobbyOwner(player) ? "player owner-name" : "player name"}>
                                 {player.name}
