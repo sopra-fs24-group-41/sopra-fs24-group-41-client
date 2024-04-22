@@ -15,18 +15,19 @@ const QuitPopup = () => {
     const playerToken = localStorage.getItem("playerToken");
 
     const QuitLobby = async () => {
-
         try {
-            const requestBody = [];
-            const config = {headers: {playerToken: playerToken}};
+            const config = {
+                headers: {
+                    "playerToken": playerToken.toString()
+                }
+            };
             console.log("Executing delete request");
-            const response = await api.delete("/lobbies/" + lobbycode + "/players/" + playerID, requestBody, config);
+            await api.delete(`/lobbies/${lobbycode}/players/${playerID}`, config);
             navigate("/lobbyoverview");
         } catch (error) {
             handleError(error);
-            alert(handleError(error));
+            alert("It didn't work it seems.");
         }
-
     }
 
     return (
