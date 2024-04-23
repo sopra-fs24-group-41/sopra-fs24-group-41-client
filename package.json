@@ -3,6 +3,7 @@
   "version": "0.24.0",
   "private": true,
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.6.7",
     "date-fns": "^3.6.0",
     "eslint-config-react-app": "^7.0.1",
