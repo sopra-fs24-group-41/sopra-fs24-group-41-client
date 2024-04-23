@@ -22,6 +22,21 @@ class Player {
         
         return this.playerWords.map(playerWord => new Word(playerWord.word));
     }
+    
+    getNewestWord() {
+        if (!this.playerWords || this.playerWords.length === 0) {
+            return null;
+        }
+        
+        let newestPlayerWord = this.playerWords.reduce((prevWord, currentWord) => {
+            const prevTimestamp = new Date(prevWord.timestamp);
+            const currentTimestamp = new Date(currentWord.timestamp);
+            
+            return prevTimestamp > currentTimestamp ? prevWord : currentWord;
+        }, this.playerWords[0]);
+
+        return newestPlayerWord.word;
+    }
 }
 
 export default Player;

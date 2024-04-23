@@ -9,7 +9,7 @@ import LobbyOverview from "../../views/LobbyOverview"
 import Lobby from "../../views/Lobby";
 import Profile from "../../views/Profile";
 import Result from "../../views/Result";
-import Game from "../../views/GameBoard/Game";
+import Game from "../../views/Game/Game";
 
 
 /**
