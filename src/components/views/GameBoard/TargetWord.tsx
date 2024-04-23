@@ -11,6 +11,15 @@ import Word from "./Word";
 import { nextWordIndexContext, mergeWordListContext } from "./Game";
 
 const TargetWord = () => {
+    const fetchTargetWord = async() => {
+        try {
+            // ...
+            
+        } catch (error) {
+            alert(`Something went wrong while fetching the target word: \n${handleError(error)}`);
+        }
+    }
+
     return (
         <BaseContainer className="targetword container">
             <div className="targetword text">Target word:</div>
