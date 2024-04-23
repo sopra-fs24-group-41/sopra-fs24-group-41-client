@@ -9,6 +9,7 @@ import "styles/views/Game.scss";
 import { User } from "types";
 import WordBoard from "./WordBoard";
 import WordMergeBar from "./WordMergeBar";
+import TargetWord from "./TargetWord";
 
 export const nextWordIndexContext = createContext(123);
 
@@ -19,18 +20,23 @@ const Game = () => {
     const [mergeWordList, setMergeWordList] = useState<String>([]);
 
     return (
-        <BaseContainer className="game container">
-            <nextWordIndexContext.Provider
-                value={{ nextWordIndex, setNextWordIndex }}
-            >
-                <mergeWordListContext.Provider
-                    value={{ mergeWordList, setMergeWordList }}
+        <div>
+            <BaseContainer>
+                <TargetWord></TargetWord>
+            </BaseContainer>
+            <BaseContainer className="game container">
+                <nextWordIndexContext.Provider
+                    value={{ nextWordIndex, setNextWordIndex }}
                 >
-                    <WordMergeBar></WordMergeBar>
-                    <WordBoard></WordBoard>
-                </mergeWordListContext.Provider>
-            </nextWordIndexContext.Provider>
-        </BaseContainer>
+                    <mergeWordListContext.Provider
+                        value={{ mergeWordList, setMergeWordList }}
+                    >
+                        <WordMergeBar></WordMergeBar>
+                        <WordBoard></WordBoard>
+                    </mergeWordListContext.Provider>
+                </nextWordIndexContext.Provider>
+            </BaseContainer>
+        </div>
     );
 };
 

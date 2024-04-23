@@ -11,7 +11,7 @@ import { User } from "types";
 
 const Word = (props) => {
     return (
-        <Button {...props} className="word">
+        <Button {...props} className={`word ${props.className ?? ""}`}>
             {props.children}
         </Button>
     );
@@ -19,6 +19,7 @@ const Word = (props) => {
 
 Word.propTypes = {
     children: PropTypes.node,
+    className: PropTypes.string,
 };
 
 export default Word;

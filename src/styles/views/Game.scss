@@ -19,6 +19,31 @@
   }
 }
 
+.targetword {
+  &.container {
+    border-radius: $borderRadius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    background-color: #9b9b9b;
+    margin: 1em auto;
+    box-shadow: $dropShadow;
+  }
+
+  &.text {
+    font-size: 4em;
+    text-align: center;
+    display: flex;
+  }
+
+  &.word {
+    padding: 0.5em;
+    border-radius: calc(#{$borderRadius}/4);
+    font-size: 3em;
+  }
+}
+
 .wordmergebar {
   &.container {
     border-radius: $borderRadius;
