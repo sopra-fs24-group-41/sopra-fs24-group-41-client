@@ -1,17 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
-import { api, handleError } from "helpers/api";
-import { Spinner } from "components/ui/Spinner";
-import { Button } from "components/ui/Button";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import { User } from "types";
 import WordButton from "./WordButton";
-import { nextWordIndexContext, mergeWordListContext, playerContext } from "./Game";
+import { playerContext } from "./Game";
 
 const TargetWord = () => {
-    const { player, setPlayer} =
+    const { player} =
       useContext(playerContext);
 
     return (

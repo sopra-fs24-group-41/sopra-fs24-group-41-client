@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";

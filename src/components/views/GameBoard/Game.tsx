@@ -1,12 +1,11 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import WordBoard from "./WordBoard";
 import WordMergeBar from "./WordMergeBar";
 import Player from "models/Player";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import Word from "models/Word";
-import WordButton from "./WordButton";
 import PlayerList from "./PlayerList";
 import TargetWord from "./TargetWord";
 

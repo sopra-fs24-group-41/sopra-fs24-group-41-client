@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import WordButton from "./WordButton";

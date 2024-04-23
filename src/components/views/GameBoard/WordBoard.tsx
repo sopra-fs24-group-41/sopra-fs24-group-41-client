@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import Word from "models/Word";
 import WordButton from "./WordButton";
-import { api, handleError } from "helpers/api";
-import { nextWordIndexContext, mergeWordListContext, wordListContext, playerContext} from "./Game";
+import { api } from "helpers/api";
+import { nextWordIndexContext, mergeWordListContext, wordListContext, playerContext } from "./Game";
 
-const WordRow = ({ key, words }) => {
+interface WordRowProps {
+  key?: string;
+}
+
+const WordRow = ({ words, key }) => {
     return <div className="wordrow"> {words} </div>;
 };
 
@@ -23,25 +27,25 @@ const WordBoard = () => {
     useContext(mergeWordListContext);
     const { wordList, setWordList } =
     useContext(wordListContext);
-    const { player, setPlayer} =
+    const { player } =
     useContext(playerContext);
 
     const addWordToWordBoard = (name: string) => {
         let i;
         // See first if the given word is already discovered.
         for (i = 0; i < wordList.length; i++) if (name === wordList[i].name) break;
-        if (i === wordList.length) setWordList([...wordList, new Word({name : name})]);
+        if (i === wordList.length) setWordList([...wordList, new Word({ name: name })]);
     };
 
     const play = async (word1: string, word2: string) => {
         try {
             let response = await api.put(`/lobbies/${player.lobbyCode}/players/${player.id}`,
-                [new Word({name : word1}), new Word({name : word2})],
+                [new Word({ name: word1 }), new Word({ name: word2 })],
                 { headers: { "playerToken": player.token } });
             player.points = response.data.points;
             player.playerWords = response.data.playerWords;
             player.targetWord = response.data.targetWord;
-            
+
             return response.data.resultWord.name;
 
         } catch (error) {
