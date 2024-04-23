@@ -16,6 +16,7 @@
     align-items: center;
     background-color: $background;
     box-shadow: $dropShadow;
+    width: 900px;
   }
 }
 
@@ -29,6 +30,7 @@
     background-color: #9b9b9b;
     margin: 1em auto;
     box-shadow: $dropShadow;
+    width: 900px;
   }
 
   &.text {
