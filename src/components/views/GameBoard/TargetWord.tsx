@@ -11,19 +11,30 @@ import Word from "./Word";
 import { nextWordIndexContext, mergeWordListContext } from "./Game";
 
 const TargetWord = () => {
-    const fetchTargetWord = async() => {
-        try {
-            // ...
-            
-        } catch (error) {
-            alert(`Something went wrong while fetching the target word: \n${handleError(error)}`);
-        }
-    }
+    const [targetWord, setTargetWord] = useState<String>("");
+
+    useEffect(() => {
+        const fetchTargetWord = async () => {
+            try {
+                setTargetWord("target word");
+            } catch (error) {
+                alert(
+                    `Something went wrong while fetching the target word: \n${handleError(
+                        error
+                    )}`
+                );
+            }
+        };
+
+        fetchTargetWord();
+    }, []);
 
     return (
         <BaseContainer className="targetword container">
             <div className="targetword text">Target word:</div>
-            <Word key={0} className="targetword word">1234</Word>
+            <Word key={0} className="targetword word">
+                {targetWord}
+            </Word>
         </BaseContainer>
     );
 };
