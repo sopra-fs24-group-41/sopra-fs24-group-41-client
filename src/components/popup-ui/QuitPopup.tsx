@@ -21,8 +21,10 @@ const QuitPopup = () => {
                     "playerToken": playerToken.toString()
                 }
             };
-            console.log("Executing delete request");
             await api.delete(`/lobbies/${lobbycode}/players/${playerID}`, config);
+            localStorage.removeItem("playerID");
+            localStorage.removeItem("playerToken");
+            localStorage.removeItem("code");
             navigate("/lobbyoverview");
         } catch (error) {
             handleError(error);

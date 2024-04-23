@@ -29,12 +29,9 @@ const Profile = () => {
                     response.data.creationDate
                 );
                 const userdata = new User(response.data);
-                console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
-                console.log("userData.favourite:", userdata.favourite);
-                let fav =
-                    userdata.favourite === null ? "Zaddy" : userdata.favourite;
+                let fav = userdata.favourite === null ? "Zaddy" : userdata.favourite;
                 setFavourite(fav);
             } catch (error) {
                 alert("Server Connection lost");
@@ -69,7 +66,6 @@ const Profile = () => {
                 config
             );
 
-            console.log("User data updated successfully:", response.data);
             setFavourite(favourite);
         } catch (error) {
             alert(

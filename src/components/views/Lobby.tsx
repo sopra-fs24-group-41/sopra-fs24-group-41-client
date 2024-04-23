@@ -48,6 +48,7 @@ const LobbyPage = () => {
     const [players, setPlayers] = useState<Player>([]);
     const [lobby, setLobby] = useState<Lobby>([]);
     const [users, setUsers] = useState<User[]>(null);
+    const [owner, setOwner] = useState();
     const params = useParams();
     const lobbycode = params.lobbycode;
 
@@ -58,7 +59,8 @@ const LobbyPage = () => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 const specialResponse = await api.get("/users");
                 const lobbyData = new Lobby(response.data);
-                const playerData = response.data.players.map(player => new Player(player));
+                const playerData = lobbyData.players.map(player => new Player(player));
+                setOwner(lobbyData.owner.id);
                 setLobby(lobbyData);
                 setPlayers(playerData);
                 setUsers(specialResponse.data);
@@ -97,9 +99,8 @@ const LobbyPage = () => {
         setQuitPopup((prevState) => !prevState);
     }
 
-    // Still need to implement check for if user is lobbyowner (had problems with this)
-    function isLobbyOwner(player: Player) {
-        return true;
+    const isLobbyOwner = (player: Player) => {
+        return (player.id === owner.id) ? true : false;
     }
 
     const startGame = async () => {
@@ -142,12 +143,18 @@ const LobbyPage = () => {
             <p> Currently active players </p>
             <ul className="player list">
                 {players.map((player: Player) => (
-                    <li key={player.token}>
+                    <li key={player.id}>
                         <div className="player container">
                             <div className="player icon">
-                                <img src={IMAGES[player.icon]} alt={"player icon"}/>
+                                <img src={IMAGES[ (player.icon==="") ? "BlueFrog" : player.icon  ]}/>
                             </div>
-                            <div className={isLobbyOwner(player) ? "player owner-name" : "player name"}>
+                            <div
+                                className={
+                                    isLobbyOwner(player)
+                                        ? "player owner-name"
+                                        : "player name"
+                                }
+                            >
                                 {player.name}
                             </div>
                         </div>
@@ -155,7 +162,6 @@ const LobbyPage = () => {
                 ))}
             </ul>
         </div>
-
     );
 
     return (

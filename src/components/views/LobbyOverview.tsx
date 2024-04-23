@@ -40,7 +40,6 @@ const LobbyOverview = () => {
 
             try {
                 const response = await api.get("/lobbies");
-                console.log(response)
                 const lobbyData = response.data.map(lobby => new Lobby(lobby));
                 setLobbies(lobbyData);
 
@@ -90,10 +89,9 @@ const LobbyOverview = () => {
             const config = {headers: {userToken: userToken}}
             const response = await api.post("/lobbies", requestbody, config);
             const createdLobby = response.data.lobby;
-            console.log(createdLobby);
             localStorage.setItem("playerToken", response.data.playerToken);
             localStorage.setItem("playerID", response.data.playerId);
-            console.log(createdLobby);
+            localStorage.setItem("code", createdLobby.code);
 
             navigate("/lobby/" + createdLobby.code);
         }     catch (error) {
@@ -104,14 +102,12 @@ const LobbyOverview = () => {
 
     let content;
 
-    if (lobbies !== []) {
-        console.log(lobbies)
+    if (lobbies) {
         content = (
-
             <div className="lobbyoverview">
                 <ul className="lobbyoverview lobby-list">
                     {lobbies.map((lobby: Lobby) => (
-                        <li key={lobby.lobbyName}>
+                        <li key={lobby.code}>
                             <LobbyItem
                                 lobby={lobby}
                                 onSelect= {() => selectLobby(lobby)}

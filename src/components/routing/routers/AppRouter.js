@@ -1,12 +1,14 @@
 import React from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import GameRouter from "./GameRouter";
+import LobbyOverviewRouter from "./LobbyOverviewRouter";
+import LobbyRouter from "./LobbyRouter";
 import Login from "../../views/Login";
 import Registration from "../../views/Registration";
 import Lobby from "../../views/Lobby";
 import Profile from "../../views/Profile";
 import Result from "../../views/Result";
 import Game from "../../views/GameBoard/Game";
+import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 
 
 /**
@@ -23,7 +25,7 @@ const AppRouter = () => {
         <BrowserRouter>
             <Routes>
 
-                <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview"/>} />
+                <Route path="/lobbyoverview/*" element={<LobbyOverviewRouter base="/lobbyoverview"/>} />
 
                 <Route path="/login" element={<Login/>} />
 
@@ -35,7 +37,7 @@ const AppRouter = () => {
 
                 <Route path="/game" element={<Game/>} />
 
-                <Route path="/lobby" element={<Lobby/>}>
+                <Route path="/lobby" element={<LobbyGuard />}>
                     <Route path="/lobby/:lobbycode" element={<Lobby/>} />
                 </Route>
 

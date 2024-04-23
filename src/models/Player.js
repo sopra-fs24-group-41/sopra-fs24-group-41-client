@@ -9,6 +9,7 @@ class Player {
         this.wins = null;
         this.losses= null;
         this.user = null;
+        this.owned_lobby = null;
         Object.assign(this, data);
     }
 }
