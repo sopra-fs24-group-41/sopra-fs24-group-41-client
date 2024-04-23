@@ -7,34 +7,19 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
-import Word from "./Word";
-import { nextWordIndexContext, mergeWordListContext } from "./Game";
+import WordButton from "./WordButton";
+import { nextWordIndexContext, mergeWordListContext, playerContext } from "./Game";
 
 const TargetWord = () => {
-    const [targetWord, setTargetWord] = useState<String>("");
-
-    useEffect(() => {
-        const fetchTargetWord = async () => {
-            try {
-                setTargetWord("target word");
-            } catch (error) {
-                alert(
-                    `Something went wrong while fetching the target word: \n${handleError(
-                        error
-                    )}`
-                );
-            }
-        };
-
-        fetchTargetWord();
-    }, []);
+    const { player, setPlayer} =
+      useContext(playerContext);
 
     return (
         <BaseContainer className="targetword container">
             <div className="targetword text">Target word:</div>
-            <Word key={0} className="targetword word">
-                {targetWord}
-            </Word>
+            <WordButton key={0} className="targetword word">
+                {player.targetWord}
+            </WordButton>
         </BaseContainer>
     );
 };

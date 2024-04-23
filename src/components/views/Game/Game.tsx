@@ -8,6 +8,7 @@ import { api, handleError } from "helpers/api";
 import Word from "models/Word";
 import WordButton from "./WordButton";
 import PlayerList from "./PlayerList";
+import TargetWord from "./TargetWord";
 
 export const nextWordIndexContext = createContext(123);
 
@@ -75,23 +76,29 @@ const Game = () => {
     }, [players]);
 
     return (
-        <BaseContainer className="game base-container">
+        <div>
             <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
                 <mergeWordListContext.Provider value={{ mergeWordList, setMergeWordList }}>
                     <wordListContext.Provider value={{ wordList, setWordList }}>
-                        <playerContext.Provider value={{ player, setPlayer }}>
-                            <div className="game horizontal-container">
-                                <div className="game container">
-                                    <WordMergeBar></WordMergeBar>
-                                    <WordBoard></WordBoard>
+                        <playerContext.Provider value={{ player, setPlayer }}>    
+                            <BaseContainer>
+                                <TargetWord></TargetWord>
+                            </BaseContainer>
+                            <BaseContainer className="game base-container">
+
+                                <div className="game horizontal-container">
+                                    <div className="game container">
+                                        <WordMergeBar></WordMergeBar>
+                                        <WordBoard></WordBoard>
+                                    </div>
+                                    <PlayerList players={players}></PlayerList>
                                 </div>
-                                <PlayerList players={players}></PlayerList>
-                            </div>
+                            </BaseContainer>
                         </playerContext.Provider>
                     </wordListContext.Provider>
                 </mergeWordListContext.Provider>
             </nextWordIndexContext.Provider>
-        </BaseContainer>
+        </div>
     );
 };
 
