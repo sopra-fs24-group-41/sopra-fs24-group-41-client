@@ -6,7 +6,7 @@ import "styles/ui/Button.scss";
 
 const WordButton = (props) => {
     return (
-        <Button {...props} className="word">
+        <Button {...props} className={`word ${props.className ?? ""}`}>
             {props.children}
         </Button>
     );
@@ -14,6 +14,7 @@ const WordButton = (props) => {
 
 WordButton.propTypes = {
     children: PropTypes.node,
+    className: PropTypes.string,
 };
 
 export default WordButton;
