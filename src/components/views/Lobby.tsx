@@ -21,8 +21,8 @@ const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
                               ownerMode: boolean;
                           }) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode? "" : " inactive"}`}
-        onClick={(gamemode.active) ? () => onSelect(gamemode) : undefined}
+        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode ? "" : " inactive"}`}
+        onClick={(gamemode.active && ownerMode) ? () => onSelect(gamemode) : undefined}
     >
         <div className="gamemode name">{gamemode.name}</div>
         <div className="gamemode description">{gamemode.description}</div>
@@ -60,9 +60,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
-                setLobbyname(lobbyData.name);
-                setPublicA(lobbyData.publicAccess);
-                setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobbyData.mode));
                 if (lobbyData.owner.id === parseInt(localStorage.getItem("playerID"))) setOwnerMode(true);
             } catch (error) {
                 handleError(error);
@@ -74,12 +71,14 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         if (lobby.mode) setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobby.mode));
+        if (lobby.name) setLobbyname(lobby.name);
+        if (lobby.publicAccess) setPublicA(lobby.publicAccess);
     }, [lobby]);
 
     useEffect(() => {
         if (stompWebSocketHook.connected === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}`);
-            stompWebSocketHook.subscribe(`topic/lobbies/${lobbycode}/game`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}/game`);
         }
 
         return () => {
@@ -93,9 +92,16 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
         if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
-            const newLobbyData = new Lobby(stompWebSocketHook.messages[messagesLength - 1]);
+            const newObject = stompWebSocketHook.messages[messagesLength - 1];
+            const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
-            // TODO: start game when instruction arrives
+            if (newObject.instruction === "start") {
+                alert("game starts! redirecting to /lobby/code/game");
+                navigate(`/lobby/${lobbycode}/game`);
+            }
+            if (newObject.instruction === "kick" && !ownerMode) {
+                kick();
+            }
         }
     }, [stompWebSocketHook.messages]);
 
@@ -119,7 +125,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const selectGamemode = (gamemode: Gamemode) => {
-        if (gamemode !== selectedGamemode) updateLobby(null, lobby.publicAccess, gamemode.serverName);
+        if (gamemode !== selectedGamemode) updateLobby(null, null, gamemode.serverName);
         if (!ownerMode) return;
         setSelectedGamemode((prevSelectedGamemode) =>
             prevSelectedGamemode === gamemode ? null : gamemode,
@@ -138,14 +144,18 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 },
             };
             await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerID")}`, config);
-            localStorage.removeItem("playerID");
-            localStorage.removeItem("playerToken");
-            localStorage.removeItem("code");
-            navigate("/lobbyoverview");
+            kick();
         } catch (error) {
             handleError(error);
             alert("Something went wrong on the server side, please try again");
         }
+    };
+
+    const kick = () => {
+        localStorage.removeItem("playerID");
+        localStorage.removeItem("playerToken");
+        localStorage.removeItem("code");
+        navigate("/lobbyoverview");
     };
 
     const startGame = async () => {
@@ -156,7 +166,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         };
         try {
             await api.post(`/lobbies/${lobbycode}/games`, {}, config);
-            alert("start game was triggered!");
         } catch (error) {
             handleError(error);
             alert(handleError(error));
@@ -232,10 +241,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     };
 
-    const returnPublicStatus = ()=>{
-        if(publicA) return "Public";
+    const returnPublicStatus = () => {
+        if (publicA) return "Public";
         else return "Private";
-    }
+    };
 
     const handlePublicButton = () => {
         setPublicA(prevPublicA => !prevPublicA);
@@ -277,7 +286,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             className="button-container button"
                             onClick={() => startGame()}
                             disabled={!selectedGamemode || !ownerMode}
-                            // style={{cursor: "not-allowed"}}
                         >
                             Start Game
                         </Button>
