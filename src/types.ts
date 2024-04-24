@@ -2,11 +2,17 @@ export type User = {
   username: string;
   profilePicture: string;
   id: number;
+  player: Player;
 };
 
 export type Lobby = {
-  lobbyName: string;
-  code: string;
+  code: number;
+  name: string;
+  publicAccess: boolean;
+  status: string;
+  mode: string;
+  owner: Player;
+  players: Array<Player>;
 };
 
 export type Gamemode = {
@@ -15,7 +21,9 @@ export type Gamemode = {
 };
 
 export type Player = {
+  id: number;
   name: string;
+  points: number;
   icon: string;
   token: string;
   wins: string;
@@ -23,6 +31,9 @@ export type Player = {
   total_wins: string;
   total_losses: string;
   words_generated: string;
+  user: User;
+  owned_lobby: Lobby;
+  lobby: Lobby;
 }
 
 

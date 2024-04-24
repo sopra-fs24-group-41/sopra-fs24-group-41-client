@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 const StompWebSocketComponent = ({ stompWebSocketHook }) => {
@@ -29,7 +29,7 @@ const StompWebSocketComponent = ({ stompWebSocketHook }) => {
         setDestination(input);
         setInput("");
         forceUpdate();
-    }
+    };
 
     useEffect(() => {
         if (stompWebSocketHook && stompWebSocketHook.connected === true) {

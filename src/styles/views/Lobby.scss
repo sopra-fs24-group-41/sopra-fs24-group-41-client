@@ -46,6 +46,7 @@
     align-items: center;
     margin-left: 30px;
   }
+
   &.container {
     &:hover {
       transform: translateY(-2px);
@@ -67,6 +68,11 @@
     &.selected {
       background: lighten($background, 25);
       border: solid rgb(0, 0, 0)
+    }
+
+    &.inactive {
+      cursor: not-allowed;
+      transform: none;
     }
   }
 
@@ -104,8 +110,9 @@
     align-items: flex-start;
     width: 200px;
     height: 60px;
-    
+
   }
+
   &.list {
     list-style: none;
     padding-left: 0;
@@ -119,11 +126,10 @@
     margin-top: 15px;
     font-weight: 300;
     margin-left: 5px;
-    
-  }
 
-  &.owner-name {
-    color: aqua;
+    &.owner {
+      color: aqua;
+    }
   }
 
   &.icon {
