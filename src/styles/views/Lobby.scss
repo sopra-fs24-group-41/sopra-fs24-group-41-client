@@ -9,8 +9,7 @@
 
 .lobbypage {
   &.container {
-    position: absolute;
-
+    position: relative;
     left: 50%;
     transform: translate(-50%);
     padding-top: 1.5em;
@@ -65,15 +64,18 @@
     cursor: pointer;
     height: 70px;
 
+    &.inactive {
+      cursor: not-allowed;
+      transform: none;
+      background: lighten($background, 10);
+    }
     &.selected {
       background: lighten($background, 25);
       border: solid rgb(0, 0, 0)
     }
 
-    &.inactive {
-      cursor: not-allowed;
-      transform: none;
-    }
+
+
   }
 
   &.name {
