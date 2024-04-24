@@ -181,8 +181,31 @@
     }
   }
 
-
   &:disabled {
     pointer-events: none;
   }
 }
+
+.edit-button{
+  position: relative;
+  transform: translateX(+8%);
+  font-size: medium;
+
+  &:hover {
+    transform: translate(8%, -2px)
+  }
+}
+
+.public-private-button {
+  font-size: medium;
+  position: absolute;
+  top: 10px; 
+  left: 10px;
+  z-index: 100;
+
+  &:hover {
+    transform: translate(+8%);
+  }
+
+}
+

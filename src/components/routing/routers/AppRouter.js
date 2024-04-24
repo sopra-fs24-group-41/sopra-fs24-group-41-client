@@ -25,8 +25,7 @@ const AppRouter = ({ stompWebSocketHook }) => {
         <BrowserRouter>
             <Routes>
 
-                <Route path="/lobbyoverview/*" element={<LobbyOverviewRouter base="/lobbyoverview"
-                                                                             stompWebSocketHook={stompWebSocketHook} />} />
+                <Route path="/lobbyoverview/*" element={<LobbyOverviewRouter base="/lobbyoverview" stompWebSocketHook={stompWebSocketHook} />} />
 
                 <Route path="/login" element={<Login />} />
 
@@ -46,8 +45,7 @@ const AppRouter = ({ stompWebSocketHook }) => {
                     <Navigate to="/lobbyoverview" replace />
                 } />
 
-                <Route path="/websocket-demo"
-                       element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook} />} />
+                <Route path="/websocket-demo" element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook} />} />
 
             </Routes>
         </BrowserRouter>

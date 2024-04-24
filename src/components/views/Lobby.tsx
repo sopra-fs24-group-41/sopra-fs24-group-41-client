@@ -46,6 +46,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [quitPopup, setQuitPopup] = useState(false);
     const [lobby, setLobby] = useState<Lobby>({ players: [] });
     const [ownerMode, setOwnerMode] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [lobbyname, setLobbyname] = useState();
+    const [publicA, setPublicA] = useState();
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
@@ -57,6 +60,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
+                setLobbyname(lobbyData.name);
+                setPublicA(lobbyData.publicAccess);
                 setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobbyData.mode));
                 if (lobbyData.owner.id === parseInt(localStorage.getItem("playerID"))) setOwnerMode(true);
             } catch (error) {
@@ -200,11 +205,54 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         </div>
     );
 
+    const handleEdit = () => {
+        if (isEditing) {
+            updateLobby(lobbyname, null, null);
+            setIsEditing(false);
+        } else {
+            setIsEditing(true);
+        }
+    };
+
+    const editLobbyName = () => {
+        if (isEditing) {
+
+            return (
+                <input
+                    className="input-css"
+                    value={lobbyname}
+                    onChange={(e) => {
+                        setLobbyname(e.target.value);
+                    }}
+                />
+            );
+        } else {
+
+            return <span>{lobbyname}</span>;
+        }
+    };
+
+    const returnPublicStatus = ()=>{
+        if(publicA) return "Public";
+        else return "Private";
+    }
+
+    const handlePublicButton = () => {
+        setPublicA(prevPublicA => !prevPublicA);
+        updateLobby(null, !publicA, null);
+    };
+
     return (
         <div className="container-wrapper">
             <BaseContainer>
-                <div className="lobbypage container">
-                    <h2>{lobby.name}</h2>
+                <div className="lobbypage container" >
+                <Button className="public-private-button" onClick={handlePublicButton}>{returnPublicStatus()}</Button> 
+
+                    <h2>{editLobbyName()} 
+                        <Button className="edit-button" onClick={handleEdit}> 
+                            {isEditing ? "Save" : "Edit"}      
+                        </Button> 
+                    </h2>
                     <div className="lobbypage game-and-players-container">
                         <div className="gamemode standard">
                             {content}
