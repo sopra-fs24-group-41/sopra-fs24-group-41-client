@@ -245,22 +245,31 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     return (
         <div className="container-wrapper">
             <BaseContainer>
-                <div className="lobbypage container" >
-                <Button className="public-private-button" onClick={handlePublicButton}>{returnPublicStatus()}</Button> 
+                <div className="lobbypage container">
+                    {ownerMode && (
+                        <Button
+                            className="public-private-button"
+                            onClick={handlePublicButton}
+                        >
+                            {returnPublicStatus()}
+                        </Button>
+                    )}
 
-                    <h2>{editLobbyName()} 
-                        <Button className="edit-button" onClick={handleEdit}> 
-                            {isEditing ? "Save" : "Edit"}      
-                        </Button> 
+                    <h2>
+                        {editLobbyName()}
+                        {ownerMode && (
+                            <Button
+                                className="edit-button"
+                                onClick={handleEdit}
+                            >
+                                {isEditing ? "Save" : "Edit"}
+                            </Button>
+                        )}
                     </h2>
                     <div className="lobbypage game-and-players-container">
-                        <div className="gamemode standard">
-                            {content}
-                        </div>
+                        <div className="gamemode standard">{content}</div>
                         <BaseContainer className="player-list-container">
-                            <div>
-                                {playerListContent}
-                            </div>
+                            <div>{playerListContent}</div>
                         </BaseContainer>
                     </div>
                     <div className="button-container">
@@ -285,10 +294,12 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 <CopyButton copyText={lobby.code} />
             </div>
             {quitPopup && (
-                <context.Provider value={{ quitPopup, setQuitPopup, QuitLobby }}>
+                <context.Provider
+                    value={{ quitPopup, setQuitPopup, QuitLobby }}
+                >
                     <QuitPopup />
-                </context.Provider>)
-            }
+                </context.Provider>
+            )}
         </div>
     );
 };
