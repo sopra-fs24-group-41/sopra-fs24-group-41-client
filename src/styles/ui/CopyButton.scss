@@ -1,8 +1,8 @@
 @import "../theme";
 
 .copy-container {
-  position: relative;
-  transform: translateX(-190px);
+  position: absolute;
+  right: 175px;
   background: $background;
   border-radius: $borderRadius;
   display: flex;

@@ -13,14 +13,15 @@ import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 
 
-const GamemodeItem = ({ gamemode, onSelect, isSelected }:
+const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
                           {
                               gamemode: Gamemode;
                               onSelect: (gamemode: Gamemode) => void;
                               isSelected: boolean;
+                              ownerMode: boolean;
                           }) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active ? "" : " inactive"}`}
+        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode? "" : " inactive"}`}
         onClick={(gamemode.active) ? () => onSelect(gamemode) : undefined}
     >
         <div className="gamemode name">{gamemode.name}</div>
@@ -114,6 +115,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const selectGamemode = (gamemode: Gamemode) => {
         if (gamemode !== selectedGamemode) updateLobby(null, lobby.publicAccess, gamemode.serverName);
+        if (!ownerMode) return;
         setSelectedGamemode((prevSelectedGamemode) =>
             prevSelectedGamemode === gamemode ? null : gamemode,
         );
@@ -166,6 +168,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             gamemode={gamemode}
                             onSelect={selectGamemode}
                             isSelected={gamemode === selectedGamemode}
+                            ownerMode={ownerMode}
                         />
                     </li>
                 ))}
