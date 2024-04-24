@@ -81,11 +81,26 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         }
     };
 
+    const checkLogin = () => {
+        const token = localStorage.getItem("token");
+        if (token === null) {
+            alert("Please login to gain further access");
+
+            return false;
+        }
+        
+        return true;
+    };
+
+
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
 
     const joinLobby = async () => {
+        if (!checkLogin()) {
+            return; // Stop execution if the user is not logged in
+        }
         try {
             const requestbody = [];
             const config = { headers: { userToken: userToken } };
@@ -100,6 +115,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const createLobby = async () => {
+        if (!checkLogin()) {
+            return; // Stop execution if the user is not logged in
+        }
         try {
             const requestBody = { "publicAccess": true };
             const config = { headers: { userToken: userToken } };
