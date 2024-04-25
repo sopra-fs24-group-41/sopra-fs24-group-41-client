@@ -41,8 +41,8 @@ const Login = () => {
             // Get the returned user and update a new object.
             const user = new User(responseLogin.data);
             // Store the token into the local storage.
-            localStorage.setItem("userID", user.id);
-            localStorage.setItem("token", user.token);
+            localStorage.setItem("userId", user.id);
+            localStorage.setItem("userToken", user.token);
             navigate("/lobbyoverview");
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);

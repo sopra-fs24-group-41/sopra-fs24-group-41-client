@@ -60,7 +60,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
-                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerID"))) setOwnerMode(true);
+                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
             } catch (error) {
                 handleError(error);
                 alert("Unable to display lobby data");
@@ -96,8 +96,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
             if (newObject.instruction === "start") {
-                alert("game starts! redirecting to /lobby/code/game");
-                navigate(`/lobby/${lobbycode}/game`);
+                navigate("/lobby/game");
             }
             if (newObject.instruction === "kick" && !ownerMode) {
                 kick();
@@ -143,7 +142,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     "playerToken": localStorage.getItem("playerToken").toString(),
                 },
             };
-            await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerID")}`, config);
+            await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerId")}`, config);
             kick();
         } catch (error) {
             handleError(error);
@@ -152,9 +151,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const kick = () => {
-        localStorage.removeItem("playerID");
+        localStorage.removeItem("playerId");
         localStorage.removeItem("playerToken");
-        localStorage.removeItem("code");
+        localStorage.removeItem("lobbyCode");
         navigate("/lobbyoverview");
     };
 

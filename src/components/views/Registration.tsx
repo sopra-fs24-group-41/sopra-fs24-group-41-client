@@ -62,8 +62,8 @@ const Registration = () => {
             // Get the returned user and update a new object.
             const user = new User(responseLogin.data);
             // Store the token into the local storage.
-            localStorage.setItem("userID", user.id);
-            localStorage.setItem("token", user.token);
+            localStorage.setItem("userId", user.id);
+            localStorage.setItem("userToken", user.token);
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
             navigate("/lobbyoverview");

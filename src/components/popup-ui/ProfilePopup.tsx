@@ -10,11 +10,11 @@ const ProfilePopup = () => {
 
     const doLogout = async () => {
         try {
-            const token = localStorage.getItem("token");
+            const token = localStorage.getItem("userToken");
             const requestBody = JSON.stringify({ token });
             console.log(requestBody);
             await api.post("/logouts", requestBody);
-            localStorage.removeItem("token");
+            localStorage.removeItem("userToken");
             navigate("/login");
         } catch (error) {
             if (error.response && error.response.status === 404) {
@@ -22,7 +22,7 @@ const ProfilePopup = () => {
             } else {
                 alert(`Something went wrong during the logout: \n${handleError(error)}`);
             }
-            localStorage.removeItem("token");
+            localStorage.removeItem("userToken");
             window.location.reload();
         }
     };

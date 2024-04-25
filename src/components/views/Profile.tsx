@@ -23,8 +23,8 @@ const Profile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userID = localStorage.getItem("userID");
-                let response = await api.get("/users/" + userID);
+                const userId = localStorage.getItem("userId");
+                let response = await api.get("/users/" + userId);
                 response.data.creationDate = handleDate(
                     response.data.creationDate
                 );
@@ -47,8 +47,8 @@ const Profile = () => {
             userData.favourite === null ? "Zaddy" : userData.favourite;
         const prevProfilePicture = userData.profilePicture;
         try {
-            const token = localStorage.getItem("token");
-            const userID = localStorage.getItem("userID");
+            const token = localStorage.getItem("userToken");
+            const userId = localStorage.getItem("userId");
             const config = {
                 headers: {
                     Authorization: token,
@@ -57,7 +57,7 @@ const Profile = () => {
             };
 
             const response = await api.put(
-                "/users/" + userID,
+                "/users/" + userId,
                 {
                     username: username,
                     favourite: favourite,
