@@ -16,9 +16,6 @@ export const mergeWordListContext = createContext([]);
 export const wordListContext = createContext([]);
 
 export const playerContext = createContext(new Player());
-const testPlayerToken = "d03bd195-ecab-48b4-be55-9e42c24098f1";
-const testPlayerId = 3;
-const testLobbyCode = 9637;
 
 const Game = () => {
     const [nextWordIndex, setNextWordIndex] = useState(0);
@@ -26,10 +23,6 @@ const Game = () => {
     const [player, setPlayer] = useState<Player>(new Player);
     const [players, setPlayers] = useState<Player[]>([]);
     const [wordList, setWordList] = useState<Word[]>([]);
-
-    localStorage.setItem("playerId", String(testPlayerId));
-    localStorage.setItem("playerToken", String(testPlayerToken));
-    localStorage.setItem("lobbyCode", String(testLobbyCode));
 
     useEffect(() => {
         const fetchPlayer = async () => {
@@ -53,7 +46,6 @@ const Game = () => {
 
     useEffect(() => {
         setWordList(player?.getWords());
-        console.log(player.getNewestWord())
     }, [player]);
 
     useEffect(() => {
