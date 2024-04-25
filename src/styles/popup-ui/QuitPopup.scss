@@ -10,12 +10,12 @@
         background: lighten($buttonColDark, 4);
         border-radius: $borderRadius;
         max-width: 240px;
-        border: 4px solid rgb(154,154,154);
+
         text-align: center;
     }
 
     h2 {
-        color: lighten($buttonCol, 40)
+        color: lighten($buttonCol, 20);
     }
 
     &.button-container {

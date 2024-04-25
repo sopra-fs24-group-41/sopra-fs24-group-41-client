@@ -7,7 +7,6 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import "styles/ui/Button.scss";
-import { User } from "types";
 
 const Word = (props) => {
     return (
