@@ -15,24 +15,26 @@ const Profile = () => {
     const [favourite, setFavourite] = useState(null);
     const [profilePicture, setProfilePicture] = useState();
     const [isEditing, setIsEditing] = useState(false);
-    const [userData, setUserData] = useState({username: "...", status: "..."});
+    const [userData, setUserData] = useState({
+        username: "...",
+        status: "...",
+    });
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const userID = localStorage.getItem("userID");
                 let response = await api.get("/users/" + userID);
-                response.data.creationDate = handleDate(response.data.creationDate);
+                response.data.creationDate = handleDate(
+                    response.data.creationDate
+                );
                 const userdata = new User(response.data);
-                console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
-                console.log("userData.favourite:", userdata.favourite);
-                let fav = (userdata.favourite === null) ? "Zaddy" : userdata.favourite;
-                setFavourite(fav)
-  
+                let fav = userdata.favourite === null ? "Zaddy" : userdata.favourite;
+                setFavourite(fav);
             } catch (error) {
-                alert("Server Connection Lost");
+                alert("Server Connection lost");
                 navigate("/lobbyoverview");
             }
         };
@@ -41,31 +43,38 @@ const Profile = () => {
 
     const updateUserData = async (username, favourite) => {
         const prevUsername = userData.username;
-        const prevFavourite = (userData.favourite === null) ? "Zaddy" : userData.favourite;
+        const prevFavourite =
+            userData.favourite === null ? "Zaddy" : userData.favourite;
         const prevProfilePicture = userData.profilePicture;
         try {
-            const token = localStorage.getItem("token"); 
+            const token = localStorage.getItem("token");
             const userID = localStorage.getItem("userID");
             const config = {
                 headers: {
-                    "Authorization": token,
-                    "Content-Type": "application/json"
-                }
+                    Authorization: token,
+                    "Content-Type": "application/json",
+                },
             };
-    
-            const response = await api.put("/users/" + userID, {
-                username: username,
-                favourite: favourite,
-                profilePicture : profilePicture, 
-            }, config);
-            
-            console.log("User data updated successfully:", response.data);
+
+            const response = await api.put(
+                "/users/" + userID,
+                {
+                    username: username,
+                    favourite: favourite,
+                    profilePicture: profilePicture,
+                },
+                config
+            );
+
             setFavourite(favourite);
         } catch (error) {
-            alert("Failed to update user data:\n" + error.response.data.message);
+            alert(
+                "Failed to update user data, Server connection lost"
+            );
             setUsername(prevUsername);
             setFavourite(prevFavourite);
             setProfilePicture(prevProfilePicture);
+            navigate("/lobbyoverview");
         }
     };
 
@@ -73,21 +82,21 @@ const Profile = () => {
         if (isEditing) {
             setUsername(username);
             setFavourite(favourite);
+            updateUserData(username, favourite);
         }
         setIsEditing(!isEditing);
-        updateUserData(username, favourite);
     };
 
-    const handleDate = (dateString) =>{
+    const handleDate = (dateString) => {
         const dateObject = new Date(dateString);
-        
+
         return format(dateObject, "dd-MM-yyyy");
-    }
+    };
 
     const handleSelectImage = (image) => {
         if (profilePicture !== image) {
             setProfilePicture(image);
-        }            
+        }
     };
 
     const tableData = [
@@ -103,7 +112,7 @@ const Profile = () => {
                 username
             ),
         },
-        { label: "Creation Date:", value: userData.creationDate},
+        { label: "Creation Date:", value: userData.creationDate },
         { label: "Status:", value: userData.status },
         { label: "Wins:", value: userData.wins },
         { label: "Losses:", value: userData.losses },
@@ -115,8 +124,10 @@ const Profile = () => {
                     value={favourite}
                     onChange={(e) => setFavourite(e.target.value)}
                 />
+            ) : favourite === "" ? (
+                "Zaddy"
             ) : (
-                favourite === "" ? "Zaddy" : favourite
+                favourite
             ),
         },
     ];
@@ -125,7 +136,11 @@ const Profile = () => {
         <BaseContainer>
             <div className="profile container">
                 <div className="profile back">
-                    <ProfileIcon Current={userData.profilePicture} isEditing={isEditing} SelectedImage={handleSelectImage} />
+                    <ProfileIcon
+                        Current={userData.profilePicture}
+                        isEditing={isEditing}
+                        SelectedImage={handleSelectImage}
+                    />
                     <table className="profile table">
                         <tbody>
                             {tableData.map((row, index) => (
@@ -140,7 +155,10 @@ const Profile = () => {
                         <Button width="100%" onClick={handleEdit}>
                             {isEditing ? "Save" : "Edit"}
                         </Button>
-                        <Button width="100%" onClick={() => navigate("/lobbyoverview")}>
+                        <Button
+                            width="100%"
+                            onClick={() => navigate("/lobbyoverview")}
+                        >
                             Return to Lobby Overview
                         </Button>
                     </div>

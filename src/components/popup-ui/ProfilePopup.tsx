@@ -4,8 +4,6 @@ import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
-import User from "models/User";
-
 
 const ProfilePopup = () => {
     const navigate = useNavigate();

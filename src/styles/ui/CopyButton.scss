@@ -1,0 +1,28 @@
+@import "../theme";
+
+.copy-container {
+  position: absolute;
+  right: 175px;
+  background: $background;
+  border-radius: $borderRadius;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: $dropShadow;
+  padding: 10px;
+  width: 160px;
+  height: 110px;
+}
+
+.text-container {
+  padding: 10px;
+  font-size: 30px;
+  color: $textColor;
+  border-radius: $borderRadius;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+
+}
+

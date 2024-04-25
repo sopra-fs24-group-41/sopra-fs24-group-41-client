@@ -9,6 +9,9 @@ class Player {
         this.name = null;
         this.points = 0;
         this.token = null;
+        this.wins = null;
+        this.losses = null;
+        this.user = null;
         this.lobby = null;
         this.ownedLobby = null;
         this.playerWords = null;

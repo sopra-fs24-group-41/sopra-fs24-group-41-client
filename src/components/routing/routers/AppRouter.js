@@ -1,15 +1,13 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { GameGuard } from "../routeProtectors/GameGuard";
-import GameRouter from "./GameRouter";
-import { LoginGuard } from "../routeProtectors/LoginGuard";
+import LobbyOverviewRouter from "./LobbyOverviewRouter";
 import Login from "../../views/Login";
 import Registration from "../../views/Registration";
-import LobbyOverview from "../../views/LobbyOverview";
 import Lobby from "../../views/Lobby";
 import Profile from "../../views/Profile";
 import Result from "../../views/Result";
 import Game from "../../views/GameBoard/Game";
+import { LobbyGuard } from "../routeProtectors/LobbyGuard";
 import StompWebSocketComponent from "../../views/StompWebSocketComponent";
 import PropTypes from "prop-types";
 
@@ -27,7 +25,7 @@ const AppRouter = ({ stompWebSocketHook }) => {
         <BrowserRouter>
             <Routes>
 
-                <Route path="/lobbyoverview/*" element={<GameRouter base="/lobbyoverview" />} />
+                <Route path="/lobbyoverview/*" element={<LobbyOverviewRouter base="/lobbyoverview" stompWebSocketHook={stompWebSocketHook} />} />
 
                 <Route path="/login" element={<Login />} />
 
@@ -39,8 +37,8 @@ const AppRouter = ({ stompWebSocketHook }) => {
 
                 <Route path="/game" element={<Game />} />
 
-                <Route path="/lobby" element={<Lobby />}>
-                    <Route path="/lobby/:lobbyID" element={<Lobby />} />
+                <Route path="/lobby" element={<LobbyGuard />}>
+                    <Route path="/lobby/:lobbycode" element={<Lobby stompWebSocketHook={stompWebSocketHook} />} />
                 </Route>
 
                 <Route path="/" element={

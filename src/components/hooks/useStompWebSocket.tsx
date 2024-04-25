@@ -39,11 +39,11 @@ const useStompWebSocket = (client) => {
             subscriptionsRef.current[destination] = client.current.subscribe(destination, (message) => {
                 try {
                     const receivedMessage = JSON.parse(message.body);
-                    console.log(receivedMessage);
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage.message]);
+                    console.log("new message received:", receivedMessage);
+                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
                 } catch (e) {
-                    console.log(message.body);
-                    setMessages((prevMessages) => [...prevMessages, message.body]);
+                    console.error("error when parsing the message: ", message.body);
+                    // setMessages((prevMessages) => [...prevMessages, message.body]);
                 }
             });
             console.log("subscribed to ", destination);
@@ -74,7 +74,11 @@ const useStompWebSocket = (client) => {
         }
     };
 
-    return { messages, subscribe, unsubscribe, sendMessage, subscriptionsRef, connected };
+    const resetMessagesList = () => {
+        setMessages([]);
+    };
+
+    return { messages, subscribe, unsubscribe, sendMessage, subscriptionsRef, connected, resetMessagesList };
 };
 
 export default useStompWebSocket;
