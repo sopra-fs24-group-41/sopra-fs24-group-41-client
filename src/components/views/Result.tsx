@@ -1,38 +1,11 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { Player } from "../../types";
 import IMAGES from "../../assets/images/index1.js";
 import { useLocation } from "react-router-dom";
-
-const players = [
-    {
-        name: "Rhinoceron",
-        icon: IMAGES.RedSquid,
-        token: "1",
-        wins: "69",
-        losses: "1",
-        total_wins: "100",
-        total_losses: "1",
-        words_generated: "100",
-    },
-    {
-        name: "Froggy",
-        icon: IMAGES.BlueFrog,
-        token: "2",
-        wins: "0",
-        losses: "70",
-        words_generated: "100",
-    },
-    {
-        name: "Bunny",
-        icon: IMAGES.PinkBunny,
-        token: "3",
-        wins: "1",
-        losses: "69",
-        words_generated: "100",
-    },
-];
+import { api, handleError } from "helpers/api";
+import Player from "../../models/Player.js";
+import Lobby from "../../models/Lobby.js";
 
 const changeBack = (status, location) => {
     if (location.pathname !== "/result") {
@@ -43,8 +16,8 @@ const changeBack = (status, location) => {
 };
 
 const result = { WIN: "You Won!", LOSS: "You Lost..." };
-let winner = "Froggy";
-let current = "Bunny"; //Determine Winner OR Loser by changing tis variable!
+let winner = "Jackie";
+let current = "Jackie"; //Determine Winner OR Loser by changing this variable!
 const result_status = winner === current ? true : false;
 
 export const ResContext = createContext<number>(
@@ -67,18 +40,36 @@ const Result = () => {
     const location = useLocation();
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
     const [res, setRes] = useState();
+    const [rplayers, setRPlayers] = useState<Player[]>([]);
+
     const handlePlayerHover = (player: Player) => {
         setSelectedPlayer(player);
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await api.get("/lobbies/1516");
+                let lobbyData = new Lobby(response.data);
+                let retrievedPlayers = lobbyData.players.map(playerData => new Player(playerData));
+                console.log(retrievedPlayers);
+                setRPlayers(retrievedPlayers);
+            } catch(error) {
+                alert("Something didn't work");
+            }
+        };
+    
+        fetchData(); 
+    }, []);
 
     const usercontent = (
         <div className="res">
             <h2>{result_status ? result.WIN : result.LOSS}</h2>
             <p>Results</p>
             <ul className="res-list">
-                {players.map((player: Player) => (
+                {rplayers.map((player: Player) => (
                     <li
-                        key={player.token}
+                        key={player.wordCount}
                         onMouseEnter={() => handlePlayerHover(player)}
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
@@ -88,30 +79,29 @@ const Result = () => {
                             )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
                             <div className={renderIcon(player.name)}>
-                                <img src={player.icon} alt="player icon" />
+                                <img src={IMAGES[player.profilePicture] || IMAGES.BlueFrog} alt="player icon" />
                             </div>
                             <div className="player-details">
                                 <div className="player-name">
                                     {" "}
                                     <div>{player.name}</div>{" "}
-                                    <div>Wins: {player.wins}</div>
+                                    <div>Wins: {player.wins || 0}</div>
                                 </div>
                                 {selectedPlayer === player && (
                                     <div className="player-info">
-                                        <div>Losses: {player.losses}</div>
+                                        <div>Losses: {player.losses || 0}</div>
                                         <div>
                                             Words Generated:{" "}
-                                            {player.words_generated}
+                                            {player.words_generated || 0}
                                         </div>
 
-                                        {player.total_wins &&
-                                            player.total_losses && (
+                                        {player.total_wins !== null && player.total_losses !== null && (
                                             <div>
                                                 <div>
-                                                    Total Wins:{" "}{player.total_wins}
+                                                    Total Wins: {player.total_wins || 0}
                                                 </div>
                                                 <div>
-                                                    Total Losses:{" "}{player.total_losses}
+                                                    Total Losses: {player.total_losses || 0}
                                                 </div>
                                             </div>
                                         )}
