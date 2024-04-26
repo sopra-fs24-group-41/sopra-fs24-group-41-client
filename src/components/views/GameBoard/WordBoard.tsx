@@ -5,49 +5,55 @@ import "styles/views/Game.scss";
 import Word from "models/Word";
 import WordButton from "./WordButton";
 import { api } from "helpers/api";
-import { nextWordIndexContext, mergeWordListContext, wordListContext, playerContext } from "./Game";
+import {
+    nextWordIndexContext,
+    mergeWordListContext,
+    wordListContext,
+    playerContext,
+} from "./Game";
 
-interface WordRowProps {
-  key?: string;
-}
-
-const WordRow = ({ words, key }) => {
-    return <div className="wordrow"> {words} </div>;
+const WordRow = (props) => {
+    return (
+        <div {...props} className="wordrow">
+            {" "}
+            {props.children}{" "}
+        </div>
+    );
 };
 
 WordRow.propTypes = {
-    key: PropTypes.string,
-    words: PropTypes.node,
+    children: PropTypes.node,
 };
 
 const WordBoard = () => {
     const { nextWordIndex, setNextWordIndex } =
-    useContext(nextWordIndexContext);
+        useContext(nextWordIndexContext);
     const { mergeWordList, setMergeWordList } =
-    useContext(mergeWordListContext);
-    const { wordList, setWordList } =
-    useContext(wordListContext);
-    const { player } =
-    useContext(playerContext);
+        useContext(mergeWordListContext);
+    const { wordList, setWordList } = useContext(wordListContext);
+    const { player } = useContext(playerContext);
 
     const addWordToWordBoard = (name: string) => {
         let i;
         // See first if the given word is already discovered.
-        for (i = 0; i < wordList.length; i++) if (name === wordList[i].name) break;
-        if (i === wordList.length) setWordList([...wordList, new Word({ name: name })]);
+        for (i = 0; i < wordList.length; i++)
+            if (name === wordList[i].name) break;
+        if (i === wordList.length)
+            setWordList([...wordList, new Word({ name: name })]);
     };
 
     const play = async (word1: string, word2: string) => {
         try {
-            let response = await api.put(`/lobbies/${player.lobbyCode}/players/${player.id}`,
+            let response = await api.put(
+                `/lobbies/${player.lobbyCode}/players/${player.id}`,
                 [new Word({ name: word1 }), new Word({ name: word2 })],
-                { headers: { "playerToken": player.token } });
+                { headers: { playerToken: player.token } }
+            );
             player.points = response.data.points;
             player.playerWords = response.data.playerWords;
             player.targetWord = response.data.targetWord;
 
             return response.data.resultWord.name;
-
         } catch (error) {
             alert("Error: " + error.message);
         }
@@ -68,7 +74,7 @@ const WordBoard = () => {
         if (newWordIndex === 2) {
             newWordList[newWordIndex] = await play(
                 newWordList[0],
-                newWordList[1],
+                newWordList[1]
             );
             addWordToWordBoard(newWordList[newWordIndex]);
         }
@@ -82,9 +88,7 @@ const WordBoard = () => {
         let wordRow = [];
         for (let i = 0; i < wordList.length; i++) {
             if (i > 0 && i % 8 === 0) {
-                result.push(
-                    <WordRow key={wordRow.toString()} words={wordRow}></WordRow>,
-                );
+                result.push(<WordRow key={result.length}>{wordRow}</WordRow>);
                 wordRow = [];
             }
             wordRow.push(
@@ -95,12 +99,10 @@ const WordBoard = () => {
                     }}
                 >
                     {wordList[i].name}
-                </WordButton>,
+                </WordButton>
             );
         }
-        result.push(
-            <WordRow key={wordRow.toString()} words={wordRow}></WordRow>,
-        );
+        result.push(<WordRow key={result.length}>{wordRow}</WordRow>);
 
         return result;
     };
