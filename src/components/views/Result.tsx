@@ -2,14 +2,11 @@ import React, { useState, createContext, useEffect, useContext } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import IMAGES from "../../assets/images/index1.js";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Player from "../../models/Player.js";
 
-export const ResContext = createContext<number>(0);
-
 const Result = () => {
-    const location = useLocation();
     const navigate = useNavigate();
     const [player, setPlayer] = useState<Player>(new Player);
     const [winner, setWinner] = useState();
@@ -53,28 +50,15 @@ const Result = () => {
         setWinner(players[0])
     }, [players]);
 
-    useEffect(() => {
-        setResultStatus(winner?.id.toString() === playerId.toString());
-        setRes(changeBack(resultStatus, location));
-    }, [winner]);
-
-    const changeBack = (status, location) => {
-        if (location.pathname !== "/result") {
-            return 0;
-        }
-        if (status) return 2;
-        else return 1;
-    };
-
-    const renderPlayer = (pName) => {
-        if (pName === winner) return "player-container winner";
-        if (pName === player.name) return "player-container loser";
+    const renderPlayer = (playerId) => {
+        if (winner && playerId === winner.id)return "player-container winner";
+        if (playerId === player.id) return "player-container loser";
         else return "player-container";
     };
-
-    const renderIcon = (pName) => {
-        if (pName === winner) return "winner";
-        if (pName === player.name) return "loser";
+    
+    const renderIcon = (playerId) => {
+        if (winner && playerId === winner.id) return "winner";
+        if (playerId === player.id) return "loser";
         else return "player-icon";
     };
 
@@ -91,10 +75,10 @@ const Result = () => {
                     >
                         <div
                             className={`player-container ${renderPlayer(
-                                player.name
+                                player.id
                             )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
-                            <div className={renderIcon(player.name)}>
+                            <div className={renderIcon(player.id)}>
                                 <img src={IMAGES[player.profilePicture] || IMAGES.BlueFrog} alt="player icon" />
                             </div>
                             <div className="player-details">
@@ -133,9 +117,7 @@ const Result = () => {
 
     return (
         <BaseContainer className="res-container">
-            <ResContext.Provider value={res}>
                 <div>{userContent}</div>
-            </ResContext.Provider>
         </BaseContainer>
     );
 };

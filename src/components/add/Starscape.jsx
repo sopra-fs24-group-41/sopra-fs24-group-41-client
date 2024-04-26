@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import {ResContext} from "../views/Result";
 import PropTypes from "prop-types"; // Import PropTypes
 import gsap from "gsap";
 
@@ -11,7 +10,7 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
     const scaleMapperRef = useRef(null);
     const alphaMapperRef = useRef(null);
 
-    const res = useContext(ResContext) || 0;
+    const res = 0;
     
     const resChange = (res)=>{
         if(res===1) return [45, 100, 50];
