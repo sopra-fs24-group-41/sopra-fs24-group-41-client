@@ -1,76 +1,92 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import IMAGES from "../../assets/images/index1.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Player from "../../models/Player.js";
-import Lobby from "../../models/Lobby.js";
 
-const changeBack = (status, location) => {
-    if (location.pathname !== "/result") {
-        return 0;
-    }
-    if (status) return 2;
-    else return 1;
-};
-
-const result = { WIN: "You Won!", LOSS: "You Lost..." };
-let winner = "Jackie";
-let current = "Jackie"; //Determine Winner OR Loser by changing this variable!
-const result_status = winner === current ? true : false;
-
-export const ResContext = createContext<number>(
-    changeBack(result_status, location)
-);
-
-const renderPlayer = (pName) => {
-    if (pName === winner) return "player-container winner";
-    if (pName === current) return "player-container loser";
-    else return "player-container";
-};
-
-const renderIcon = (pName) => {
-    if (pName === winner) return "winner";
-    if (pName === current) return "loser";
-    else return "player-icon";
-};
+export const ResContext = createContext<number>(0);
 
 const Result = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const [player, setPlayer] = useState<Player>(new Player);
+    const [winner, setWinner] = useState();
+    const [players, setPlayers] = useState<Player[]>([]);
+    const playerId = localStorage.getItem("playerId");
+    const playerToken = localStorage.getItem("playerToken");
+    const lobbyCode = localStorage.getItem("lobbyCode");
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
     const [res, setRes] = useState();
-    const [rplayers, setRPlayers] = useState<Player[]>([]);
-
-    const handlePlayerHover = (player: Player) => {
-        setSelectedPlayer(player);
-    };
+    const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
+    const [resultStatus, setResultStatus] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPlayer = async () => {
             try {
-                const response = await api.get("/lobbies/1516");
-                let lobbyData = new Lobby(response.data);
-                let retrievedPlayers = lobbyData.players.map(playerData => new Player(playerData));
-                console.log(retrievedPlayers);
-                setRPlayers(retrievedPlayers);
-            } catch(error) {
-                alert("Something didn't work");
+                let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
+                let foundPlayer = new Player(response.data);
+                foundPlayer.id = playerId;
+                foundPlayer.token = playerToken;
+                foundPlayer.lobbyCode = lobbyCode;
+                setPlayer(foundPlayer);
+            } catch (error) {
+                handleError(error, navigate);
             }
         };
-    
-        fetchData(); 
+
+        const fetchOtherPlayers = async () => {
+            try {
+                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
+                setPlayers(response.data.map(p => new Player(p)));
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        };
+        fetchPlayer();
+        fetchOtherPlayers();
     }, []);
 
-    const usercontent = (
+    useEffect(() => {
+        players.sort((a, b) => b.points - a.points);
+        setWinner(players[0])
+    }, [players]);
+
+    useEffect(() => {
+        setResultStatus(winner?.id.toString() === playerId.toString());
+        setRes(changeBack(resultStatus, location));
+    }, [winner]);
+
+    const changeBack = (status, location) => {
+        if (location.pathname !== "/result") {
+            return 0;
+        }
+        if (status) return 2;
+        else return 1;
+    };
+
+    const renderPlayer = (pName) => {
+        if (pName === winner) return "player-container winner";
+        if (pName === player.name) return "player-container loser";
+        else return "player-container";
+    };
+
+    const renderIcon = (pName) => {
+        if (pName === winner) return "winner";
+        if (pName === player.name) return "loser";
+        else return "player-icon";
+    };
+
+    const userContent = (
         <div className="res">
-            <h2>{result_status ? result.WIN : result.LOSS}</h2>
+            <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
             <p>Results</p>
             <ul className="res-list">
-                {rplayers.map((player: Player) => (
+                {players.map((player: Player) => (
                     <li
                         key={player.wordCount}
-                        onMouseEnter={() => handlePlayerHover(player)}
+                        onMouseEnter={() => setSelectedPlayer(player)}
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
                         <div
@@ -118,7 +134,7 @@ const Result = () => {
     return (
         <BaseContainer className="res-container">
             <ResContext.Provider value={res}>
-                <div>{usercontent}</div>
+                <div>{userContent}</div>
             </ResContext.Provider>
         </BaseContainer>
     );

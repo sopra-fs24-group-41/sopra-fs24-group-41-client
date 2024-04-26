@@ -79,7 +79,7 @@ const Game = ({ stompWebSocketHook }) => {
         if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             if (newObject.instruction && newObject.instruction === "stop") {
-                // stop the game
+                navigate("/result/");
             }
         }
     }, [stompWebSocketHook.messages]);
