@@ -5,6 +5,8 @@ import IMAGES from "../../assets/images/index1.js";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Player from "../../models/Player.js";
+import { Button } from "components/ui/Button";
+
 
 const Result = () => {
     const navigate = useNavigate();
@@ -62,6 +64,11 @@ const Result = () => {
         else return "player-icon";
     };
 
+    const handleBackToLobby = () =>{
+        const code = localStorage.getItem("code");
+        navigate("/lobby" + code);
+    }
+
     const userContent = (
         <div className="res">
             <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
@@ -118,6 +125,7 @@ const Result = () => {
     return (
         <BaseContainer className="res-container">
                 <div>{userContent}</div>
+                <Button onClick={handleBackToLobby}>Back to Lobby</Button>
         </BaseContainer>
     );
 };
