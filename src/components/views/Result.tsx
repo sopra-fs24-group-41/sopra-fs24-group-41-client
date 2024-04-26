@@ -95,26 +95,13 @@ const Result = () => {
                                 <div className="player-name">
                                     {" "}
                                     <div>{player.name}</div>{" "}
-                                    <div>Wins: {player.wins || 0}</div>
                                 </div>
                                 {selectedPlayer === player && (
                                     <div className="player-info">
-                                        <div>Losses: {player.losses || 0}</div>
                                         <div>
                                             Words Generated:{" "}
-                                            {player.words_generated || 0}
+                                            {player.wordCount || 0}
                                         </div>
-
-                                        {player.total_wins !== null && player.total_losses !== null && (
-                                            <div>
-                                                <div>
-                                                    Total Wins: {player.total_wins || 0}
-                                                </div>
-                                                <div>
-                                                    Total Losses: {player.total_losses || 0}
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                             </div>
