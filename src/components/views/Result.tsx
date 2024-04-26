@@ -52,6 +52,10 @@ const Result = () => {
         setWinner(players[0])
     }, [players]);
 
+    useEffect(() => {
+        setResultStatus(winner?.id.toString() === playerId.toString());
+    }, [winner]);
+
     const renderPlayer = (playerId) => {
         if (winner && playerId === winner.id)return "player-container winner";
         if (playerId === player.id) return "player-container loser";
@@ -65,8 +69,8 @@ const Result = () => {
     };
 
     const handleBackToLobby = () =>{
-        const code = localStorage.getItem("code");
-        navigate("/lobby" + code);
+        let lobbyCode = localStorage.getItem("lobbyCode");
+        navigate("/lobby/" + lobbyCode);
     }
 
     const userContent = (
