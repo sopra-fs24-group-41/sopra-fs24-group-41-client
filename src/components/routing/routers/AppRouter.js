@@ -10,6 +10,7 @@ import Game from "../../views/GameBoard/Game";
 import { LobbyGuard } from "../routeProtectors/LobbyGuard";
 import StompWebSocketComponent from "../../views/StompWebSocketComponent";
 import PropTypes from "prop-types";
+import ServerDownPage from "../../views/ServerDownPage";
 
 /**
  * Main router of your application.
@@ -46,6 +47,8 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 } />
 
                 <Route path="/websocket-demo" element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook} />} />
+
+                <Route path="/server-down" element={<ServerDownPage />} />
 
             </Routes>
         </BrowserRouter>

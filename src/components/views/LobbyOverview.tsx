@@ -41,8 +41,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
                 setLobbies(lobbyData);
             } catch (error) {
-                handleError(error);
-                alert(handleError(error));
+                handleError(error, navigate);
             }
         };
         fetchLobbies();
@@ -107,10 +106,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             const response = await api.post("/lobbies/" + lobbyCode + "/players", requestbody, config);
             localStorage.setItem("playerToken", response.data.playerToken);
             localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", lobbyCode);
             navigate("/lobby/" + lobbyCode);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 
@@ -129,8 +128,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
             navigate("/lobby/" + createdLobby.code);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 

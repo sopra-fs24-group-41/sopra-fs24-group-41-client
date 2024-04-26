@@ -69,7 +69,7 @@ const Registration = () => {
             navigate("/lobbyoverview");
         } catch (error) {
             alert(
-                `Something went wrong during the registration: \n${handleError(error)}`
+                `Something went wrong during the registration: \n${handleError(error, navigate)}`
             );
         }
     };

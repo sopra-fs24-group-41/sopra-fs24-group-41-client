@@ -20,7 +20,7 @@ const ProfilePopup = () => {
             if (error.response && error.response.status === 404) {
                 alert("Logout endpoint not found, the server was restarted");
             } else {
-                alert(`Something went wrong during the logout: \n${handleError(error)}`);
+                alert(`Something went wrong during the logout: \n${handleError(error, navigate)}`);
             }
             localStorage.removeItem("userToken");
             window.location.reload();

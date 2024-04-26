@@ -68,7 +68,7 @@ const Profile = () => {
 
             setFavourite(favourite);
         } catch (error) {
-            handleError(error);
+            handleError(error, navigate);
             let error_msg = error.response.data.message;
             alert("Failed to update user data: " + error_msg);
             setUsername(prevUsername);

@@ -4,10 +4,11 @@ import "styles/views/Game.scss";
 import WordBoard from "./WordBoard";
 import WordMergeBar from "./WordMergeBar";
 import Player from "models/Player";
-import { api } from "helpers/api";
+import { api, handleError } from "helpers/api";
 import Word from "models/Word";
 import PlayerList from "./PlayerList";
 import TargetWord from "./TargetWord";
+import { useNavigate } from "react-router-dom";
 
 export const nextWordIndexContext = createContext(123);
 
@@ -23,6 +24,7 @@ const Game = () => {
     const [player, setPlayer] = useState<Player>(new Player);
     const [players, setPlayers] = useState<Player[]>([]);
     const [wordList, setWordList] = useState<Word[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPlayer = async () => {
@@ -38,7 +40,7 @@ const Game = () => {
                 foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
             } catch (error) {
-                alert("Error: " + error.message);
+                handleError(error, navigate);
             }
         };
         fetchPlayer();
@@ -52,19 +54,14 @@ const Game = () => {
         const fetchOtherPlayers = async () => {
             try {
                 const lobbyCode = localStorage.getItem("lobbyCode");
-
                 let response = await api.get(`/lobbies/${lobbyCode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
             } catch (error) {
-                alert("Error: " + error.message);
+                handleError(error, navigate);
             }
         };
         fetchOtherPlayers();
     }, []);
-
-    useEffect(() => {
-        console.log(players);
-    }, [players]);
 
     return (
         <div>

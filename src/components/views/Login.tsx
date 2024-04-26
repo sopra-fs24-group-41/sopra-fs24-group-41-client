@@ -45,7 +45,7 @@ const Login = () => {
             localStorage.setItem("userToken", user.token);
             navigate("/lobbyoverview");
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during the login: \n${handleError(error, navigate)}`);
         }
     };
 

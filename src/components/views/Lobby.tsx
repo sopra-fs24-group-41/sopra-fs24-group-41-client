@@ -62,7 +62,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 setLobby(lobbyData);
                 if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
             } catch (error) {
-                handleError(error);
+                handleError(error, navigate);
                 alert("Unable to display lobby data");
             }
         };
@@ -145,7 +145,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerId")}`, config);
             kick();
         } catch (error) {
-            handleError(error);
+            handleError(error, navigate);
             alert("Something went wrong on the server side, please try again");
         }
     };
@@ -166,8 +166,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         try {
             await api.post(`/lobbies/${lobbycode}/games`, {}, config);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 
