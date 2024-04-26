@@ -36,7 +36,7 @@ GamemodeItem.propTypes = {
 const gamemodes = [
     { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
     { name: "Casual", description: "chill and relaxed", serverName: "STANDARD", active: true },
-    { name: "COMING SOON: Wombo Combo!!", description: "Make some bomb combos", serverName: "", active: false },
+    { name: "Wombo Combo!!", description: "Make some bomb combos", serverName: "WOMBOCOMBO", active: true },
 ];
 
 export const context = createContext();
