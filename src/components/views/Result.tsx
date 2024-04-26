@@ -114,8 +114,8 @@ const Result = () => {
 
     return (
         <BaseContainer className="res-container">
-                <div>{userContent}</div>
-                <Button onClick={handleBackToLobby}>Back to Lobby</Button>
+            <div>{userContent}</div>
+            <Button onClick={handleBackToLobby}>Back to Lobby</Button>
         </BaseContainer>
     );
 };
