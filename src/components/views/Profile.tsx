@@ -68,13 +68,12 @@ const Profile = () => {
 
             setFavourite(favourite);
         } catch (error) {
-            alert(
-                "Failed to update user data, Server connection lost"
-            );
+            handleError(error);
+            let error_msg = error.response.data.message;
+            alert("Failed to update user data: " + error_msg);
             setUsername(prevUsername);
             setFavourite(prevFavourite);
             setProfilePicture(prevProfilePicture);
-            navigate("/lobbyoverview");
         }
     };
 
