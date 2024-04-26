@@ -10,6 +10,8 @@ import PlayerList from "./PlayerList";
 import TargetWord from "./TargetWord";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Button } from "components/ui/Button";
+import QuitPopup from "components/popup-ui/QuitPopup";
 
 export const nextWordIndexContext = createContext(123);
 

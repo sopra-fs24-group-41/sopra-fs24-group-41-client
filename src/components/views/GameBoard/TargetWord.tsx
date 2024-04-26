@@ -3,6 +3,8 @@ import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import WordButton from "./WordButton";
 import { playerContext } from "./Game";
+import { Button } from "components/ui/Button";
+import QuitPopup from "components/popup-ui/QuitPopup";
 
 const TargetWord = () => {
     const { player } =
@@ -16,6 +18,8 @@ const TargetWord = () => {
             <WordButton key={0} className="targetword word">
                 {targetWordName}
             </WordButton>
+            <Button>Quit</Button>
+
         </BaseContainer>
     );
 };

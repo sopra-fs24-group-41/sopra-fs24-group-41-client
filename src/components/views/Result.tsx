@@ -7,7 +7,6 @@ import { api, handleError } from "helpers/api";
 import Player from "../../models/Player.js";
 import { Button } from "components/ui/Button";
 
-
 const Result = () => {
     const navigate = useNavigate();
     const [player, setPlayer] = useState<Player>(new Player);
