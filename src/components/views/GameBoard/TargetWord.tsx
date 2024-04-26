@@ -1,40 +1,25 @@
-import React, { useEffect, useState, useContext } from "react";
-import { api, handleError } from "helpers/api";
-import { Spinner } from "components/ui/Spinner";
-import { Button } from "components/ui/Button";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import { User } from "types";
-import Word from "./Word";
-import { nextWordIndexContext, mergeWordListContext } from "./Game";
+import WordButton from "./WordButton";
+import { playerContext } from "./Game";
+import { Button } from "components/ui/Button";
+import QuitPopup from "components/popup-ui/QuitPopup";
 
 const TargetWord = () => {
-    const [targetWord, setTargetWord] = useState<String>("");
+    const { player } =
+      useContext(playerContext);
 
-    useEffect(() => {
-        const fetchTargetWord = async () => {
-            try {
-                setTargetWord("target word");
-            } catch (error) {
-                alert(
-                    `Something went wrong while fetching the target word: \n${handleError(
-                        error
-                    )}`
-                );
-            }
-        };
-
-        fetchTargetWord();
-    }, []);
+    const targetWordName = player.targetWord ? player.targetWord.name : "";
 
     return (
         <BaseContainer className="targetword container">
             <div className="targetword text">Target word:</div>
-            <Word key={0} className="targetword word">
-                {targetWord}
-            </Word>
+            <WordButton key={0} className="targetword word">
+                {targetWordName}
+            </WordButton>
+            <Button>Quit</Button>
+
         </BaseContainer>
     );
 };

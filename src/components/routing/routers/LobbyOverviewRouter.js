@@ -5,7 +5,7 @@ import LobbyOverview from "../../views/LobbyOverview";
 
 const LobbyOverviewRouter = ({ stompWebSocketHook }) => {
     const playerToken = localStorage.getItem("playerToken");
-    const code = localStorage.getItem("code");
+    const code = localStorage.getItem("lobbyCode");
 
     // Check if both playerToken and code are in localStorage
     const inLobby = playerToken && code;

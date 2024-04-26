@@ -6,7 +6,7 @@ export const api = axios.create({
     headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
 });
 
-export const handleError = error => {
+export const handleError = (error, navigate) => {
     const response = error.response;
 
     // catch 4xx and 5xx status codes
@@ -26,10 +26,14 @@ export const handleError = error => {
 
         return info;
     } else {
-        if (error.message.match(/Network Error/)) {
+        if (error.message.match(/Network Error/i)) {
+            localStorage.clear();
             alert("The server cannot be reached.\nDid you start it?");
+            navigate("/server-down/");
+            
+            return error.message;
         }
-
+        
         console.log("Something else happened.", error);
 
         return error.message;

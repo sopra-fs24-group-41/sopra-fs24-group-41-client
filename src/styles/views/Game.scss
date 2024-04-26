@@ -8,6 +8,13 @@
  */
 
 .game {
+  &.base-container {
+    margin: 1em auto;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   &.container {
     margin: 1em auto;
     border-radius: $borderRadius;
@@ -17,6 +24,16 @@
     background-color: $background;
     box-shadow: $dropShadow;
     width: 900px;
+  }
+  &.vertical-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &.horizontal-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
   }
 }
 
@@ -43,6 +60,48 @@
     padding: 0.5em;
     border-radius: calc(#{$borderRadius}/4);
     font-size: 3em;
+    height: 100%;
+  }
+}
+
+.player-list {
+  &.container {
+    padding: 1em;
+    margin: 1em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: $background;
+    box-shadow: $dropShadow;
+  }
+  &.list {
+    list-style: none;
+    padding-left: 0;
+    text-align: center;
+    max-height: 170px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.player-word {
+  &.container {
+    margin: 0.5em 0;
+    padding: 10px;
+    border-radius: $borderRadius;
+    display: flex;
+    align-items: center;  }
+  &.player-name {
+    margin-right: 10px;
+    font-size: 1.5em;
+    text-align: left;
+    display: flex;
+  }
+  &.newest-word {
+    font-size: 1.5em;
+    text-align: left;
+    display: flex;
   }
 }
 

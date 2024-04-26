@@ -32,7 +32,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
     const [lobbyCode, setLobbyCode] = useState<String>(null);
-    const userToken = localStorage.getItem("token");
+    const userToken = localStorage.getItem("userToken");
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -41,8 +41,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
                 setLobbies(lobbyData);
             } catch (error) {
-                handleError(error);
-                alert(handleError(error));
+                handleError(error, navigate);
             }
         };
         fetchLobbies();
@@ -82,7 +81,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const checkLogin = () => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("userToken");
         if (token === null) {
             alert("Please login to gain further access");
 
@@ -106,11 +105,11 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             const config = { headers: { userToken: userToken } };
             const response = await api.post("/lobbies/" + lobbyCode + "/players", requestbody, config);
             localStorage.setItem("playerToken", response.data.playerToken);
-            localStorage.setItem("playerID", response.data.playerId);
+            localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", lobbyCode);
             navigate("/lobby/" + lobbyCode);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 
@@ -124,13 +123,12 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             const response = await api.post("/lobbies", requestBody, config);
             const createdLobby = response.data.lobby;
             localStorage.setItem("playerToken", response.data.playerToken);
-            localStorage.setItem("playerID", response.data.playerId);
-            localStorage.setItem("code", createdLobby.code);
+            localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", createdLobby.code);
 
             navigate("/lobby/" + createdLobby.code);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 
@@ -202,10 +200,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 {content}
             </BaseContainer>
             <Icon onClick={() => iconClick()} />
-            {LoginRegisterPopup && localStorage.getItem("token") === null && (
+            {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
                 <LoginRegister />
             )}
-            {LoginRegisterPopup && localStorage.getItem("token") !== null && (
+            {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
                 <ProfilePopup />
             )}
         </div>

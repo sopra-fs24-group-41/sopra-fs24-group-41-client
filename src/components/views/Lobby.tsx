@@ -36,7 +36,7 @@ GamemodeItem.propTypes = {
 const gamemodes = [
     { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
     { name: "Casual", description: "chill and relaxed", serverName: "STANDARD", active: true },
-    { name: "COMING SOON: Wombo Combo!!", description: "Make some bomb combos", serverName: "", active: false },
+    { name: "Wombo Combo!!", description: "Make some bomb combos", serverName: "WOMBOCOMBO", active: true },
 ];
 
 export const context = createContext();
@@ -60,9 +60,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
-                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerID"))) setOwnerMode(true);
+                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
             } catch (error) {
-                handleError(error);
+                handleError(error, navigate);
                 alert("Unable to display lobby data");
             }
         };
@@ -83,7 +83,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
         return () => {
             if (stompWebSocketHook.connected === true) {
-                stompWebSocketHook.unsubscribe("/topic/lobbies/" + lobbycode);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}/game`);
             }
             stompWebSocketHook.resetMessagesList();
         };
@@ -96,8 +97,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
             if (newObject.instruction === "start") {
-                alert("game starts! redirecting to /lobby/code/game");
-                navigate(`/lobby/${lobbycode}/game`);
+                navigate("/lobby/game");
             }
             if (newObject.instruction === "kick" && !ownerMode) {
                 kick();
@@ -143,18 +143,18 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     "playerToken": localStorage.getItem("playerToken").toString(),
                 },
             };
-            await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerID")}`, config);
+            await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerId")}`, config);
             kick();
         } catch (error) {
-            handleError(error);
+            handleError(error, navigate);
             alert("Something went wrong on the server side, please try again");
         }
     };
 
     const kick = () => {
-        localStorage.removeItem("playerID");
+        localStorage.removeItem("playerId");
         localStorage.removeItem("playerToken");
-        localStorage.removeItem("code");
+        localStorage.removeItem("lobbyCode");
         navigate("/lobbyoverview");
     };
 
@@ -167,8 +167,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         try {
             await api.post(`/lobbies/${lobbycode}/games`, {}, config);
         } catch (error) {
-            handleError(error);
-            alert(handleError(error));
+            handleError(error, navigate);
         }
     };
 

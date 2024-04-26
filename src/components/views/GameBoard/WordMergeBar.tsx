@@ -1,13 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
-import { api, handleError } from "helpers/api";
-import { Spinner } from "components/ui/Spinner";
-import { Button } from "components/ui/Button";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-
-import Word from "./Word";
+import WordButton from "./WordButton";
 import { nextWordIndexContext, mergeWordListContext } from "./Game";
 
 const WordMergeBar = () => {
@@ -37,11 +31,11 @@ const WordMergeBar = () => {
 
     return (
         <BaseContainer className="wordmergebar container">
-            <Word key={1} onClick={removeWord}>{formatWord(mergeWordList[0], "-")}</Word>
+            <WordButton key={1} onClick={removeWord}>{formatWord(mergeWordList[0], "-")}</WordButton>
             <div className="wordmergebar symbol">+</div>
-            <Word key={2}>{formatWord(mergeWordList[1], "-")}</Word>
+            <WordButton key={2}>{formatWord(mergeWordList[1], "-")}</WordButton>
             <div className="wordmergebar symbol">=</div>
-            <Word key={3}>{formatWord(mergeWordList[2], "?")}</Word>
+            <WordButton key={3}>{formatWord(mergeWordList[2], "?")}</WordButton>
         </BaseContainer>
     );
 };
