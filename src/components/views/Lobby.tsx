@@ -83,7 +83,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
         return () => {
             if (stompWebSocketHook.connected === true) {
-                stompWebSocketHook.unsubscribe("/topic/lobbies/" + lobbycode);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}/game`);
             }
             stompWebSocketHook.resetMessagesList();
         };
