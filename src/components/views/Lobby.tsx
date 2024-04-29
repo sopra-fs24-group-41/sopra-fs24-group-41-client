@@ -302,7 +302,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             </div>
             {quitPopup && (
                 <context.Provider
-                    value={{ quitPopup, setQuitPopup, QuitLobby }}
+                    value={{ quitPopup, setQuitPopup }}
                 >
                     <QuitPopup />
                 </context.Provider>

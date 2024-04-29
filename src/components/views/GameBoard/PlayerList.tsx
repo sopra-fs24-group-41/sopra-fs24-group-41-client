@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import Player from "models/Player";
+import { playerContext } from "./Game";
 import "styles/views/Game.scss";
 
 const PlayerContainer = ({ player }) => (
@@ -11,26 +12,22 @@ const PlayerContainer = ({ player }) => (
 );
 
 PlayerContainer.propTypes = {
-    player: PropTypes.object.isRequired
-}
+    player: PropTypes.instanceOf(Player).isRequired
+};
 
-const PlayerList = ({ players }) => {
+const PlayerList = () => {
+    const { player } = useContext(playerContext);
+
     return (
         <div className="player-list container">
             <h2>Players</h2>
             <ul className="player-list list">
-                {players.map((p, index) => (
-                    <li key={index}>
-                        <PlayerContainer player={p}/>
-                    </li>
-                ))}
+                <li>
+                    <PlayerContainer player={player} />
+                </li>
             </ul>
         </div>
     );
-};
-
-PlayerList.propTypes = {
-    players: PropTypes.arrayOf(Player).isRequired
 };
 
 export default PlayerList;
