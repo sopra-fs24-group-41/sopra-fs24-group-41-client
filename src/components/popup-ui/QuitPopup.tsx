@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/QuitPopup.scss";
-import { context } from "../views/Lobby";
+import { LobbyContext } from "../views/Lobby";
+import { GameContext } from "components/views/GameBoard/TargetWord";
 import { api, handleError } from "../../helpers/api.js";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -36,7 +37,13 @@ const QuitPopup = () => {
         localStorage.removeItem("lobbyCode");
         navigate("/lobbyoverview");
     };
-    const { setQuitPopup } = useContext(context);
+
+    const lobbyContext = useContext(LobbyContext)
+    const gameContext = useContext(GameContext)
+    const setQuitPopup = lobbyContext ? lobbyContext.setQuitPopup : gameContext.setQuitPopup;
+
+
+
     return (
         <BaseContainer className="quitpopup container">
             <h2> Do you want to leave this lobby and quit to the lobby overview?</h2>
