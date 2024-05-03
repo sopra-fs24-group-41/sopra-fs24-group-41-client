@@ -40,7 +40,6 @@ const Result = () => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
-                console.log(players)
             } catch (error) {
                 handleError(error, navigate);
             }
