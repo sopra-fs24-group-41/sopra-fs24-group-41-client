@@ -9,16 +9,13 @@ import QuitPopup from "components/popup-ui/QuitPopup";
 export const GameContext = createContext();
 
 
-
-
 const TargetWord = () => {
-    const { player } = useContext(playerContext);
+    const {player} = useContext(playerContext);
     const [quitPopup, setQuitPopup] = useState(false);
 
     const handleQuit = () => {
         setQuitPopup((prevState) => !prevState);
     };
-
 
     const targetWordName = player.targetWord ? player.targetWord.name : "";
 

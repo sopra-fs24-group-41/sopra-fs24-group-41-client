@@ -7,7 +7,7 @@ import "styles/views/Game.scss";
 const PlayerContainer = ({ player }) => (
     <div className="player-word container">
         <div className="player-word player-name">{player.name}</div>
-        <div className="word">{player.getNewestWord() === null ? 'fire' : player.getNewestWord().name}</div>
+        <div className="word">{player.getNewestWord() === null ? "fire" : player.getNewestWord().name}</div>
     </div>
 );
 

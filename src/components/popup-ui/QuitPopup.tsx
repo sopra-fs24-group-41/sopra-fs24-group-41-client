@@ -8,8 +8,6 @@ import { api, handleError } from "../../helpers/api.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 
-
-
 const QuitPopup = () => {
 
     const navigate = useNavigate();
@@ -41,7 +39,6 @@ const QuitPopup = () => {
     const lobbyContext = useContext(LobbyContext)
     const gameContext = useContext(GameContext)
     const setQuitPopup = lobbyContext ? lobbyContext.setQuitPopup : gameContext.setQuitPopup;
-
 
 
     return (
