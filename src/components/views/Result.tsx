@@ -19,7 +19,7 @@ const Result = () => {
     const [res, setRes] = useState();
     const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
     const [resultStatus, setResultStatus] = useState<boolean>(false);
-    const [plName, setPlName] = useState();
+    const [pID, setPID] = useState();
 
     useEffect(() => {
         const fetchPlayer = async () => {
@@ -30,7 +30,7 @@ const Result = () => {
                 foundPlayer.token = playerToken;
                 foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
-                setPlName(foundPlayer.id);
+                setPID(foundPlayer.id);
             } catch (error) {
                 handleError(error, navigate);
             }
@@ -59,7 +59,7 @@ const Result = () => {
 
     const renderPlayer = (ID) => {
         if (winner && ID === winner.id)return "player-container winner";
-        else if (ID.toString()  === plName)return "player-container loser";
+        else if (ID.toString()  === pID)return "player-container loser";
         else return "player-container";
     };
     
