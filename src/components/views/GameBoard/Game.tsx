@@ -86,6 +86,24 @@ const Game = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    const kick = () => {
+        localStorage.removeItem("playerId");
+        localStorage.removeItem("playerToken");
+        localStorage.removeItem("lobbyCode");
+        navigate("/lobbyoverview");
+    };
+
+    useEffect(() => {
+        let messagesLength = stompWebSocketHook.messages.length;
+        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
+            const newObject = stompWebSocketHook.messages[messagesLength - 1];
+            if (newObject.instruction === "kick") {
+                kick();
+            }
+        }
+    }, [stompWebSocketHook.messages]);
+
+
     return (
         <div>
             <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
