@@ -83,6 +83,10 @@ const Game = ({ stompWebSocketHook }) => {
             if (newObject.instruction && newObject.instruction === "stop") {
                 navigate("/result/");
             }
+
+            if (newObject.instruction === "kick") {
+                kick();
+            }
         }
     }, [stompWebSocketHook.messages]);
 
@@ -92,17 +96,6 @@ const Game = ({ stompWebSocketHook }) => {
         localStorage.removeItem("lobbyCode");
         navigate("/lobbyoverview");
     };
-
-    useEffect(() => {
-        let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
-            const newObject = stompWebSocketHook.messages[messagesLength - 1];
-            if (newObject.instruction === "kick") {
-                kick();
-            }
-        }
-    }, [stompWebSocketHook.messages]);
-
 
     return (
         <div>
