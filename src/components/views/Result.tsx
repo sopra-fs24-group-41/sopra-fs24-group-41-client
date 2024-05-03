@@ -30,7 +30,7 @@ const Result = () => {
                 foundPlayer.token = playerToken;
                 foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
-                setPlName(foundPlayer.name);
+                setPlName(foundPlayer.id);
             } catch (error) {
                 handleError(error, navigate);
             }
@@ -58,9 +58,9 @@ const Result = () => {
         setResultStatus(winner?.id.toString() === playerId.toString());
     }, [winner]);
 
-    const renderPlayer = (ID, pName) => {
+    const renderPlayer = (ID) => {
         if (winner && ID === winner.id)return "player-container winner";
-        else if (pName  === plName)return "player-container loser";
+        else if (ID.toString()  === plName)return "player-container loser";
         else return "player-container";
     };
     
@@ -88,7 +88,7 @@ const Result = () => {
                     >
                         <div
                             className={`player-container ${renderPlayer(
-                                player.id, player.name
+                                player.id
                             )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
                             <div className={renderIcon(player.id)}>
