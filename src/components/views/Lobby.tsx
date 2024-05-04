@@ -37,6 +37,7 @@ const gamemodes = [
     { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
     { name: "Casual", description: "chill and relaxed", serverName: "STANDARD", active: true },
     { name: "Wombo Combo!!", description: "Make some bomb combos", serverName: "WOMBOCOMBO", active: true },
+    { name: "Finite Fusion", description: "Use your resources wisely", serverName: "FINITEFUSION", active: true },
 ];
 
 export const context = createContext();

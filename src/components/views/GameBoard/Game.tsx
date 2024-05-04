@@ -1,36 +1,23 @@
 import React, { useEffect, useState, createContext } from "react";
-import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/Game.scss";
-import WordBoard from "./WordBoard";
-import WordMergeBar from "./WordMergeBar";
-import Player from "models/Player";
-import { api, handleError } from "helpers/api";
-import Word from "models/Word";
-import PlayerList from "./PlayerList";
-import TargetWord from "./TargetWord";
 import { useNavigate } from "react-router-dom";
+import BaseContainer from "components/ui/BaseContainer";
+import TargetWord from "./TargetWord";
+import WordBoard from "./WordBoard";
+import PlayerList from "./PlayerList";
+import { api, handleError } from "helpers/api";
+import Player from "models/Player";
+import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
-import { Button } from "components/ui/Button";
-import QuitPopup from "components/popup-ui/QuitPopup";
-
-export const nextWordIndexContext = createContext(123);
-
-export const mergeWordListContext = createContext([]);
-
-export const wordListContext = createContext([]);
+import "styles/views/Game.scss";
 
 export const playerContext = createContext(new Player());
 
 const Game = ({ stompWebSocketHook }) => {
-    const [nextWordIndex, setNextWordIndex] = useState(0);
-    const [mergeWordList, setMergeWordList] = useState<String>([]);
-    const [player, setPlayer] = useState<Player>(new Player);
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [wordList, setWordList] = useState<Word[]>([]);
-    const navigate = useNavigate();
+    const [player, setPlayer] = useState<Player>(new Player());
     const playerId = localStorage.getItem("playerId");
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPlayer = async () => {
@@ -40,23 +27,14 @@ const Game = ({ stompWebSocketHook }) => {
                 foundPlayer.id = playerId;
                 foundPlayer.token = playerToken;
                 foundPlayer.lobbyCode = lobbyCode;
+                foundPlayer.sortPlayerWords();
                 setPlayer(foundPlayer);
             } catch (error) {
                 handleError(error, navigate);
             }
         };
 
-        const fetchOtherPlayers = async () => {
-            try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
-                setPlayers(response.data.map(p => new Player(p)));
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
-
         fetchPlayer();
-        fetchOtherPlayers();
     }, []);
 
     useEffect(() => {
@@ -73,10 +51,6 @@ const Game = ({ stompWebSocketHook }) => {
     }, [stompWebSocketHook.connected]);
 
     useEffect(() => {
-        setWordList(player?.getWords());
-    }, [player]);
-
-    useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
         if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
@@ -86,29 +60,42 @@ const Game = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+        try {
+            let response = await api.put(
+                `/lobbies/${lobbyCode}/players/${playerId}`,
+                [playerWord1.word, playerWord2.word],
+                { headers: { playerToken: playerToken } }
+            );
+            let responsePlayer = new Player(player);
+            responsePlayer.points = response.data.points;
+            responsePlayer.playerWords = response.data.playerWords;
+            responsePlayer.sortPlayerWords();
+            responsePlayer.targetWord = response.data.targetWord;
+            let resultPlayerWord = new PlayerWord();
+            resultPlayerWord.word = response.data.resultWord;
+
+            setPlayer(responsePlayer);
+
+            return resultPlayerWord;
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
+
     return (
         <div>
-            <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
-                <mergeWordListContext.Provider value={{ mergeWordList, setMergeWordList }}>
-                    <wordListContext.Provider value={{ wordList, setWordList }}>
-                        <playerContext.Provider value={{ player, setPlayer }}>    
-                            <BaseContainer>
-                                <TargetWord></TargetWord>
-                            </BaseContainer>
-                            <BaseContainer className="game base-container">
-
-                                <div className="game horizontal-container">
-                                    <div className="game container">
-                                        <WordMergeBar></WordMergeBar>
-                                        <WordBoard></WordBoard>
-                                    </div>
-                                    <PlayerList players={players}></PlayerList>
-                                </div>
-                            </BaseContainer>
-                        </playerContext.Provider>
-                    </wordListContext.Provider>
-                </mergeWordListContext.Provider>
-            </nextWordIndexContext.Provider>
+            <playerContext.Provider value={{ player, setPlayer }}>
+                <BaseContainer>
+                    <TargetWord></TargetWord>
+                </BaseContainer>
+                <BaseContainer className="game base-container">
+                    <div className="game horizontal-container">
+                        <WordBoard playFunction={play} ></WordBoard>
+                        <PlayerList></PlayerList>
+                    </div>
+                </BaseContainer>
+            </playerContext.Provider>
         </div>
     );
 };

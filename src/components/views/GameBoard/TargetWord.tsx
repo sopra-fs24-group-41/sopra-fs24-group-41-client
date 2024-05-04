@@ -1,16 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import WordButton from "./WordButton";
 import { playerContext } from "./Game";
 import { Button } from "components/ui/Button";
-import QuitPopup from "components/popup-ui/QuitPopup";
 
 const TargetWord = () => {
-    const { player } =
-      useContext(playerContext);
+    const { player } = useContext(playerContext);
+    const [targetWordName, setTargetWordName] = useState(player.targetWord ? player.targetWord.name : "");
 
-    const targetWordName = player.targetWord ? player.targetWord.name : "";
+    useEffect(() => {
+        console.log(player);
+        setTargetWordName(player.targetWord ? player.targetWord.name : "");
+    }, [player]);
 
     return (
         <BaseContainer className="targetword container">

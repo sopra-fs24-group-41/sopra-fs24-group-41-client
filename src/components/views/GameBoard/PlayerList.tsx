@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Player from "models/Player";
 import "styles/views/Game.scss";
+import { api, handleError } from "../../../helpers/api";
+import { useNavigate } from "react-router-dom";
 
 const PlayerContainer = ({ player }) => (
     <div className="player-word container">
@@ -14,7 +16,24 @@ PlayerContainer.propTypes = {
     player: PropTypes.object.isRequired
 }
 
-const PlayerList = ({ players }) => {
+const PlayerList = ({ }) => {
+    const [players, setPlayers] = useState<Player[]>([]);
+    const lobbyCode = localStorage.getItem("lobbyCode");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchOtherPlayers = async () => {
+            try {
+                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
+                setPlayers(response.data.map(p => new Player(p)));
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        };
+
+        fetchOtherPlayers();
+    }, []);
+
     return (
         <div className="player-list container">
             <h2>Players</h2>
@@ -27,10 +46,6 @@ const PlayerList = ({ players }) => {
             </ul>
         </div>
     );
-};
-
-PlayerList.propTypes = {
-    players: PropTypes.arrayOf(Player).isRequired
 };
 
 export default PlayerList;
