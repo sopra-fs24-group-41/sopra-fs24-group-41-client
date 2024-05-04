@@ -57,8 +57,19 @@ const Game = ({ stompWebSocketHook }) => {
             if (newObject.instruction && newObject.instruction === "stop") {
                 navigate("/result/");
             }
+
+            if (newObject.instruction === "kick") {
+                kick();
+            }
         }
     }, [stompWebSocketHook.messages]);
+
+    const kick = () => {
+        localStorage.removeItem("playerId");
+        localStorage.removeItem("playerToken");
+        localStorage.removeItem("lobbyCode");
+        navigate("/lobbyoverview");
+    };
 
     const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
         try {
