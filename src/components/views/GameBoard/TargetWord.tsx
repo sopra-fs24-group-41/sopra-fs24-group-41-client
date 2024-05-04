@@ -19,7 +19,6 @@ const TargetWord = () => {
     };
 
     useEffect(() => {
-        console.log(player);
         setTargetWordName(player.targetWord ? player.targetWord.name : "");
     }, [player]);
 
