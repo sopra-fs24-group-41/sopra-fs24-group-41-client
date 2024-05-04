@@ -39,7 +39,7 @@ const gamemodes = [
     { name: "Wombo Combo!!", description: "Make some bomb combos", serverName: "WOMBOCOMBO", active: true },
 ];
 
-export const context = createContext();
+export const LobbyContext = createContext();
 
 const LobbyPage = ({ stompWebSocketHook }) => {
     const [selectedGamemode, setSelectedGamemode] = useState<Gamemode>(null);
@@ -64,6 +64,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             } catch (error) {
                 handleError(error, navigate);
                 alert("Unable to display lobby data");
+                localStorage.clear();
             }
         };
         fetchLobbyAndPlayers();
@@ -134,21 +135,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const handleQuit = () => {
         setQuitPopup((prevState) => !prevState);
-    };
-
-    const QuitLobby = async () => {
-        try {
-            const config = {
-                headers: {
-                    "playerToken": localStorage.getItem("playerToken").toString(),
-                },
-            };
-            await api.delete(`/lobbies/${lobbycode}/players/${localStorage.getItem("playerId")}`, config);
-            kick();
-        } catch (error) {
-            handleError(error, navigate);
-            alert("Something went wrong on the server side, please try again");
-        }
     };
 
     const kick = () => {
@@ -301,11 +287,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 <CopyButton copyText={lobby.code} />
             </div>
             {quitPopup && (
-                <context.Provider
-                    value={{ quitPopup, setQuitPopup, QuitLobby }}
+                <LobbyContext.Provider
+                    value={{ quitPopup, setQuitPopup }}
                 >
                     <QuitPopup />
-                </context.Provider>
+                </LobbyContext.Provider>
             )}
         </div>
     );
