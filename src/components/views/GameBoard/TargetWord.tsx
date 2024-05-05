@@ -17,7 +17,6 @@ const TargetWord = () => {
     );
 
     useEffect(() => {
-        console.log(player.status)
         if (player.status === "PLAYING") {
             if (player.targetWord === null || player.targetWord === undefined || player.targetWord?.name === "") {
                 setContent(

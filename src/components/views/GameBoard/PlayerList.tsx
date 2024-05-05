@@ -9,11 +9,6 @@ const PlayerContainer = ({ otherPlayer }) => {
     let otherPlayerWord = otherPlayer.getNewestWord();
 
     let wordFormat = player.getWords().some(word => word.name === otherPlayerWord.name) ? "visible-word" : "blurred-word";
-    console.log("My words: ");
-    console.log(player.getWords());
-    console.log("Their word: ");
-    console.log(otherPlayerWord);
-    console.log(wordFormat);
     
     return (
         <div className="player-word container">
