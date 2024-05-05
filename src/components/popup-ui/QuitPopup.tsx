@@ -3,7 +3,7 @@ import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/QuitPopup.scss";
 import { LobbyContext } from "../views/Lobby";
-import { GameContext } from "components/views/GameBoard/TargetWord";
+import { GameContext } from "components/views/GameBoard/Game";
 import { api, handleError } from "../../helpers/api.js";
 import { useNavigate, useParams } from "react-router-dom";
 

@@ -16,11 +16,11 @@ const WordMergeBar = ({ removeWordFunction }) => {
     };
 
     return (
-        <BaseContainer className="wordmergebar container">
+        <BaseContainer className="word-merge-bar container">
             <WordButton key={1} onClick={removeWordFunction}>{formatPlayerWord(mergeWordList[0], "-")}</WordButton>
-            <div className="wordmergebar symbol">+</div>
+            <div className="word-merge-bar symbol">+</div>
             <WordButton key={2}>{formatPlayerWord(mergeWordList[1], "-")}</WordButton>
-            <div className="wordmergebar symbol">=</div>
+            <div className="word-merge-bar symbol">=</div>
             <WordButton key={3}>{formatPlayerWord(mergeWordList[2], "?")}</WordButton>
         </BaseContainer>
     );

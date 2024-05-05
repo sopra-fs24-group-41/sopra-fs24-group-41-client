@@ -14,7 +14,7 @@ export const nextWordIndexContext = createContext(0);
 
 const WordRow = (props) => {
     return (
-        <div {...props} className="wordrow">
+        <div {...props} className="word-row">
             {" "}
             {props.children}{" "}
         </div>
@@ -119,16 +119,16 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
     }
 
     return (
-        <div className="game container">
+        <BaseContainer className="game vertical-container">
             <mergeWordListContext.Provider value={{ mergeWordList, setMergeWordList }}>
                 <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
                     <WordMergeBar removeWordFunction={removeWord}></WordMergeBar>
                 </nextWordIndexContext.Provider>
             </mergeWordListContext.Provider>
-            <BaseContainer className="wordboard container">
+            <BaseContainer className="word-board container">
                 {createWordMatrix()}
             </BaseContainer>
-        </div>
+        </BaseContainer>
     );
 };
 
