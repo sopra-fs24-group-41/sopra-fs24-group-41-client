@@ -81,14 +81,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const checkLogin = () => {
-        const token = localStorage.getItem("userToken");
-        if (token === null) {
-            alert("Please login to gain further access");
-
-            return false;
-        }
-        
-        return true;
+        return localStorage.getItem("userToken") !== null;
     };
 
 
@@ -98,24 +91,37 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     const joinLobby = async () => {
         if (!checkLogin()) {
-            return; // Stop execution if the user is not logged in
-        }
-        try {
-            const requestbody = [];
-            const config = { headers: { userToken: userToken } };
-            const response = await api.post("/lobbies/" + lobbyCode + "/players", requestbody, config);
-            localStorage.setItem("playerToken", response.data.playerToken);
-            localStorage.setItem("playerId", response.data.playerId);
-            localStorage.setItem("lobbyCode", lobbyCode);
-            navigate("/lobby/" + lobbyCode);
-        } catch (error) {
-            handleError(error, navigate);
+            try {
+                let name = prompt("enter player name");
+                const requestBody = { playerName: name };
+                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody);
+                localStorage.setItem("playerToken", response.data.playerToken);
+                localStorage.setItem("playerId", response.data.playerId);
+                localStorage.setItem("lobbyCode", lobbyCode);
+                navigate("/lobby/" + lobbyCode);
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        } else {
+            try {
+                const requestBody = {};
+                const config = { headers: { userToken: userToken } };
+                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
+                localStorage.setItem("playerToken", response.data.playerToken);
+                localStorage.setItem("playerId", response.data.playerId);
+                localStorage.setItem("lobbyCode", lobbyCode);
+                navigate("/lobby/" + lobbyCode);
+            } catch (error) {
+                handleError(error, navigate);
+            }
         }
     };
 
     const createLobby = async () => {
         if (!checkLogin()) {
-            return; // Stop execution if the user is not logged in
+            alert("Only logged in users can create lobbies\nPlease login or join an existing lobby");
+
+            return;
         }
         try {
             const requestBody = { "publicAccess": true };
