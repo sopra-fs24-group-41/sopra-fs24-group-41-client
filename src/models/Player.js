@@ -18,6 +18,7 @@ class Player {
         this.playerWords = [];
         this.targetWord = null;
         this.resultWord = null;
+        this.status = "READY";
         Object.assign(this, data);
 
         // Assign word count attribute

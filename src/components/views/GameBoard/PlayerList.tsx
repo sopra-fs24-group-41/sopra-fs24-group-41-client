@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext} from "react";
 import PropTypes from "prop-types";
-import Player from "models/Player";
 import "styles/views/Game.scss";
-import { api, handleError } from "../../../helpers/api";
-import { useNavigate } from "react-router-dom";
+import {otherPlayersContext, playerContext} from "./Game";
 
-const PlayerContainer = ({ player }) => (
-    <div className="player-word container">
-        <div className="player-word player-name">{player.name}</div>
-        <div className="word">{player.getNewestWord().name}</div>
-    </div>
-);
+const PlayerContainer = ({ otherPlayer }) => {
+    const { player } = useContext(playerContext);
+
+    let otherPlayerWord = otherPlayer.getNewestWord();
+
+    let wordFormat = player.getWords().some(word => word.name === otherPlayerWord.name) ? "visible-word" : "blurred-word";
+    console.log("My words: ");
+    console.log(player.getWords());
+    console.log("Their word: ");
+    console.log(otherPlayerWord);
+    console.log(wordFormat);
+    
+    return (
+        <div className="player-word container">
+            <div className="player-word player-name">{otherPlayer.name}</div>
+            <div className={`player-word ${wordFormat}`}>{otherPlayerWord.name}</div>
+        </div>
+    );
+};
 
 PlayerContainer.propTypes = {
-    player: PropTypes.object.isRequired
+    otherPlayer: PropTypes.object.isRequired
 }
 
 const PlayerList = ({ }) => {
-    const [players, setPlayers] = useState<Player[]>([]);
-    const lobbyCode = localStorage.getItem("lobbyCode");
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchOtherPlayers = async () => {
-            try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
-                setPlayers(response.data.map(p => new Player(p)));
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
-
-        fetchOtherPlayers();
-    }, []);
+    const { otherPlayers } = useContext(otherPlayersContext);
+    
 
     return (
-        <div className="player-list container">
+        <div className="game vertical-container">
             <h2>Players</h2>
             <ul className="player-list list">
-                {players.map((p, index) => (
+                {otherPlayers.map((p, index) => (
                     <li key={index}>
-                        <PlayerContainer player={p}/>
+                        <PlayerContainer otherPlayer={p}/>
                     </li>
                 ))}
             </ul>

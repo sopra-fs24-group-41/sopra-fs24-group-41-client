@@ -9,32 +9,52 @@ import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
+import {Button} from "../../ui/Button";
+import QuitPopup from "../../popup-ui/QuitPopup";
 
 export const playerContext = createContext(new Player());
 
+export const otherPlayersContext = createContext([]);
+
+export const GameContext = createContext();
+
 const Game = ({ stompWebSocketHook }) => {
     const [player, setPlayer] = useState<Player>(new Player());
+    const [otherPlayers, setOtherPlayers] = useState<Player[]>([]);
     const playerId = localStorage.getItem("playerId");
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
+    const [quitPopup, setQuitPopup] = useState(false);
+
+    const fetchPlayer = async () => {
+        try {
+            let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
+            let foundPlayer = new Player(response.data);
+            foundPlayer.id = playerId;
+            foundPlayer.token = playerToken;
+            foundPlayer.lobbyCode = lobbyCode;
+            foundPlayer.sortPlayerWords();
+            setPlayer(foundPlayer);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
+
+    const fetchOtherPlayers = async () => {
+        try {
+            let response = await api.get(`/lobbies/${lobbyCode}/players`,);
+            let foundOtherPlayers = response.data.map(p => new Player(p));
+            foundOtherPlayers.sort((a, b) => b.points - a.points);
+            setOtherPlayers(foundOtherPlayers);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
 
     useEffect(() => {
-        const fetchPlayer = async () => {
-            try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
-                let foundPlayer = new Player(response.data);
-                foundPlayer.id = playerId;
-                foundPlayer.token = playerToken;
-                foundPlayer.lobbyCode = lobbyCode;
-                foundPlayer.sortPlayerWords();
-                setPlayer(foundPlayer);
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
-
         fetchPlayer();
+        fetchOtherPlayers();
     }, []);
 
     useEffect(() => {
@@ -61,6 +81,10 @@ const Game = ({ stompWebSocketHook }) => {
             if (newObject.instruction === "kick") {
                 kick();
             }
+
+            if (newObject.instruction === "update") {
+                fetchOtherPlayers();
+            }
         }
     }, [stompWebSocketHook.messages]);
 
@@ -85,7 +109,7 @@ const Game = ({ stompWebSocketHook }) => {
             responsePlayer.targetWord = response.data.targetWord;
             let resultPlayerWord = new PlayerWord();
             resultPlayerWord.word = response.data.resultWord;
-
+            responsePlayer.status = response.data.status;
             setPlayer(responsePlayer);
 
             return resultPlayerWord;
@@ -94,20 +118,38 @@ const Game = ({ stompWebSocketHook }) => {
         }
     };
 
+    const handleQuit = () => {
+        setQuitPopup((prevState) => !prevState);
+    };
+
     return (
-        <div>
+        <BaseContainer className="game vertical-container">
             <playerContext.Provider value={{ player, setPlayer }}>
-                <BaseContainer>
-                    <TargetWord></TargetWord>
+                <BaseContainer className="game container">
+                    <BaseContainer className="game horizontal-container">
+                        <TargetWord></TargetWord>
+                        <Button onClick={() => handleQuit()}>Quit</Button>
+                        {quitPopup && (
+                            <GameContext.Provider
+                                value={{ quitPopup, setQuitPopup }}
+                            >
+                                <QuitPopup />
+                            </GameContext.Provider>
+                        )}
+                    </BaseContainer>
                 </BaseContainer>
-                <BaseContainer className="game base-container">
-                    <div className="game horizontal-container">
+                <BaseContainer className="game horizontal-container">
+                    <BaseContainer className="game container">
                         <WordBoard playFunction={play} ></WordBoard>
-                        <PlayerList></PlayerList>
-                    </div>
+                    </BaseContainer>
+                    <BaseContainer className="player-list container">
+                        <otherPlayersContext.Provider value = {{otherPlayers, setOtherPlayers}}>
+                            <PlayerList></PlayerList>
+                        </otherPlayersContext.Provider>
+                    </BaseContainer>
                 </BaseContainer>
             </playerContext.Provider>
-        </div>
+        </BaseContainer>
     );
 };
 
