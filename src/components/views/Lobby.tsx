@@ -35,9 +35,9 @@ GamemodeItem.propTypes = {
 
 const gamemodes = [
     { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
-    { name: "Casual", description: "chill and relaxed", serverName: "STANDARD", active: true },
-    { name: "Wombo Combo!!", description: "Make some bomb combos", serverName: "WOMBOCOMBO", active: true },
-    { name: "Finite Fusion", description: "Use your resources wisely", serverName: "FINITEFUSION", active: true },
+    { name: "Wombo Combo", description: "Make some bomb combos!", serverName: "WOMBOCOMBO", active: true },
+    { name: "Finite Fusion", description: "Use your resources wisely.", serverName: "FINITEFUSION", active: true },
+    { name: "Sandbox", description: "Explore infinite combinations.", serverName: "STANDARD", active: true },
 ];
 
 export const LobbyContext = createContext();
@@ -64,7 +64,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
             } catch (error) {
                 handleError(error, navigate);
-                alert("Unable to display lobby data");
                 localStorage.clear();
             }
         };
@@ -122,7 +121,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
         } catch (e) {
-            handleError(e);
+            handleError(e, navigate);
         }
     };
 
