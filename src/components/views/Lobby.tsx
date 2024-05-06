@@ -64,7 +64,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
             } catch (error) {
                 handleError(error, navigate);
-                localStorage.clear();
+                localStorage.removeItem("playerId");
+                localStorage.removeItem("playerToken");
+                localStorage.removeItem("lobbyCode");
+                navigate("/lobbyoverview");
             }
         };
         fetchLobbyAndPlayers();
