@@ -8,48 +8,32 @@
  */
 
 .game {
-  &.base-container {
-    margin: 1em auto;
-    border-radius: $borderRadius;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
   &.container {
-    margin: 1em auto;
+    margin: 1em;
     border-radius: $borderRadius;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: $background;
     box-shadow: $dropShadow;
-    width: 900px;
+    height: 100%;
+    width: 100%;
+    @include center;
   }
   &.vertical-container {
-    display: flex;
     flex-direction: column;
-    align-items: center;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    @include center;
   }
   &.horizontal-container {
-    display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    @include center;
   }
 }
 
-.targetword {
-  &.container {
-    border-radius: $borderRadius;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    background-color: #9b9b9b;
-    margin: 1em auto;
-    box-shadow: $dropShadow;
-    width: 900px;
-  }
-
+.target-word {
   &.text {
     font-size: 4em;
     text-align: center;
@@ -66,22 +50,16 @@
 
 .player-list {
   &.container {
-    padding: 1em;
     margin: 1em;
     border-radius: $borderRadius;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     background-color: $background;
     box-shadow: $dropShadow;
+    height: 100%;
+    @include center;
   }
   &.list {
     list-style: none;
-    padding-left: 0;
-    text-align: center;
-    max-height: 170px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    padding: 0;
   }
 }
 
@@ -91,21 +69,35 @@
     padding: 10px;
     border-radius: $borderRadius;
     display: flex;
-    align-items: center;  }
+    align-items: center;
+  }
   &.player-name {
     margin-right: 10px;
     font-size: 1.5em;
     text-align: left;
     display: flex;
   }
-  &.newest-word {
+  &.visible-word {
     font-size: 1.5em;
     text-align: left;
     display: flex;
   }
+  &.blurred-word {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-size: 1.5em;
+    text-align: left;
+    display: flex;
+    color: transparent;
+    text-shadow:
+            0 0 10px $textColor,
+            0 0 8px $textColor;
+  }
 }
 
-.wordmergebar {
+.word-merge-bar {
   &.container {
     border-radius: $borderRadius;
     display: flex;
@@ -123,7 +115,7 @@
   }
 }
 
-.wordboard {
+.word-board {
   &.container {
     padding: 0.5em;
     border-radius: $borderRadius;
@@ -139,7 +131,7 @@
   }
 }
 
-.wordrow {
+.word-row {
   display: flex;
   flex-direction: row;
 }

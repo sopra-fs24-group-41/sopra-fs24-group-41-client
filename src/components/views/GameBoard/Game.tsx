@@ -1,60 +1,58 @@
 import React, { useEffect, useState, createContext } from "react";
-import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/Game.scss";
-import WordBoard from "./WordBoard";
-import WordMergeBar from "./WordMergeBar";
-import Player from "models/Player";
-import { api, handleError } from "helpers/api";
-import Word from "models/Word";
-import PlayerList from "./PlayerList";
-import TargetWord from "./TargetWord";
 import { useNavigate } from "react-router-dom";
+import BaseContainer from "components/ui/BaseContainer";
+import TargetWord from "./TargetWord";
+import WordBoard from "./WordBoard";
+import PlayerList from "./PlayerList";
+import { api, handleError } from "helpers/api";
+import Player from "models/Player";
+import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
-import { Button } from "components/ui/Button";
-import QuitPopup from "components/popup-ui/QuitPopup";
-
-export const nextWordIndexContext = createContext(123);
-
-export const mergeWordListContext = createContext([]);
-
-export const wordListContext = createContext([]);
+import "styles/views/Game.scss";
+import {Button} from "../../ui/Button";
+import QuitPopup from "../../popup-ui/QuitPopup";
 
 export const playerContext = createContext(new Player());
 
+export const otherPlayersContext = createContext([]);
+
+export const GameContext = createContext();
+
 const Game = ({ stompWebSocketHook }) => {
-    const [nextWordIndex, setNextWordIndex] = useState(0);
-    const [mergeWordList, setMergeWordList] = useState<String>([]);
-    const [player, setPlayer] = useState<Player>(new Player);
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [wordList, setWordList] = useState<Word[]>([]);
-    const navigate = useNavigate();
+    const [player, setPlayer] = useState<Player>(new Player());
+    const [otherPlayers, setOtherPlayers] = useState<Player[]>([]);
     const playerId = localStorage.getItem("playerId");
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
+    const navigate = useNavigate();
+    const [quitPopup, setQuitPopup] = useState(false);
+
+    const fetchPlayer = async () => {
+        try {
+            let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
+            let foundPlayer = new Player(response.data);
+            foundPlayer.id = playerId;
+            foundPlayer.token = playerToken;
+            foundPlayer.lobbyCode = lobbyCode;
+            foundPlayer.sortPlayerWords();
+            setPlayer(foundPlayer);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
+
+    const fetchOtherPlayers = async () => {
+        try {
+            let response = await api.get(`/lobbies/${lobbyCode}/players`,);
+            let foundOtherPlayers = response.data.map(p => new Player(p));
+            foundOtherPlayers.sort((a, b) => b.points - a.points);
+            setOtherPlayers(foundOtherPlayers);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
 
     useEffect(() => {
-        const fetchPlayer = async () => {
-            try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
-                let foundPlayer = new Player(response.data);
-                foundPlayer.id = playerId;
-                foundPlayer.token = playerToken;
-                foundPlayer.lobbyCode = lobbyCode;
-                setPlayer(foundPlayer);
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
-
-        const fetchOtherPlayers = async () => {
-            try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
-                setPlayers(response.data.map(p => new Player(p)));
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
-
         fetchPlayer();
         fetchOtherPlayers();
     }, []);
@@ -73,10 +71,6 @@ const Game = ({ stompWebSocketHook }) => {
     }, [stompWebSocketHook.connected]);
 
     useEffect(() => {
-        setWordList(player?.getWords());
-    }, [player]);
-
-    useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
         if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
@@ -86,6 +80,10 @@ const Game = ({ stompWebSocketHook }) => {
 
             if (newObject.instruction === "kick") {
                 kick();
+            }
+
+            if (newObject.instruction === "update") {
+                fetchOtherPlayers();
             }
         }
     }, [stompWebSocketHook.messages]);
@@ -97,30 +95,61 @@ const Game = ({ stompWebSocketHook }) => {
         navigate("/lobbyoverview");
     };
 
-    return (
-        <div>
-            <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
-                <mergeWordListContext.Provider value={{ mergeWordList, setMergeWordList }}>
-                    <wordListContext.Provider value={{ wordList, setWordList }}>
-                        <playerContext.Provider value={{ player, setPlayer }}>    
-                            <BaseContainer>
-                                <TargetWord></TargetWord>
-                            </BaseContainer>
-                            <BaseContainer className="game base-container">
+    const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+        try {
+            let response = await api.put(
+                `/lobbies/${lobbyCode}/players/${playerId}`,
+                [playerWord1.word, playerWord2.word],
+                { headers: { playerToken: playerToken } }
+            );
+            let responsePlayer = new Player(player);
+            responsePlayer.points = response.data.points;
+            responsePlayer.playerWords = response.data.playerWords;
+            responsePlayer.sortPlayerWords();
+            responsePlayer.targetWord = response.data.targetWord;
+            let resultPlayerWord = new PlayerWord();
+            resultPlayerWord.word = response.data.resultWord;
+            responsePlayer.status = response.data.status;
+            setPlayer(responsePlayer);
 
-                                <div className="game horizontal-container">
-                                    <div className="game container">
-                                        <WordMergeBar></WordMergeBar>
-                                        <WordBoard></WordBoard>
-                                    </div>
-                                    <PlayerList players={players}></PlayerList>
-                                </div>
-                            </BaseContainer>
-                        </playerContext.Provider>
-                    </wordListContext.Provider>
-                </mergeWordListContext.Provider>
-            </nextWordIndexContext.Provider>
-        </div>
+            return resultPlayerWord;
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
+
+    const handleQuit = () => {
+        setQuitPopup((prevState) => !prevState);
+    };
+
+    return (
+        <BaseContainer className="game vertical-container">
+            <playerContext.Provider value={{ player, setPlayer }}>
+                <BaseContainer className="game container">
+                    <BaseContainer className="game horizontal-container">
+                        <TargetWord></TargetWord>
+                        <Button onClick={() => handleQuit()}>Quit</Button>
+                        {quitPopup && (
+                            <GameContext.Provider
+                                value={{ quitPopup, setQuitPopup }}
+                            >
+                                <QuitPopup />
+                            </GameContext.Provider>
+                        )}
+                    </BaseContainer>
+                </BaseContainer>
+                <BaseContainer className="game horizontal-container">
+                    <BaseContainer className="game container">
+                        <WordBoard playFunction={play} ></WordBoard>
+                    </BaseContainer>
+                    <BaseContainer className="player-list container">
+                        <otherPlayersContext.Provider value = {{otherPlayers, setOtherPlayers}}>
+                            <PlayerList></PlayerList>
+                        </otherPlayersContext.Provider>
+                    </BaseContainer>
+                </BaseContainer>
+            </playerContext.Provider>
+        </BaseContainer>
     );
 };
 

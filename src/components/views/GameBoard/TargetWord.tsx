@@ -1,40 +1,53 @@
-import React, { useContext, useState, createContext } from "react";
+import React, { useContext, useEffect, useState} from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import WordButton from "./WordButton";
 import { playerContext } from "./Game";
-import { Button } from "components/ui/Button";
-import QuitPopup from "components/popup-ui/QuitPopup";
-
-export const GameContext = createContext();
-
 
 const TargetWord = () => {
-    const {player} = useContext(playerContext);
-    const [quitPopup, setQuitPopup] = useState(false);
-
-    const handleQuit = () => {
-        setQuitPopup((prevState) => !prevState);
-    };
-
-    const targetWordName = player.targetWord ? player.targetWord.name : "";
-
-    return (
-        <BaseContainer className="targetword container">
-            <div className="targetword text">Target word:</div>
-            <WordButton key={0} className="targetword word">
+    const { player } = useContext(playerContext);
+    const [targetWordName, setTargetWordName] = useState(player.targetWord ? player.targetWord.name : "");
+    const [content, setContent] = useState(
+        <div className="game horizontal-container">
+            <div className="target-word text">Target word:</div>
+            <WordButton key={0} className="target-word word">
                 {targetWordName}
             </WordButton>
-            <Button onClick={() => handleQuit()}>Quit</Button>
-            {quitPopup && (
-                <GameContext.Provider
-                    value={{ quitPopup, setQuitPopup }}
-                >
-                    <QuitPopup />
-                </GameContext.Provider>
-            )}
-        </BaseContainer>
+        </div>
     );
+
+    useEffect(() => {
+        if (player.status === "PLAYING") {
+            if (player.targetWord === null || player.targetWord === undefined || player.targetWord?.name === "") {
+                setContent(
+                    <div className="game horizontal-container">
+                        <div className="target-word text">Explore Combinations</div>
+                    </div>
+                )
+            }
+            else {
+                setContent(
+                    <div className="game horizontal-container">
+                        <div className="target-word text">Target word:</div>
+                        <WordButton key={0} className="target-word word">
+                            {player.targetWord.name}
+                        </WordButton>
+                    </div>
+                )
+            }
+        }
+        if (player.status === "LOST") {
+            setContent(
+                <div className="game horizontal-container">
+                    <div className="target-word text">You lost...</div>
+                </div>
+            )
+        }
+
+    }, [player]);
+
+
+    return content;
 };
 
 export default TargetWord;

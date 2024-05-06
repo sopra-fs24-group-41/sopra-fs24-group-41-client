@@ -50,7 +50,7 @@ const Result = () => {
 
     useEffect(() => {
         players.sort((a, b) => b.points - a.points);
-        setWinner(players[0])
+        setWinner(players.find(player => player.status === "WON"))
     }, [players]);
 
     useEffect(() => {

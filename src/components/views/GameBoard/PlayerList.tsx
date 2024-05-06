@@ -1,30 +1,40 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import PropTypes from "prop-types";
-import Player from "models/Player";
-import { playerContext } from "./Game";
 import "styles/views/Game.scss";
+import {otherPlayersContext, playerContext} from "./Game";
 
-const PlayerContainer = ({ player }) => (
-    <div className="player-word container">
-        <div className="player-word player-name">{player.name}</div>
-        <div className="word">{player.getNewestWord() === null ? "fire" : player.getNewestWord().name}</div>
-    </div>
-);
-
-PlayerContainer.propTypes = {
-    player: PropTypes.instanceOf(Player).isRequired
-};
-
-const PlayerList = () => {
+const PlayerContainer = ({ otherPlayer }) => {
     const { player } = useContext(playerContext);
 
+    let otherPlayerWord = otherPlayer.getNewestWord();
+
+    let wordFormat = player.getWords().some(word => word.name === otherPlayerWord.name) ? "visible-word" : "blurred-word";
+    
     return (
-        <div className="player-list container">
+        <div className="player-word container">
+            <div className="player-word player-name">{otherPlayer.name}</div>
+            <div className={`player-word ${wordFormat}`}>{otherPlayerWord.name}</div>
+        </div>
+    );
+};
+
+PlayerContainer.propTypes = {
+    otherPlayer: PropTypes.object.isRequired
+}
+
+const PlayerList = ({ }) => {
+    const { otherPlayers } = useContext(otherPlayersContext);
+    
+
+    return (
+        <div className="game vertical-container">
             <h2>Players</h2>
             <ul className="player-list list">
-                <li>
-                    <PlayerContainer player={player} />
-                </li>
+                {otherPlayers.map((p, index) => (
+                    <li key={index}>
+                        <PlayerContainer otherPlayer={p}/>
+                    </li>
+                ))}
             </ul>
         </div>
     );

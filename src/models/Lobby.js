@@ -9,7 +9,7 @@ class Lobby {
         this.status = null;
         this.mode = null;
         this.owner = null;
-        this.players = null;
+        this.players = [];
         Object.assign(this, data);
     }
 }

@@ -12,7 +12,6 @@ const ProfilePopup = () => {
         try {
             const token = localStorage.getItem("userToken");
             const requestBody = JSON.stringify({ token });
-            console.log(requestBody);
             await api.post("/logouts", requestBody);
             localStorage.removeItem("userToken");
             navigate("/login");

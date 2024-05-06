@@ -1,20 +1,20 @@
-import React, { useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import Word from "models/Word";
+import PlayerWord from "models/PlayerWord";
 import WordButton from "./WordButton";
-import { api } from "helpers/api";
-import {
-    nextWordIndexContext,
-    mergeWordListContext,
-    wordListContext,
-    playerContext,
-} from "./Game";
+import Game, {playerContext} from "./Game";
+import WordMergeBar from "./WordMergeBar";
+
+export const mergeWordListContext = createContext([]);
+
+export const nextWordIndexContext = createContext(0);
 
 const WordRow = (props) => {
     return (
-        <div {...props} className="wordrow">
+        <div {...props} className="word-row">
             {" "}
             {props.children}{" "}
         </div>
@@ -25,93 +25,122 @@ WordRow.propTypes = {
     children: PropTypes.node,
 };
 
-const WordBoard = () => {
-    const { nextWordIndex, setNextWordIndex } =
-        useContext(nextWordIndexContext);
-    const { mergeWordList, setMergeWordList } =
-        useContext(mergeWordListContext);
-    const { wordList, setWordList } = useContext(wordListContext);
+const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => any }) => {
+    const [mergeWordList, setMergeWordList] = useState<String[]>([]);
+    const [nextWordIndex, setNextWordIndex] = useState<number>(0);
     const { player } = useContext(playerContext);
+    const rowLength = 8;
 
-    const addWordToWordBoard = (name: string) => {
-        let i;
-        // See first if the given word is already discovered.
-        for (i = 0; i < wordList.length; i++)
-            if (name === wordList[i].name) break;
-        if (i === wordList.length)
-            setWordList([...wordList, new Word({ name: name })]);
-    };
-
-    const play = async (word1: string, word2: string) => {
-        try {
-            let response = await api.put(
-                `/lobbies/${player.lobbyCode}/players/${player.id}`,
-                [new Word({ name: word1 }), new Word({ name: word2 })],
-                { headers: { playerToken: player.token } }
-            );
-            player.points = response.data.points;
-            player.playerWords = response.data.playerWords;
-            player.targetWord = response.data.targetWord;
-
-            return response.data.resultWord.name;
-        } catch (error) {
-            alert("Error: " + error.message);
+    const addWordToMerge = async (playerWord: PlayerWord) => {
+        if (nextWordIndex === 2) {
+            return;
         }
-    };
 
-    const addWordToMerge = async (word: string) => {
         let newWordIndex = nextWordIndex;
         let newWordList = mergeWordList;
 
-        if (newWordIndex === 2) {
-            newWordList = ["", "", ""];
-            newWordIndex = 0;
+        if (nextWordIndex === 0) {
+            newWordList = [null, null, null];
         }
 
-        newWordList[newWordIndex] = word;
+        newWordList[newWordIndex] = playerWord;
         newWordIndex++;
 
-        if (newWordIndex === 2) {
-            newWordList[newWordIndex] = await play(
-                newWordList[0],
-                newWordList[1]
-            );
-            addWordToWordBoard(newWordList[newWordIndex]);
+        if (playerWord.uses !== null && playerWord.uses !== undefined) {
+            playerWord.uses -= 1;
         }
 
         setNextWordIndex(newWordIndex);
         setMergeWordList(newWordList);
     };
 
-    const createWordMatrix = () => {
-        let result = [];
-        let wordRow = [];
-        for (let i = 0; i < wordList.length; i++) {
-            if (i > 0 && i % 8 === 0) {
-                result.push(<WordRow key={result.length}>{wordRow}</WordRow>);
-                wordRow = [];
+    useEffect(() => {
+        const executePlayFunction = async () => {
+            if (nextWordIndex === 2) {
+                const result = await playFunction(mergeWordList[0], mergeWordList[1]);
+                setMergeWordList(prev => [...prev.slice(0, 2), result]);
+                setNextWordIndex(0);
             }
-            wordRow.push(
+        };
+
+        executePlayFunction();
+    }, [nextWordIndex]);
+
+    const formatWord = (playerWord : PlayerWord) => {
+        let result = playerWord.word.name;
+        if (playerWord.uses !== null && playerWord.uses !== undefined && playerWord.uses > 0) {
+            result += " " + playerWord.uses.toString();
+        }
+
+        return result;
+    }
+
+    const wordAvailable = (playerWord : PlayerWord) => {
+        return playerWord.uses === null || playerWord.uses === undefined || playerWord.uses > 0;
+    }
+
+    const createWordMatrix = () => {
+        let matrix = [];
+        let row = [];
+
+        for (let i = 0; i < player.playerWords.length; i++) {
+            if (i > 0 && i % rowLength === 0) {
+                matrix.push(<WordRow key={matrix.length}>{row}</WordRow>);
+                row = [];
+            }
+
+            row.push(
                 <WordButton
                     key={i}
                     onClick={() => {
-                        addWordToMerge(wordList[i].name);
+                        addWordToMerge(player.playerWords[i]);
                     }}
+                    disabled={!wordAvailable(player.playerWords[i])}
                 >
-                    {wordList[i].name}
+                    {formatWord(player.playerWords[i])}
                 </WordButton>
             );
         }
-        result.push(<WordRow key={result.length}>{wordRow}</WordRow>);
 
-        return result;
+        matrix.push(<WordRow key={matrix.length}>{row}</WordRow>);
+
+        return matrix;
     };
 
+    useEffect(() => {
+        createWordMatrix();
+    }, [player]);
+
+    const removeWord = () => {
+        if (nextWordIndex !== 1) {
+            return;
+        }
+
+        if (mergeWordList[0].uses !== null || mergeWordList[0].uses !== undefined) {
+            mergeWordList[0].uses += 1;
+        }
+
+        setNextWordIndex(0);
+        setMergeWordList([null, null, null]);
+        createWordMatrix();
+    }
+
     return (
-        <BaseContainer className="wordboard container">
-            {createWordMatrix()}
+        <BaseContainer className="game vertical-container">
+            <mergeWordListContext.Provider value={{ mergeWordList, setMergeWordList }}>
+                <nextWordIndexContext.Provider value={{ nextWordIndex, setNextWordIndex }}>
+                    <WordMergeBar removeWordFunction={removeWord}></WordMergeBar>
+                </nextWordIndexContext.Provider>
+            </mergeWordListContext.Provider>
+            <BaseContainer className="word-board container">
+                {createWordMatrix()}
+            </BaseContainer>
         </BaseContainer>
     );
+};
+
+WordBoard.propTypes = {
+    playFunction: PropTypes.func,
 };
 
 export default WordBoard;
