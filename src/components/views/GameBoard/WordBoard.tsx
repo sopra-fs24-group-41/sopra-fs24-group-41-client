@@ -32,31 +32,39 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
     const rowLength = 8;
 
     const addWordToMerge = async (playerWord: PlayerWord) => {
+        if (nextWordIndex === 2) {
+            return;
+        }
+
         let newWordIndex = nextWordIndex;
         let newWordList = mergeWordList;
 
-        if (newWordIndex === 2) {
+        if (nextWordIndex === 0) {
             newWordList = [null, null, null];
-            newWordIndex = 0;
-        }
-
-        if (playerWord.uses !== null) {
-            playerWord.uses -= 1;
         }
 
         newWordList[newWordIndex] = playerWord;
         newWordIndex++;
 
-        if (newWordIndex === 2) {
-            newWordList[newWordIndex] = await playFunction(
-                newWordList[0],
-                newWordList[1]
-            );
+        if (playerWord.uses !== null && playerWord.uses !== undefined) {
+            playerWord.uses -= 1;
         }
 
         setNextWordIndex(newWordIndex);
         setMergeWordList(newWordList);
     };
+
+    useEffect(() => {
+        const executePlayFunction = async () => {
+            if (nextWordIndex === 2) {
+                const result = await playFunction(mergeWordList[0], mergeWordList[1]);
+                setMergeWordList(prev => [...prev.slice(0, 2), result]);
+                setNextWordIndex(0);
+            }
+        };
+
+        executePlayFunction();
+    }, [nextWordIndex]);
 
     const formatWord = (playerWord : PlayerWord) => {
         let result = playerWord.word.name;
@@ -104,17 +112,16 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
     }, [player]);
 
     const removeWord = () => {
-        // Assumption: this is always executed only when `nextWordIndex` = 1.
-        if (nextWordIndex !== 1)
+        if (nextWordIndex !== 1) {
             return;
+        }
 
-        let newNextWordIndex = 0;
-        let newMergeWordList = mergeWordList;
-        mergeWordList[newNextWordIndex].uses += 1;
-        newMergeWordList[newNextWordIndex] = null;
+        if (mergeWordList[0].uses !== null || mergeWordList[0].uses !== undefined) {
+            mergeWordList[0].uses += 1;
+        }
 
-        setNextWordIndex(newNextWordIndex);
-        setMergeWordList(newMergeWordList);
+        setNextWordIndex(0);
+        setMergeWordList([null, null, null]);
         createWordMatrix();
     }
 
