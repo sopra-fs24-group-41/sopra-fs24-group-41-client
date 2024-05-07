@@ -6,6 +6,7 @@ class Lobby {
         this.code = null;
         this.name = null;
         this.publicAccess = null;
+        this.gameTime = null;
         this.status = null;
         this.mode = null;
         this.owner = null;

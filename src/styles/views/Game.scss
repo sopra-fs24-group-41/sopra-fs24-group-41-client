@@ -144,3 +144,20 @@
   margin: 0.5em;
   box-shadow: $dropShadow;
 }
+
+.popup-container {
+  min-height: auto;
+  width: auto;
+  display: flex;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(43, 43, 43);
+  padding: 0.1em;
+  border-radius: 5px;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  text-transform: uppercase;
+  z-index: 99000;
+}
