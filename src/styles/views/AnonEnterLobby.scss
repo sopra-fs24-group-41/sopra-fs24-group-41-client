@@ -1,0 +1,88 @@
+@import "../theme";
+
+/* The '&' is a shorthand for the containing element,
+  so for example a '&.user-list' inside .game will compile to
+  .game.user-list
+
+  for more information visit https://sass-lang.com/guide
+ */
+
+.lobbyoverview {
+  &.container {
+    z-index: 1;
+    background: $background;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+  }
+
+
+  & p,
+  h2 {
+    margin: 0.5em 0;
+  }
+
+  @media only screen and (max-width: 768px) {
+    &.container {
+      z-index: 1;
+      background: $background;
+      padding: 1.2em;
+      border-radius: $borderRadius;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+    }
+  }
+}
+
+.player {
+  &.container {
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    text-align: center;
+    margin: 0.5em 0;
+    width: 20em;
+    padding: 10px;
+    border-radius: $borderRadius;
+    display: flex;
+    align-items: center;
+    background: lighten($background, 10);
+  }
+
+  &.name {
+    text-align: center;
+    margin: auto;
+    color: $accentDark;
+    text-transform: uppercase;
+  }
+
+  &.input-container {
+    text-align: center;
+    margin: 0.5em 0;
+    width: 20em;
+    padding: 10px;
+    border-radius: $borderRadius;
+    display: flex;
+    align-items: center;
+    background: lighten($background, 10);
+    border: none;
+
+    &.has-input {
+      background: lighten($background, 25);
+      border: solid rgb(0, 0, 0)
+
+    }
+  }
+}
+
+.container-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}

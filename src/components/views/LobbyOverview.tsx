@@ -92,13 +92,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const joinLobby = async () => {
         if (!checkLogin()) {
             try {
-                let name = prompt("enter player name");
-                const requestBody = { playerName: name };
-                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody);
-                localStorage.setItem("playerToken", response.data.playerToken);
-                localStorage.setItem("playerId", response.data.playerId);
-                localStorage.setItem("lobbyCode", lobbyCode);
-                navigate("/lobby/" + lobbyCode);
+                navigate("/lobby/" + lobbyCode + "/anonymous")
             } catch (error) {
                 handleError(error, navigate);
             }

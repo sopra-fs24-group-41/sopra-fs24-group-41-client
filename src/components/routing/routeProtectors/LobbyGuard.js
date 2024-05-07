@@ -17,7 +17,7 @@ export const LobbyGuard = () => {
         return <Outlet />;
     }
 
-    return <Navigate to="/lobbyoverview" replace />;
+    return <Navigate to="/lobby/:lobbycode/anonymous" replace />;
 };
 
 LobbyGuard.propTypes = {
