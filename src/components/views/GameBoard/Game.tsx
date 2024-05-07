@@ -100,7 +100,7 @@ const Game = ({ stompWebSocketHook }) => {
             stompWebSocketHook.messages[messagesLength - 1] !== undefined
         ) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
-            if (newObject.instruction && newObject.instruction === "stop") {
+            if (newObject.instruction && newObject.instruction === "STOP") {
                 navigate("/result/");
             }
 
@@ -108,11 +108,12 @@ const Game = ({ stompWebSocketHook }) => {
                 renderPopupMessage(popupMessages[newObject.time]);
             }
 
-            if (newObject.instruction === "kick") {
+            if (newObject.instruction === "KICK") {
+                console.log("kicked because: ", newObject.reason) // replace with showing message
                 kick();
             }
 
-            if (newObject.instruction === "update") {
+            if (newObject.instruction === "UPDATE") {
                 fetchOtherPlayers();
             }
         }
