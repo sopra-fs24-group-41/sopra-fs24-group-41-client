@@ -50,9 +50,26 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
     const [publicA, setPublicA] = useState();
+    const [selectedTimer, setSelectedTimer] = useState(0);
+    const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
+    const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
+
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
+
+    const timerOptions = [
+        { label: "None", value: 0 },
+        { label: "1 min", value: 60 },
+        { label: "1 min 30s", value: 90},
+        { label: "2 min", value: 120},
+        { label: "2 min 30s", value: 150},
+        { label: "3 min", value: 180 },
+        { label: "3 min 30s", value: 180 },
+        { label: "4 min", value: 240 },
+        { label: "4 min 30s", value: 240 },
+        { label: "5 min", value: 300 },
+    ];
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -77,6 +94,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         if (lobby.mode) setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobby.mode));
         if (lobby.name) setLobbyname(lobby.name);
         if (lobby.publicAccess) setPublicA(lobby.publicAccess);
+        if (lobby.gameTime) setSelectedTimer(lobby.gameTime);
     }, [lobby]);
 
     useEffect(() => {
@@ -109,7 +127,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
-    const updateLobby = async (name: string, publicAccess: boolean, mode: string) => {
+    const updateLobby = async (name: string, publicAccess: boolean, mode: string, gameTime: number) => {
         if (!ownerMode) return alert("Not allowed! Only lobby owners can change this");
         const config = {
             headers: {
@@ -120,16 +138,17 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             name: name,
             publicAccess: publicAccess,
             mode: mode,
+            gameTime: gameTime
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
         } catch (e) {
-            handleError(e, navigate);
+            handleError(e);
         }
     };
 
     const selectGamemode = (gamemode: Gamemode) => {
-        if (gamemode !== selectedGamemode) updateLobby(null, null, gamemode.serverName);
+        if (gamemode !== selectedGamemode) updateLobby(null, null, gamemode.serverName, null);
         if (!ownerMode) return;
         setSelectedGamemode((prevSelectedGamemode) =>
             prevSelectedGamemode === gamemode ? null : gamemode,
@@ -204,7 +223,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const handleEdit = () => {
         if (isEditing) {
-            updateLobby(lobbyname, null, null);
+            updateLobby(lobbyname, null, null, null);
             setIsEditing(false);
         } else {
             setIsEditing(true);
@@ -236,8 +255,22 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const handlePublicButton = () => {
         setPublicA(prevPublicA => !prevPublicA);
-        updateLobby(null, !publicA, null);
+        updateLobby(null, !publicA, null, null);
     };
+
+        //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
+    const toggleTimer = () => {
+        setSelectedTimer(timerOptions[(selectedTimerIndex + 1) % timerOptions.length].value);
+        setSelectedTimerIndex((prevIndex) => (prevIndex + 1) % timerOptions.length);
+        setToggleTimerTriggered(true);
+    };
+        
+    useEffect(() => {
+        if (toggleTimerTriggered) {
+            updateLobby(null, null, null, selectedTimer);
+            setToggleTimerTriggered(false);
+        }
+    }, [toggleTimerTriggered]); 
 
     return (
         <div className="container-wrapper">
@@ -250,6 +283,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                         >
                             {returnPublicStatus()}
                         </Button>
+                    )}
+
+                    {ownerMode && (
+                        <Button className="timer-label" onClick={toggleTimer}>Timer: {timerOptions[selectedTimerIndex].label}</Button>
+
                     )}
 
                     <h2>

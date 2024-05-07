@@ -26,6 +26,16 @@ const Game = ({ stompWebSocketHook }) => {
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+    const [remainingTime, setRemainingTime] = useState();
+
+    const popupMessages = {
+        "30": "You have 30 seconds left!",
+        "10": "You have 10 seconds  left!",
+        "60": "You have 1 minute left!",
+        "180": "You have 3 minutes left!",
+        "300": "You have 5 minutes left!",
+    };
 
     const fetchPlayer = async () => {
         try {
@@ -49,6 +59,14 @@ const Game = ({ stompWebSocketHook }) => {
             setOtherPlayers(foundOtherPlayers);
         } catch (error) {
             handleError(error, navigate);
+        }
+    };
+
+    const renderPopupMessage = (TimeMSG) => {
+        if (TimeMSG) {
+            setShowPopup(true);
+            setRemainingTime(TimeMSG);
+            setTimeout(() => setShowPopup(false), 2000);
         }
     };
 
@@ -76,6 +94,10 @@ const Game = ({ stompWebSocketHook }) => {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             if (newObject.instruction && newObject.instruction === "stop") {
                 navigate("/result/");
+            }
+
+            if(newObject.time){
+                renderPopupMessage(popupMessages[newObject.time]);
             }
 
             if (newObject.instruction === "kick") {
@@ -123,6 +145,10 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     return (
+        <div>
+         {showPopup && (<div className="popup-container">
+                <p>{remainingTime}</p>
+            </div>)}
         <BaseContainer className="game vertical-container">
             <playerContext.Provider value={{ player, setPlayer }}>
                 <BaseContainer className="game container">
@@ -150,6 +176,7 @@ const Game = ({ stompWebSocketHook }) => {
                 </BaseContainer>
             </playerContext.Provider>
         </BaseContainer>
+        </div>
     );
 };
 
