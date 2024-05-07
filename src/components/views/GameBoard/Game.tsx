@@ -39,7 +39,10 @@ const Game = ({ stompWebSocketHook }) => {
 
     const fetchPlayer = async () => {
         try {
-            let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
+            let response = await api.get(
+                `/lobbies/${lobbyCode}/players/${playerId}`,
+                { headers: { playerToken: playerToken } }
+            );
             let foundPlayer = new Player(response.data);
             foundPlayer.id = playerId;
             foundPlayer.token = playerToken;
@@ -53,8 +56,8 @@ const Game = ({ stompWebSocketHook }) => {
 
     const fetchOtherPlayers = async () => {
         try {
-            let response = await api.get(`/lobbies/${lobbyCode}/players`,);
-            let foundOtherPlayers = response.data.map(p => new Player(p));
+            let response = await api.get(`/lobbies/${lobbyCode}/players`);
+            let foundOtherPlayers = response.data.map((p) => new Player(p));
             foundOtherPlayers.sort((a, b) => b.points - a.points);
             setOtherPlayers(foundOtherPlayers);
         } catch (error) {
@@ -82,7 +85,9 @@ const Game = ({ stompWebSocketHook }) => {
 
         return () => {
             if (stompWebSocketHook.connected === true) {
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}/game`);
+                stompWebSocketHook.unsubscribe(
+                    `/topic/lobbies/${lobbyCode}/game`
+                );
             }
             stompWebSocketHook.resetMessagesList();
         };
@@ -90,13 +95,16 @@ const Game = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             if (newObject.instruction && newObject.instruction === "stop") {
                 navigate("/result/");
             }
 
-            if(newObject.time){
+            if (newObject.time) {
                 renderPopupMessage(popupMessages[newObject.time]);
             }
 
@@ -146,36 +154,40 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-         {showPopup && (<div className="popup-container">
-                <p>{remainingTime}</p>
-            </div>)}
-        <BaseContainer className="game vertical-container">
-            <playerContext.Provider value={{ player, setPlayer }}>
-                <BaseContainer className="game container">
-                    <BaseContainer className="game horizontal-container">
-                        <TargetWord></TargetWord>
-                        <Button onClick={() => handleQuit()}>Quit</Button>
-                        {quitPopup && (
-                            <GameContext.Provider
-                                value={{ quitPopup, setQuitPopup }}
-                            >
-                                <QuitPopup />
-                            </GameContext.Provider>
-                        )}
-                    </BaseContainer>
-                </BaseContainer>
-                <BaseContainer className="game horizontal-container">
+            {showPopup && (
+                <div className="popup-container">
+                    <p>{remainingTime}</p>
+                </div>
+            )}
+            <BaseContainer className="game vertical-container">
+                <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">
-                        <WordBoard playFunction={play} ></WordBoard>
+                        <BaseContainer className="game horizontal-container">
+                            <TargetWord></TargetWord>
+                            <Button onClick={() => handleQuit()}>Quit</Button>
+                            {quitPopup && (
+                                <GameContext.Provider
+                                    value={{ quitPopup, setQuitPopup }}
+                                >
+                                    <QuitPopup />
+                                </GameContext.Provider>
+                            )}
+                        </BaseContainer>
                     </BaseContainer>
-                    <BaseContainer className="player-list container">
-                        <otherPlayersContext.Provider value = {{otherPlayers, setOtherPlayers}}>
-                            <PlayerList></PlayerList>
-                        </otherPlayersContext.Provider>
+                    <BaseContainer className="game horizontal-container">
+                        <BaseContainer className="game container">
+                            <WordBoard playFunction={play}></WordBoard>
+                        </BaseContainer>
+                        <BaseContainer className="player-list container">
+                            <otherPlayersContext.Provider
+                                value={{ otherPlayers, setOtherPlayers }}
+                            >
+                                <PlayerList></PlayerList>
+                            </otherPlayersContext.Provider>
+                        </BaseContainer>
                     </BaseContainer>
-                </BaseContainer>
-            </playerContext.Provider>
-        </BaseContainer>
+                </playerContext.Provider>
+            </BaseContainer>
         </div>
     );
 };

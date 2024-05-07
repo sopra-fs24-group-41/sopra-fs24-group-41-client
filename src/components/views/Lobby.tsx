@@ -258,7 +258,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         updateLobby(null, !publicA, null, null);
     };
 
-        //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
+    //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
     const toggleTimer = () => {
         setSelectedTimer(timerOptions[(selectedTimerIndex + 1) % timerOptions.length].value);
         setSelectedTimerIndex((prevIndex) => (prevIndex + 1) % timerOptions.length);

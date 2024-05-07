@@ -209,28 +209,6 @@
 
 }
 
-.time-button {
-  font-size: medium;
-  position: absolute;
-  top: 50px; 
-  left: 10px;
-  z-index: 100;
-
-  &:hover {
-    transform: translate(+8%);
-  }
-
-}
-
-.timer-dropdown {
-  position: absolute;
-  top: 69px; 
-  left: 10px;
-  width: 100px;
-  border-radius: 4px;
-  background-color: #fff;
-}
-
 .timer-label {
   position: absolute;
   top: 50px; 
