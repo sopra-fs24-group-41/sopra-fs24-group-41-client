@@ -22,6 +22,7 @@ export const handleError = (error, navigate) => {
             info += `\nError message:\n${response.data}`;
         }
 
+        error.response.statusText = response.data.message;
         console.log("The request was made and answered but was unsuccessful.", error.response);
 
         return info;
