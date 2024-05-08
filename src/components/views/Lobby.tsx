@@ -212,7 +212,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             <div
                                 className={player.id === lobby.owner.id ? "player name owner" : "player name"}
                             >
-                                {player.name}
+                                {player.id === lobby.owner.id ? player.name + " (Owner)" : player.name}
                             </div>
                         </div>
                     </li>
@@ -232,7 +232,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const editLobbyName = () => {
         if (isEditing) {
-
             return (
                 <input
                     className="input-css"
