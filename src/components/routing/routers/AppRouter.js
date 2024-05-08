@@ -43,7 +43,10 @@ const AppRouter = ({ stompWebSocketHook }) => {
                     <Route path="/lobby/:lobbycode" element={<Lobby stompWebSocketHook={stompWebSocketHook} />} />
                 </Route>
 
-                <Route path="/lobby/:lobbycode/anonymous" element={<AnonymousEnteringLobbyPage />} />
+                <Route path={"/lobby/:lobbycode" + "/anonymous"} element={<AnonymousEnteringLobbyPage />} />
+
+
+
 
                 <Route path="/" element={
                     <Navigate to="/lobbyoverview" replace />

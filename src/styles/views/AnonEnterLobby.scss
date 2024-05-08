@@ -41,9 +41,6 @@
 
 .player {
   &.container {
-    &:hover {
-      transform: translateY(-2px);
-    }
 
     text-align: center;
     margin: 0.5em 0;
@@ -52,32 +49,18 @@
     border-radius: $borderRadius;
     display: flex;
     align-items: center;
-    background: lighten($background, 10);
-  }
-
-  &.name {
-    text-align: center;
-    margin: auto;
-    color: $accentDark;
-    text-transform: uppercase;
   }
 
   &.input-container {
     text-align: center;
-    margin: 0.5em 0;
+    margin: 10px;
     width: 20em;
     padding: 10px;
     border-radius: $borderRadius;
-    display: flex;
+    display: table-column;
     align-items: center;
     background: lighten($background, 10);
     border: none;
-
-    &.has-input {
-      background: lighten($background, 25);
-      border: solid rgb(0, 0, 0)
-
-    }
   }
 }
 

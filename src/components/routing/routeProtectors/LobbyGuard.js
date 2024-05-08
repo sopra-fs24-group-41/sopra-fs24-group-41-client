@@ -1,5 +1,5 @@
 import React from "react";
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate, Outlet, useParams} from "react-router-dom";
 import PropTypes from "prop-types";
 
 /**
@@ -11,13 +11,18 @@ import PropTypes from "prop-types";
  * @Guard
  * @param props
  */
+
 export const LobbyGuard = () => {
+
+
+
     if (localStorage.getItem("playerToken")) {
 
         return <Outlet />;
     }
 
-    return <Navigate to="/lobby/:lobbycode/anonymous" replace />;
+    const {lobbycode} = useParams()
+    return <Navigate to={"/lobby/" + lobbycode + "/anonymous"} replace />;
 };
 
 LobbyGuard.propTypes = {

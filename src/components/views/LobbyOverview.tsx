@@ -92,7 +92,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const joinLobby = async () => {
         if (!checkLogin()) {
             try {
-                navigate("/lobby/" + lobbyCode + "/anonymous")
+                navigate("/lobby/" + lobbyCode + "/anonymous");
             } catch (error) {
                 handleError(error, navigate);
             }

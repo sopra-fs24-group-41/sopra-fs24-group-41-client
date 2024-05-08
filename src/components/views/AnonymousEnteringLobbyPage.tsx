@@ -9,8 +9,8 @@ import BaseContainer from "../ui/BaseContainer";
 
 const FormField = (props) => {
     return (
-        <div className="login field">
-            <label className="login label">{props.label}</label>
+        <div>
+            <label>{props.label}</label>
             <input
                 className="login input"
                 placeholder="enter here.."
@@ -40,10 +40,11 @@ const AnonymousEnteringLobbyPage = () => {
         const fetchLobby = async () => {
             try {
                 const response = await api.get("/lobbies/" + lobbyCode);
-                const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
+                const lobbyData = response.data;
                 setLobby(lobbyData);
             } catch (error) {
                 handleError(error, navigate);
+                navigate("/lobbyoverview")
             }
         };
         fetchLobby();
@@ -64,35 +65,43 @@ const AnonymousEnteringLobbyPage = () => {
     }
 
     let content = (
-        <div className="player input container">
+        <div>
             <FormField
-                label="Playername"
+                label={"Your playername: "}
                 value={playerName}
                 onChange={(pn: string) => setPlayerName(pn)}
             />
-            <div className="login button-container">
-                <Button
-                    width="100%"
-                    onClick={() => joinLobby()}
-                    disabled={playerName === ""}
-                >
-                    Join Lobby
-                </Button>
-
             </div>
-        </div>
     );
-
 
     return (
         <div className="container-wrapper">
             <BaseContainer className="lobbyoverview container">
-                <h2>Currently joining {lobby.name}</h2>
-                <p>Enter a username you want to be represented as:</p>
-                {content}
+                <h2>Currently joining {lobby.name} as an anonymous user</h2>
+                <div className="player input-container">
+                    Enter a playername you want to be represented as:
+                    {content}
+                </div>
+                <div className="login button-container">
+                    <Button
+                        className="button-container button"
+                        onClick={() => navigate("/lobbyoverview")}
+                    >
+                        Back to Overview
+                    </Button>
+
+                    <Button
+                        width="100%"
+                        onClick={() => joinLobby()}
+                        disabled={playerName === ""}
+                    >
+                        Join Lobby
+                    </Button>
+                </div>
+
             </BaseContainer>
         </div>
-    );
+);
 }
 
 export default AnonymousEnteringLobbyPage;
