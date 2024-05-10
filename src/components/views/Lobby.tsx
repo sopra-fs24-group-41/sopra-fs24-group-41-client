@@ -118,10 +118,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
-            if (newObject.instruction === "START") {
+            if (newObject.instruction === "start") {
                 navigate("/lobby/game");
             }
-            if (newObject.instruction === "KICK") {
+            if (newObject.instruction === "kick") {
                 console.log("kicked because: ", newObject.reason) // replace with showing message
                 kick();
             }
