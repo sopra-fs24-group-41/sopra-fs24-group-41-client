@@ -9,6 +9,12 @@ import LoginRegister from "components/popup-ui/LoginRegister";
 import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
+import "styles/views/Explanation.scss";
+import Typewriter from "components/views/Explanations/Typewriter"
+import { set } from "date-fns";
+import Typeappear from "./Explanations/Typeappear";
+
+
 
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
@@ -33,6 +39,25 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
     const [lobbyCode, setLobbyCode] = useState<String>(null);
     const userToken = localStorage.getItem("userToken");
+    const [displayText, setDisplayText] = useState("Hi There!");
+
+    // Function to handle mouse enter event
+    const handleMouseEnter = (label) => {
+        const explanation = explanations.find(item => item.label === label);
+        if (explanation) {
+            setDisplayText(explanation.value);
+        }
+    };
+
+    // Function to handle mouse leave event
+    const handleMouseLeave = () => {
+        setDisplayText(explanations.find(item => item.label === "greeting").value);
+    };
+
+    const explanations = [
+        {label: "greeting", value:"Hi There!"},
+        {label: "icon", value: "Clicking on the icon allows you to login, register or view your profile"}
+    ]
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -199,19 +224,28 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
 
     return (
-        <div className="container-wrapper">
-            <BaseContainer className="lobbyoverview container">
-                <h2>Lobby Overview</h2>
-                <p>Select a Lobby to Join</p>
-                {content}
-            </BaseContainer>
-            <Icon onClick={() => iconClick()} />
-            {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
-                <LoginRegister />
-            )}
-            {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
-                <ProfilePopup />
-            )}
+        <div>
+            <Typeappear text={displayText} />
+            <div className="container-wrapper">
+                <BaseContainer className="lobbyoverview container">
+                    <h2>Lobby Overview</h2>
+                    <p>Select a Lobby to Join</p>
+                    {content}
+                </BaseContainer>
+
+                {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
+                    <LoginRegister />
+                )}
+                {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
+                    <ProfilePopup />
+                )}
+            </div>
+            <div
+                    onMouseEnter={() => handleMouseEnter("icon")}
+                    onMouseLeave={handleMouseLeave}>
+                    <Icon onClick={iconClick} />
+
+                </div>
         </div>
     );
 };

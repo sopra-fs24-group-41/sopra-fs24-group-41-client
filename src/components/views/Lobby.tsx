@@ -11,6 +11,7 @@ import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
 import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
+import Typeappear from "./Explanations/Typeappear";
 
 
 const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
@@ -53,6 +54,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [selectedTimer, setSelectedTimer] = useState(0);
     const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
     const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
+    const [displayText, setDisplayText] = useState("Hi There!");
+
 
     const navigate = useNavigate();
     const params = useParams();
@@ -70,6 +73,14 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         { label: "4 min 30s", value: 240 },
         { label: "5 min", value: 300 },
     ];
+
+    const explanations = {
+        "greeting": "",
+        "Finite Fusion" : "You have only a limited number of words to get the target word",
+        "Sandbox" : "We didn't just clone Neal's Infinite Craft, did we...?",
+        "Wombo Combo" : "All players will get a different set of target word, the one that gets all their target words first, wins",
+        "Fusion Frenzy": "All players get the same target word, the one who gets it first, wins"
+    };
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -272,7 +283,21 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     }, [toggleTimerTriggered]); 
 
+    const explainGamemode = (value)=>{
+        if(value===null){
+            return "Hi there";
+        }
+
+        else{
+            return explanations[value.name]
+        }
+
+    }
+
+
     return (
+        <div>
+            <Typeappear text={explainGamemode(selectedGamemode)}/>
         <div className="container-wrapper">
             <BaseContainer>
                 <div className="lobbypage container">
@@ -334,6 +359,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     <QuitPopup />
                 </LobbyContext.Provider>
             )}
+        </div>
         </div>
     );
 };

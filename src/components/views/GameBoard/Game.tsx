@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
+import Typeappear from "../Explanations/Typeappear";
 
 export const playerContext = createContext(new Player());
 
@@ -29,6 +30,7 @@ const Game = ({ stompWebSocketHook }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState();
 
+
     const popupMessages = {
         "30": "You have 30 seconds left!",
         "10": "You have 10 seconds  left!",
@@ -36,6 +38,7 @@ const Game = ({ stompWebSocketHook }) => {
         "180": "You have 3 minutes left!",
         "300": "You have 5 minutes left!",
     };
+
 
     const fetchPlayer = async () => {
         try {

@@ -1,0 +1,20 @@
+.explanation {
+        text-align: center;
+        margin-top: 50px; /* Adjust as needed */
+        font-size: 20px;
+        color: #ffffff; /* Adjust color as needed */
+        z-index: 9999;
+}
+
+.explanation_appear {
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+    margin-top: 50px; /* Adjust as needed */
+    font-size: 20px;
+    color: #ffffff; /* Adjust color as needed */
+    z-index: 9999;
+  }
+  
+  .fade-in {
+    opacity: 1;
+  }
