@@ -15,7 +15,6 @@ import { set } from "date-fns";
 import Typeappear from "./Explanations/Typeappear";
 
 
-
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
@@ -43,7 +42,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     // Function to handle mouse enter event
     const handleMouseEnter = (label) => {
-        const explanation = explanations.find(item => item.label === label);
+        const explanation = explanations.find((item) => item.label === label);
         if (explanation) {
             setDisplayText(explanation.value);
         }
@@ -51,19 +50,26 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     // Function to handle mouse leave event
     const handleMouseLeave = () => {
-        setDisplayText(explanations.find(item => item.label === "greeting").value);
+        setDisplayText(
+            explanations.find((item) => item.label === "greeting").value
+        );
     };
 
     const explanations = [
-        {label: "greeting", value:"Hi There!"},
-        {label: "icon", value: "Clicking on the icon allows you to login, register or view your profile"}
-    ]
+        { label: "greeting", value: "Hi There!" },
+        {
+            label: "icon",
+            value: "Clicking on the icon allows you to login, register or view your profile",
+        },
+    ];
 
     useEffect(() => {
         const fetchLobbies = async () => {
             try {
                 const response = await api.get("/lobbies");
-                const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
+                const lobbyData = response.data.map(
+                    (lobby: any) => new Lobby(lobby)
+                );
                 setLobbies(lobbyData);
             } catch (error) {
                 handleError(error, navigate);
@@ -87,16 +93,21 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
-            const lobbyDataRAW = stompWebSocketHook.messages[messagesLength - 1];
-            if (Array.isArray(lobbyDataRAW)) setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
+            const lobbyDataRAW =
+                stompWebSocketHook.messages[messagesLength - 1];
+            if (Array.isArray(lobbyDataRAW))
+                setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
         }
     }, [stompWebSocketHook.messages]);
 
     // Allows selection / deselection
     const selectLobby = (lobby: Lobby) => {
         setSelectedLobby((prevSelectedLobby) =>
-            prevSelectedLobby === lobby ? null : lobby,
+            prevSelectedLobby === lobby ? null : lobby
         );
         if (lobby === selectedLobby) {
             setLobbyCode("");
@@ -109,7 +120,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         return localStorage.getItem("userToken") !== null;
     };
 
-
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
@@ -119,7 +129,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 let name = prompt("enter player name");
                 const requestBody = { playerName: name };
-                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody);
+                const response = await api.post(
+                    "/lobbies/" + lobbyCode + "/players",
+                    requestBody
+                );
                 localStorage.setItem("playerToken", response.data.playerToken);
                 localStorage.setItem("playerId", response.data.playerId);
                 localStorage.setItem("lobbyCode", lobbyCode);
@@ -131,7 +144,11 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 const requestBody = {};
                 const config = { headers: { userToken: userToken } };
-                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
+                const response = await api.post(
+                    "/lobbies/" + lobbyCode + "/players",
+                    requestBody,
+                    config
+                );
                 localStorage.setItem("playerToken", response.data.playerToken);
                 localStorage.setItem("playerId", response.data.playerId);
                 localStorage.setItem("lobbyCode", lobbyCode);
@@ -144,12 +161,14 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     const createLobby = async () => {
         if (!checkLogin()) {
-            alert("Only logged in users can create lobbies\nPlease login or join an existing lobby");
+            alert(
+                "Only logged in users can create lobbies\nPlease login or join an existing lobby"
+            );
 
             return;
         }
         try {
-            const requestBody = { "publicAccess": true };
+            const requestBody = { publicAccess: true };
             const config = { headers: { userToken: userToken } };
             const response = await api.post("/lobbies", requestBody, config);
             const createdLobby = response.data.lobby;
@@ -183,7 +202,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     <p> Or enter a lobby code: </p>
                     <form>
                         <input
-                            className={`lobby input-container ${lobbyCode ? "has-input" : ""}`}
+                            className={`lobby input-container ${
+                                lobbyCode ? "has-input" : ""
+                            }`}
                             name="lobbyCode"
                             value={lobbyCode || ""}
                             onChange={(lobbyCode) => {
@@ -222,7 +243,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         );
     }
 
-
     return (
         <div>
             <Typeappear text={displayText} />
@@ -233,19 +253,19 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     {content}
                 </BaseContainer>
 
-                {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
-                    <LoginRegister />
-                )}
-                {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
-                    <ProfilePopup />
-                )}
+                {LoginRegisterPopup &&
+                    localStorage.getItem("userToken") === null && (
+                    <LoginRegister />)}
+                {LoginRegisterPopup &&
+                    localStorage.getItem("userToken") !== null && (
+                    <ProfilePopup />)}
             </div>
             <div
-                    onMouseEnter={() => handleMouseEnter("icon")}
-                    onMouseLeave={handleMouseLeave}>
-                    <Icon onClick={iconClick} />
-
-                </div>
+                onMouseEnter={() => handleMouseEnter("icon")}
+                onMouseLeave={handleMouseLeave}
+            >
+                <Icon onClick={iconClick} />
+            </div>
         </div>
     );
 };

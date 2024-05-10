@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
-import Typeappear from "../Explanations/Typeappear";
+import Typewriter from "../Explanations/Typewriter";
 
 export const playerContext = createContext(new Player());
 
@@ -157,11 +157,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            {showPopup && (
-                <div className="popup-container">
-                    <p>{remainingTime}</p>
-                </div>
-            )}
+            {showPopup && <Typewriter text={remainingTime}/>}
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">
