@@ -28,7 +28,7 @@ const Game = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
-    const [remainingTime, setRemainingTime] = useState();
+    const [remainingTime, setRemainingTime] = useState(" ");
 
 
     const popupMessages = {
@@ -70,9 +70,8 @@ const Game = ({ stompWebSocketHook }) => {
 
     const renderPopupMessage = (TimeMSG) => {
         if (TimeMSG) {
-            setShowPopup(true);
             setRemainingTime(TimeMSG);
-            setTimeout(() => setShowPopup(false), 2000);
+            setTimeout(() => setRemainingTime(" "), 2000);
         }
     };
 
@@ -157,7 +156,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            {showPopup && <Typewriter text={remainingTime}/>}
+            <Typewriter text={remainingTime}/>
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">

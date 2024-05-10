@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import "styles/views/Explanation.scss";
 
 const Typewriter = ({ text }) => {
-    const [displayText, setDisplayText] = useState("");
+    const [displayText, setDisplayText] = useState(" ");
 
     useEffect(() => {
         // Each time text changes, previous should be discarded
-        setDisplayText("");
+        setDisplayText(" ");
 
         let currentIndex = 0;
         const intervalId = setInterval(() => {

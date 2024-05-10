@@ -11,7 +11,6 @@ import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
 import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
-import Typeappear from "./Explanations/Typeappear";
 
 
 const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
@@ -26,7 +25,14 @@ const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
         onClick={(gamemode.active && ownerMode) ? () => onSelect(gamemode) : undefined}
     >
         <div className="gamemode name">{gamemode.name}</div>
-        <div className="gamemode description">{gamemode.description}</div>
+        {isSelected ? <div className="gamemode description">{longerdesc[gamemode.name]}</div> : <div className="gamemode description">{gamemode.description}</div>
+}
+
+
+
+
+
+
     </div>
 );
 
@@ -41,6 +47,12 @@ const gamemodes = [
     { name: "Sandbox", description: "Explore infinite combinations.", serverName: "STANDARD", active: true },
 ];
 
+const longerdesc: { [key: string]: string } = {
+    "Fusion Frenzy": "All players get the same target word, whoever gets it first, wins.",
+    "Wombo Combo": "All players will get a different set of target words, the one that gets all their target words first, wins.",
+    "Finite Fusion": "You have only a limited number of words to get the target word.",
+    "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?"
+};
 export const LobbyContext = createContext();
 
 const LobbyPage = ({ stompWebSocketHook }) => {
@@ -318,17 +330,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     }, [toggleTimerTriggered]);
 
-    const explainGamemode = (value) => {
-        if (value === null) {
-            return "Hi there";
-        } else {
-            return explanations[value.name];
-        }
-    };
-
     return (
         <div>
-            <Typeappear text={explainGamemode(selectedGamemode)} />
             <div className="container-wrapper">
                 <BaseContainer>
                     <div className="lobbypage container">

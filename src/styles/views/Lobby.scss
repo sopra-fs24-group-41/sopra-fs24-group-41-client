@@ -85,6 +85,8 @@
   }
 
   &.description {
+    max-width: 200px; /* adjust as needed */
+    word-wrap: break-word;
     color: $textColor;
     margin-top: 5px;
     text-align: center;

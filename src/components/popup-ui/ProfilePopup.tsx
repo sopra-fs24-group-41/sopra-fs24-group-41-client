@@ -8,7 +8,7 @@ import Typeappear from "components/views/Explanations/Typeappear";
 import PropTypes from "prop-types";
 
 
-const ProfilePopup = ({ onMouseEnter, onMouseLeave }) => {
+const ProfilePopup = () => {
     const navigate = useNavigate();
 
     const doLogout = async () => {
@@ -33,11 +33,7 @@ const ProfilePopup = ({ onMouseEnter, onMouseLeave }) => {
         <BaseContainer className="profilepopup container">
             <div className="profilepopup button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
-                <Button 
-                    onClick={() => doLogout()} 
-                    onMouseEnter={() => onMouseEnter("Logout")}
-                    onMouseLeave={onMouseLeave}
-                >
+                <Button onClick={() => doLogout()} >
                     Logout
                 </Button>
             </div>

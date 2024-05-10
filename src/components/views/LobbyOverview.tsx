@@ -10,7 +10,6 @@ import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import "styles/views/Explanation.scss";
-import Typeappear from "./Explanations/Typeappear";
 
 
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
@@ -36,29 +35,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
     const [lobbyCode, setLobbyCode] = useState<String>(null);
     const userToken = localStorage.getItem("userToken");
-    const [displayText, setDisplayText] = useState("Hi There!");
-
-    // Function to handle mouse enter event
-    const handleMouseEnter = (label) => {
-        const text = explanationPopups[label]
-        if (text) {
-            setDisplayText(text);
-        }
-    };
-
-    // Function to handle mouse leave event
-    const handleMouseLeave = () => {
-        setDisplayText(
-            explanationPopups["greeting"]
-        );
-    };
-
-    const explanationPopups = {
-        "greeting": "Hi There!",
-        "icon": "Clicking on the icon allows you to login, register or view your profile",
-        "create_lobby": "At least one person must register and login to to create a lobby, others can join also without registering",
-        "Logout":"Noooo! Don't leave me!!! Please don't go!"
-    }
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -223,8 +199,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
                         <Button
                             width="100%"
-                            onMouseEnter={() => handleMouseEnter("create_lobby")}
-                            onMouseLeave={handleMouseLeave}
                             onClick={() => createLobby()}
                             disabled={selectedLobby || lobbyCode}
                         >
@@ -244,7 +218,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            <Typeappear text={displayText} />
             <div className="container-wrapper">
                 <BaseContainer className="lobbyoverview container">
                     <h2>Lobby Overview</h2>
@@ -257,17 +230,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     <LoginRegister />)}
                 {LoginRegisterPopup &&
                     localStorage.getItem("userToken") !== null && (
-                        <ProfilePopup 
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                    />)}
+                    <ProfilePopup />)}
             </div>
-            <div
-                onMouseEnter={() => handleMouseEnter("icon")}
-                onMouseLeave={handleMouseLeave}
-            >
-                <Icon onClick={iconClick} />
-            </div>
+            <Icon onClick={iconClick} />
         </div>
     );
 };
