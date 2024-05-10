@@ -6,24 +6,23 @@ const Typewriter = ({ text }) => {
     const [displayText, setDisplayText] = useState("");
 
     useEffect(() => {
+        // Each time text changes, previous should be discarded
+        setDisplayText("");
+
         let currentIndex = 0;
         const intervalId = setInterval(() => {
             setDisplayText((prevText) => {
                 if (currentIndex < text.length) {
-                    return prevText + text[currentIndex++];
+                    return prevText + text[currentIndex++]; //Increment by character
                 } else {
                     clearInterval(intervalId);
-                    
+
                     return prevText;
                 }
             });
-        }, 10); // adjust the interval to control typing speed
+        }, 10); //Adjust type speed here
 
-        return () => clearInterval(intervalId); // cleanup on component unmount
-    }, [text]);
-
-    useEffect(() => {
-        setDisplayText(""); // Reset displayText when text prop changes
+        return () => clearInterval(intervalId); 
     }, [text]);
 
     return <div className="explanation">{displayText}</div>;

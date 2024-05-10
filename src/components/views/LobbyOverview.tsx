@@ -40,26 +40,25 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     // Function to handle mouse enter event
     const handleMouseEnter = (label) => {
-        const explanation = explanations.find((item) => item.label === label);
-        if (explanation) {
-            setDisplayText(explanation.value);
+        const text = explanationPopups[label]
+        if (text) {
+            setDisplayText(text);
         }
     };
 
     // Function to handle mouse leave event
     const handleMouseLeave = () => {
         setDisplayText(
-            explanations.find((item) => item.label === "greeting").value
+            explanationPopups["greeting"]
         );
     };
 
-    const explanations = [
-        { label: "greeting", value: "Hi There!" },
-        {
-            label: "icon",
-            value: "Clicking on the icon allows you to login, register or view your profile",
-        },
-    ];
+    const explanationPopups = {
+        "greeting": "Hi There!",
+        "icon": "Clicking on the icon allows you to login, register or view your profile",
+        "create_lobby": "At least one person must register and login to to create a lobby, others can join also without registering",
+        "Logout":"Noooo! Don't leave me!!! Please don't go!"
+    }
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -224,6 +223,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
                         <Button
                             width="100%"
+                            onMouseEnter={() => handleMouseEnter("create_lobby")}
+                            onMouseLeave={handleMouseLeave}
                             onClick={() => createLobby()}
                             disabled={selectedLobby || lobbyCode}
                         >
@@ -256,7 +257,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     <LoginRegister />)}
                 {LoginRegisterPopup &&
                     localStorage.getItem("userToken") !== null && (
-                    <ProfilePopup />)}
+                        <ProfilePopup 
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                    />)}
             </div>
             <div
                 onMouseEnter={() => handleMouseEnter("icon")}
