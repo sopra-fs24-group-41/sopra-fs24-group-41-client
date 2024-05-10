@@ -10,8 +10,6 @@ import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import "styles/views/Explanation.scss";
-import Typewriter from "components/views/Explanations/Typewriter"
-import { set } from "date-fns";
 import Typeappear from "./Explanations/Typeappear";
 
 
