@@ -5,24 +5,37 @@ import "styles/views/Explanation.scss";
 const Typewriter = ({ text }) => {
     const [displayText, setDisplayText] = useState(" ");
 
+
     useEffect(() => {
-        // Each time text changes, previous should be discarded
-        setDisplayText(" ");
-
         let currentIndex = 0;
-        const intervalId = setInterval(() => {
-            setDisplayText((prevText) => {
-                if (currentIndex < text.length) {
-                    return prevText + text[currentIndex++]; //Increment by character
-                } else {
-                    clearInterval(intervalId);
+        let deleting = false;
+        if(text.trim() === "") {deleting = true}
 
-                    return prevText;
+        const timeframe = setInterval(() => {
+            setDisplayText((prevText) => {
+                if (deleting) {
+                    if (prevText.length > 0) {
+                        return prevText.slice(0, -1); // Delete one character
+                    } else {
+                        clearInterval(timeframe);
+                        deleting = false;
+
+                        return " ";
+                    }
+                } else {
+                    if (currentIndex < text.length) {
+                        return prevText + text[currentIndex++]; // Increment by character
+                    } else {
+                        clearInterval(timeframe);
+                        deleting = true;
+
+                        return prevText;
+                    }
                 }
             });
-        }, 10); //Adjust type speed here
+        }, 10); // 10ms interval per character
 
-        return () => clearInterval(intervalId); 
+        return () => clearInterval(timeframe);
     }, [text]);
 
     return <div className="explanation">{displayText}</div>;

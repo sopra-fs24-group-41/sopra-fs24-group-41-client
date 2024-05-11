@@ -30,8 +30,7 @@
   }
 
   &.game-and-players-container {
-    width: auto;
-    flex-direction: column;
+    justify-content: space-evenly;
   }
 }
 
@@ -53,10 +52,6 @@
     overflow: auto; 
     text-overflow: ellipsis;
     padding-bottom: 20%;
-    &:hover {
-      transform: translateY(-2px);
-    }
-
     text-align: start;
     margin: 0.5em 0;
     width: auto;
@@ -69,6 +64,10 @@
     align-items: center;
     background: lighten($background, 20);
     cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
 
     &.inactive {
       cursor: default;

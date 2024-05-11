@@ -115,17 +115,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         { label: "5 min", value: 300 },
     ];
 
-    const explanations = {
-        greeting: "",
-        "Finite Fusion":
-            "You have only a limited number of words to get the target word",
-        Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
-        "Wombo Combo":
-            "All players will get a different set of target word, the one that gets all their target words first, wins",
-        "Fusion Frenzy":
-            "All players get the same target word, the one who gets it first, wins",
-    };
-
     useEffect(() => {
         // Fetch lobby and players data
         const fetchLobbyAndPlayers = async () => {
