@@ -46,7 +46,7 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
         newWordList[newWordIndex] = playerWord;
         newWordIndex++;
 
-        if (playerWord.uses !== null && playerWord.uses !== undefined) {
+        if (playerWord.uses !== null && playerWord.uses !== undefined && !isNaN(playerWord.uses)) {
             playerWord.uses -= 1;
         }
 
@@ -79,6 +79,14 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
         return playerWord.uses === null || playerWord.uses === undefined || playerWord.uses > 0;
     }
 
+    const isNew = (playerWord: PlayerWord) => {
+        if (playerWord !== null && playerWord !== undefined) {
+            return playerWord.word.newlyDiscovered
+        }
+
+        return false
+    }
+
     const createWordMatrix = () => {
         let matrix = [];
         let row = [];
@@ -95,6 +103,7 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
                     onClick={() => {
                         addWordToMerge(player.playerWords[i]);
                     }}
+                    className={isNew(player.playerWords[i]) ? "glow" : ""}
                     disabled={!wordAvailable(player.playerWords[i])}
                 >
                     {formatWord(player.playerWords[i])}
@@ -116,7 +125,9 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
             return;
         }
 
-        if (mergeWordList[0].uses !== null || mergeWordList[0].uses !== undefined) {
+        console.log(mergeWordList);
+
+        if (mergeWordList[0].uses !== null && mergeWordList[0].uses !== undefined && !isNaN(mergeWordList[0])) {
             mergeWordList[0].uses += 1;
         }
 
