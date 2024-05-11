@@ -180,13 +180,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     };
 
-    //Not hashing, different profile pictures for different Clients
-    const pickProfileForAnon = () =>{
-        const icon_names = Object.keys(ICONS);
-        const randomIcon = icon_names[Math.floor(Math.random() * icon_names.length)];
-        return randomIcon;
-    }
-
     //ChatGPT
     const hashForAnon = (name: string) => {
         let hash = 0;
