@@ -49,6 +49,10 @@ const AppRouter = ({ stompWebSocketHook }) => {
                     <Navigate to="/lobbyoverview" replace />
                 } />
 
+                <Route path="/*" element={
+                    <Navigate to="/lobbyoverview" replace />
+                } />
+
                 <Route path="/websocket-demo" element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook} />} />
 
                 <Route path="/server-down" element={<ServerDownPage />} />
