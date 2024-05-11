@@ -17,8 +17,9 @@ function CopyButton({ copyText }) {
 
     const handleCopyClick = () => {
 
-        copy(copyText)
-        setIsCopied(true)
+        let URL = window.location.href;
+        copy(URL);
+        setIsCopied(true);
         
         setTimeout(() => {
             setIsCopied(false);
@@ -34,7 +35,7 @@ function CopyButton({ copyText }) {
             <div>
                 <Button
                     onClick={handleCopyClick}>
-                    <span>{isCopied ? "Copied!" : "Copy lobby code"}</span>
+                    <span>{isCopied ? "Copied!" : "Copy lobby URL"}</span>
                 </Button>
             </div>
         </div>
