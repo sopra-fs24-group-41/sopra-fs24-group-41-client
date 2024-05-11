@@ -321,11 +321,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             Quit
                         </Button>
                     </div>
+                    <div>
+                        <CopyButton copyText={lobby.code}/>
+                    </div>
                 </div>
             </BaseContainer>
-            <div>
-                <CopyButton copyText={lobby.code} />
-            </div>
             {quitPopup && (
                 <LobbyContext.Provider
                     value={{ quitPopup, setQuitPopup }}

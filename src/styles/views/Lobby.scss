@@ -32,6 +32,7 @@
 
   &.game-and-players-container {
     width: auto;
+    flex-direction: column;
   }
 }
 
@@ -94,7 +95,7 @@
     list-style: none;
     padding-left: 0;
     text-align: center;
-    max-height: 300px;
+    max-height: 320px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -155,9 +156,7 @@
 }
 
 .player-list-container {
-  float: left;
   background: darken($background, 4);
-
   border-radius: $borderRadius;
   display: flex;
   flex-direction: column;

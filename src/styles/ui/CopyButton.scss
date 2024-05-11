@@ -2,7 +2,8 @@
 
 .copy-container {
   position: absolute;
-  right: 175px;
+  right: -175px;
+  top: 0;
   background: $background;
   border-radius: $borderRadius;
   display: flex;
