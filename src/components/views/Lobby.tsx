@@ -11,6 +11,7 @@ import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
 import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
+import ICONS from "../../assets/icons/index.js";
 
 
 const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
@@ -179,6 +180,43 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     };
 
+    //Not hashing, different profile pictures for different Clients
+    const pickProfileForAnon = () =>{
+        const icon_names = Object.keys(ICONS);
+        const randomIcon = icon_names[Math.floor(Math.random() * icon_names.length)];
+        return randomIcon;
+    }
+
+    //ChatGPT
+    const hashForAnon = (name: string) => {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = (hash << 5) - hash + name.charCodeAt(i);
+            hash |= 0; // Convert to 32bit integer
+        }
+
+        const iconNames = Object.keys(ICONS);
+    
+        // Get the index based on the hash value
+        const iconIndex = Math.abs(hash) % iconNames.length;
+    
+        // Get the icon name based on the index
+        const iconName = iconNames[iconIndex];
+        return iconName;
+    }
+
+    //I did one as well, because hashing is fun
+    const hashForAnon2 = (name: string) => {
+        let hash = 0;
+        hash = name.length + name.charCodeAt(0);
+
+        const iconNames = Object.keys(ICONS);
+        const iconIndex = Math.abs(hash) % iconNames.length;
+        const iconName = iconNames[iconIndex];
+        return iconName;
+    }
+
+
     let content = (
         <div>
             <p>Select a Gamemode</p>
@@ -206,8 +244,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                         <div className="player container">
                             <div className="player icon">
                                 <img
-                                    src={IMAGES[(player.user === null || player.user.profilePicture === "") ? "AnonPenguin"
-                                        : player.user.profilePicture]} alt={"profile picture"} />
+                                    src={player.user === null ? ICONS[hashForAnon2(player.name)] : IMAGES[player.user.profilePicture]}
+                                    alt={"profile picture"} />
                             </div>
                             <div
                                 className={player.id === lobby.owner.id ? "player name owner" : "player name"}
