@@ -180,13 +180,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     };
 
-    //Not hashing, different profile pictures for different Clients
-    const pickProfileForAnon = () =>{
-        const icon_names = Object.keys(ICONS);
-        const randomIcon = icon_names[Math.floor(Math.random() * icon_names.length)];
-        return randomIcon;
-    }
-
     //ChatGPT
     const hashForAnon = (name: string) => {
         let hash = 0;
@@ -205,11 +198,17 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         return iconName;
     }
 
-    //I did one as well, because hashing is fun
+    //Basic String hashing, hash it to the concatenated ASCII values
+    //e.g h("abba") = 97989897
     const hashForAnon2 = (name: string) => {
         let hash = 0;
-        hash = name.length + name.charCodeAt(0);
+        let asciiConcatenation = "";
 
+        for (let i = 0; i < name.length; i++) {
+            asciiConcatenation += name.charCodeAt(i).toString(); 
+        }
+
+        hash = parseInt(asciiConcatenation);
         const iconNames = Object.keys(ICONS);
         const iconIndex = Math.abs(hash) % iconNames.length;
         const iconName = iconNames[iconIndex];
