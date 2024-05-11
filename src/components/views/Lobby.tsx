@@ -22,11 +22,21 @@ const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
                               ownerMode: boolean;
                           }) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode ? "" : " inactive"}`}
-        onClick={(gamemode.active && ownerMode) ? () => onSelect(gamemode) : undefined}
+        className={`gamemode container${isSelected ? " selected" : ""}${
+            gamemode.active && ownerMode ? "" : " inactive"
+        }`}
+        onClick={
+            gamemode.active && ownerMode ? () => onSelect(gamemode) : undefined
+        }
     >
         <div className="gamemode name">{gamemode.name}</div>
-        <div className="gamemode description">{gamemode.description}</div>
+        {isSelected ? (
+            <div className="gamemode description">
+                {longerdesc[gamemode.name]}
+            </div>
+        ) : (
+            <div className="gamemode description">{gamemode.description}</div>
+        )}
     </div>
 );
 
@@ -35,11 +45,41 @@ GamemodeItem.propTypes = {
 };
 
 const gamemodes = [
-    { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
-    { name: "Wombo Combo", description: "Make some bomb combos!", serverName: "WOMBOCOMBO", active: true },
-    { name: "Finite Fusion", description: "Use your resources wisely.", serverName: "FINITEFUSION", active: true },
-    { name: "Sandbox", description: "Explore infinite combinations.", serverName: "STANDARD", active: true },
+    {
+        name: "Fusion Frenzy",
+        description: "How fast are you?",
+        serverName: "FUSIONFRENZY",
+        active: true,
+    },
+    {
+        name: "Wombo Combo",
+        description: "Make some bomb combos!",
+        serverName: "WOMBOCOMBO",
+        active: true,
+    },
+    {
+        name: "Finite Fusion",
+        description: "Use your resources wisely.",
+        serverName: "FINITEFUSION",
+        active: true,
+    },
+    {
+        name: "Sandbox",
+        description: "Explore infinite combinations.",
+        serverName: "STANDARD",
+        active: true,
+    },
 ];
+
+const longerdesc: { [key: string]: string } = {
+    "Fusion Frenzy":
+        "All players get the same target word, whoever gets it first, wins.",
+    "Wombo Combo":
+        "All players will get a different set of target words, the one that gets all their target words first, wins.",
+    "Finite Fusion":
+        "You have only a limited number of words to get the target word.",
+    Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
+};
 
 export const LobbyContext = createContext();
 
@@ -62,15 +102,26 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const timerOptions = [
         { label: "None", value: 0 },
         { label: "1 min", value: 60 },
-        { label: "1 min 30s", value: 90},
-        { label: "2 min", value: 120},
-        { label: "2 min 30s", value: 150},
+        { label: "1 min 30s", value: 90 },
+        { label: "2 min", value: 120 },
+        { label: "2 min 30s", value: 150 },
         { label: "3 min", value: 180 },
         { label: "3 min 30s", value: 180 },
         { label: "4 min", value: 240 },
         { label: "4 min 30s", value: 240 },
         { label: "5 min", value: 300 },
     ];
+
+    const explanations = {
+        greeting: "",
+        "Finite Fusion":
+            "You have only a limited number of words to get the target word",
+        Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
+        "Wombo Combo":
+            "All players will get a different set of target word, the one that gets all their target words first, wins",
+        "Fusion Frenzy":
+            "All players get the same target word, the one who gets it first, wins",
+    };
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -79,7 +130,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
-                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
+                if (
+                    lobbyData.owner.id ===
+                    parseInt(localStorage.getItem("playerId"))
+                )
+                    setOwnerMode(true);
             } catch (error) {
                 handleError(error, navigate);
                 localStorage.removeItem("playerId");
@@ -92,7 +147,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     }, []);
 
     useEffect(() => {
-        if (lobby.mode) setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobby.mode));
+        if (lobby.mode)
+            setSelectedGamemode(
+                gamemodes.find((mode) => mode.serverName === lobby.mode)
+            );
         if (lobby.name) setLobbyname(lobby.name);
         if (lobby.publicAccess) setPublicA(lobby.publicAccess);
         if (lobby.gameTime) setSelectedTimer(lobby.gameTime);
@@ -107,7 +165,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         return () => {
             if (stompWebSocketHook.connected === true) {
                 stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}/game`);
+                stompWebSocketHook.unsubscribe(
+                    `/topic/lobbies/${lobbycode}/game`
+                );
             }
             stompWebSocketHook.resetMessagesList();
         };
@@ -115,7 +175,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
@@ -128,8 +191,14 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
-    const updateLobby = async (name: string, publicAccess: boolean, mode: string, gameTime: number) => {
-        if (!ownerMode) return alert("Not allowed! Only lobby owners can change this");
+    const updateLobby = async (
+        name: string,
+        publicAccess: boolean,
+        mode: string,
+        gameTime: number
+    ) => {
+        if (!ownerMode)
+            return alert("Not allowed! Only lobby owners can change this");
         const config = {
             headers: {
                 playerToken: localStorage.getItem("playerToken"),
@@ -139,7 +208,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             name: name,
             publicAccess: publicAccess,
             mode: mode,
-            gameTime: gameTime
+            gameTime: gameTime,
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
@@ -149,10 +218,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const selectGamemode = (gamemode: Gamemode) => {
-        if (gamemode !== selectedGamemode) updateLobby(null, null, gamemode.serverName, null);
+        if (gamemode !== selectedGamemode)
+            updateLobby(null, null, gamemode.serverName, null);
         if (!ownerMode) return;
         setSelectedGamemode((prevSelectedGamemode) =>
-            prevSelectedGamemode === gamemode ? null : gamemode,
+            prevSelectedGamemode === gamemode ? null : gamemode
         );
     };
 
@@ -246,7 +316,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                     alt={"profile picture"} />
                             </div>
                             <div
-                                className={player.id === lobby.owner.id ? "player name owner" : "player name"}
+                                className={
+                                    player.id === lobby.owner.id
+                                        ? "player name owner"
+                                        : "player name"
+                                }
                             >
                                 {player.id === lobby.owner.id ? player.name + " (Owner)" : player.name}
                             </div>
@@ -278,7 +352,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 />
             );
         } else {
-
             return <span>{lobbyname}</span>;
         }
     };
@@ -289,41 +362,50 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const handlePublicButton = () => {
-        setPublicA(prevPublicA => !prevPublicA);
+        setPublicA((prevPublicA) => !prevPublicA);
         updateLobby(null, !publicA, null, null);
     };
 
     //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
     const toggleTimer = () => {
-        setSelectedTimer(timerOptions[(selectedTimerIndex + 1) % timerOptions.length].value);
-        setSelectedTimerIndex((prevIndex) => (prevIndex + 1) % timerOptions.length);
+        setSelectedTimer(
+            timerOptions[(selectedTimerIndex + 1) % timerOptions.length].value
+        );
+        setSelectedTimerIndex(
+            (prevIndex) => (prevIndex + 1) % timerOptions.length
+        );
         setToggleTimerTriggered(true);
     };
-        
+
     useEffect(() => {
         if (toggleTimerTriggered) {
             updateLobby(null, null, null, selectedTimer);
             setToggleTimerTriggered(false);
         }
-    }, [toggleTimerTriggered]); 
+    }, [toggleTimerTriggered]);
 
     return (
-        <div className="container-wrapper">
-            <BaseContainer>
-                <div className="lobbypage container">
-                    {ownerMode && (
-                        <Button
-                            className="public-private-button"
-                            onClick={handlePublicButton}
-                        >
-                            {returnPublicStatus()}
-                        </Button>
-                    )}
+        <div>
+            <div className="container-wrapper">
+                <BaseContainer>
+                    <div className="lobbypage container">
+                        {ownerMode && (
+                            <Button
+                                className="public-private-button"
+                                onClick={handlePublicButton}
+                            >
+                                {returnPublicStatus()}
+                            </Button>
+                        )}
 
-                    {ownerMode && (
-                        <Button className="timer-label" onClick={toggleTimer}>Timer: {timerOptions[selectedTimerIndex].label}</Button>
-
-                    )}
+                        {ownerMode && (
+                            <Button
+                                className="timer-label"
+                                onClick={toggleTimer}
+                            >
+                                Timer: {timerOptions[selectedTimerIndex].label}
+                            </Button>
+                        )}
 
                     <h2>
                         {editLobbyName()}

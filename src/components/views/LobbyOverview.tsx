@@ -9,6 +9,8 @@ import LoginRegister from "components/popup-ui/LoginRegister";
 import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
+import "styles/views/Explanation.scss";
+
 
 const LobbyItem = ({ lobby, onSelect, isSelected }: {
     lobby: Lobby;
@@ -38,7 +40,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         const fetchLobbies = async () => {
             try {
                 const response = await api.get("/lobbies");
-                const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
+                const lobbyData = response.data.map(
+                    (lobby: any) => new Lobby(lobby)
+                );
                 setLobbies(lobbyData);
             } catch (error) {
                 handleError(error, navigate);
@@ -62,16 +66,21 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
-            const lobbyDataRAW = stompWebSocketHook.messages[messagesLength - 1];
-            if (Array.isArray(lobbyDataRAW)) setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
+            const lobbyDataRAW =
+                stompWebSocketHook.messages[messagesLength - 1];
+            if (Array.isArray(lobbyDataRAW))
+                setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
         }
     }, [stompWebSocketHook.messages]);
 
     // Allows selection / deselection
     const selectLobby = (lobby: Lobby) => {
         setSelectedLobby((prevSelectedLobby) =>
-            prevSelectedLobby === lobby ? null : lobby,
+            prevSelectedLobby === lobby ? null : lobby
         );
         if (lobby === selectedLobby) {
             setLobbyCode("");
@@ -83,7 +92,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const checkLogin = () => {
         return localStorage.getItem("userToken") !== null;
     };
-
 
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
@@ -100,7 +108,11 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 const requestBody = {};
                 const config = { headers: { userToken: userToken } };
-                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
+                const response = await api.post(
+                    "/lobbies/" + lobbyCode + "/players",
+                    requestBody,
+                    config
+                );
                 localStorage.setItem("playerToken", response.data.playerToken);
                 localStorage.setItem("playerId", response.data.playerId);
                 localStorage.setItem("lobbyCode", lobbyCode);
@@ -113,12 +125,14 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     const createLobby = async () => {
         if (!checkLogin()) {
-            alert("Only logged in users can create lobbies\nPlease login or join an existing lobby");
+            alert(
+                "Only logged in users can create lobbies\nPlease login or join an existing lobby"
+            );
 
             return;
         }
         try {
-            const requestBody = { "publicAccess": true };
+            const requestBody = { publicAccess: true };
             const config = { headers: { userToken: userToken } };
             const response = await api.post("/lobbies", requestBody, config);
             const createdLobby = response.data.lobby;
@@ -152,7 +166,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     <p> Or enter a lobby code: </p>
                     <form>
                         <input
-                            className={`lobby input-container ${lobbyCode ? "has-input" : ""}`}
+                            className={`lobby input-container ${
+                                lobbyCode ? "has-input" : ""
+                            }`}
                             name="lobbyCode"
                             value={lobbyCode || ""}
                             onChange={(lobbyCode) => {
@@ -191,21 +207,23 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         );
     }
 
-
     return (
-        <div className="container-wrapper">
-            <BaseContainer className="lobbyoverview container">
-                <h2>Lobby Overview</h2>
-                <p>Select a Lobby to Join</p>
-                {content}
-            </BaseContainer>
-            <Icon onClick={() => iconClick()} />
-            {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
-                <LoginRegister />
-            )}
-            {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
-                <ProfilePopup />
-            )}
+        <div>
+            <div className="container-wrapper">
+                <BaseContainer className="lobbyoverview container">
+                    <h2>Lobby Overview</h2>
+                    <p>Select a Lobby to Join</p>
+                    {content}
+                </BaseContainer>
+
+                {LoginRegisterPopup &&
+                    localStorage.getItem("userToken") === null && (
+                    <LoginRegister />)}
+                {LoginRegisterPopup &&
+                    localStorage.getItem("userToken") !== null && (
+                    <ProfilePopup />)}
+            </div>
+            <Icon onClick={iconClick} />
         </div>
     );
 };

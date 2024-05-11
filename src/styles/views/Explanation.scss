@@ -1,0 +1,20 @@
+.explanation {
+        text-align: center;
+        font-size: 20px;
+        color: #ffffff; 
+        z-index: 9999;
+}
+
+.explanation_appear {
+  animation: fadeIn 0.35s ease-in-out;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #ffffff;
+  z-index: 9999;
+}
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }

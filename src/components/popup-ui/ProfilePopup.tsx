@@ -4,6 +4,9 @@ import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
+import Typeappear from "components/views/Explanations/Typeappear";
+import PropTypes from "prop-types";
+
 
 const ProfilePopup = () => {
     const navigate = useNavigate();
@@ -30,10 +33,17 @@ const ProfilePopup = () => {
         <BaseContainer className="profilepopup container">
             <div className="profilepopup button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
-                <Button onClick={() => doLogout()}>Logout</Button>
+                <Button onClick={() => doLogout()} >
+                    Logout
+                </Button>
             </div>
         </BaseContainer>
     );
+};
+
+ProfilePopup.propTypes = {
+    onMouseEnter: PropTypes.func.isRequired,
+    onMouseLeave: PropTypes.func.isRequired,
 };
 
 export default ProfilePopup;
