@@ -29,7 +29,7 @@ FormField.propTypes = {
     type: PropTypes.string,
 };
 
-const AnonymousEnteringLobbyPage = () => {
+const AnonEnterLobbyPage = () => {
     const navigate = useNavigate();
     const params = useParams();
     const lobbyCode = params.lobbycode;
@@ -42,6 +42,10 @@ const AnonymousEnteringLobbyPage = () => {
                 const response = await api.get("/lobbies/" + lobbyCode);
                 const lobbyData = response.data;
                 setLobby(lobbyData);
+
+                if (localStorage.getItem("userToken")) {
+                    joinLobbyAsRegisteredUser();
+                }
             } catch (error) {
                 handleError(error, navigate);
                 navigate("/lobbyoverview")
@@ -55,6 +59,21 @@ const AnonymousEnteringLobbyPage = () => {
         try {
             const requestBody = {playerName: playerName};
             const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody);
+            localStorage.setItem("playerToken", response.data.playerToken);
+            localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", lobbyCode);
+            navigate("/lobby/" + lobbyCode);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    }
+
+    const joinLobbyAsRegisteredUser = async () => {
+        const userToken = localStorage.getItem("userToken");
+        try {
+            const requestBody = {};
+            const config = { headers: { userToken: userToken } };
+            const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
             localStorage.setItem("playerToken", response.data.playerToken);
             localStorage.setItem("playerId", response.data.playerId);
             localStorage.setItem("lobbyCode", lobbyCode);
@@ -104,4 +123,4 @@ const AnonymousEnteringLobbyPage = () => {
 );
 }
 
-export default AnonymousEnteringLobbyPage;
+export default AnonEnterLobbyPage;

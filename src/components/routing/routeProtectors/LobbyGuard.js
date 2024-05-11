@@ -14,8 +14,6 @@ import PropTypes from "prop-types";
 
 export const LobbyGuard = () => {
 
-
-
     if (localStorage.getItem("playerToken")) {
 
         return <Outlet />;

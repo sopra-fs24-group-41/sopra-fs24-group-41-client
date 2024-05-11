@@ -11,7 +11,7 @@ import { LobbyGuard } from "../routeProtectors/LobbyGuard";
 import StompWebSocketComponent from "../../views/StompWebSocketComponent";
 import PropTypes from "prop-types";
 import ServerDownPage from "../../views/ServerDownPage";
-import AnonymousEnteringLobbyPage from "../../views/AnonymousEnteringLobbyPage";
+import AnonymousEnteringLobbyPage from "../../views/AnonEnterLobbyPage";
 
 /**
  * Main router of your application.
@@ -44,9 +44,6 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 </Route>
 
                 <Route path={"/lobby/:lobbycode" + "/anonymous"} element={<AnonymousEnteringLobbyPage />} />
-
-
-
 
                 <Route path="/" element={
                     <Navigate to="/lobbyoverview" replace />
