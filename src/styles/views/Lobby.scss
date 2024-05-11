@@ -41,13 +41,18 @@
     float: left;
     padding: 1.5em;
     border-radius: $borderRadius;
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: center;
     margin-left: 30px;
   }
 
   &.container {
+    display: block;
+    align-items: center;
+    overflow: auto; 
+    text-overflow: ellipsis;
+    padding-bottom: 20%;
     &:hover {
       transform: translateY(-2px);
     }
@@ -58,12 +63,12 @@
     padding: 12px;
     padding-left: 30px;
     padding-right: 30px;
+    padding-bottom: 10px;
     border-radius: $borderRadius;
     flex-direction: column;
     align-items: center;
     background: lighten($background, 20);
     cursor: pointer;
-    height: 70px;
 
     &.inactive {
       cursor: default;
@@ -148,11 +153,6 @@
   }
 }
 
-.container-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-}
 
 .player-list-container {
   background: darken($background, 4);

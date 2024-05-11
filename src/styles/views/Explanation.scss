@@ -1,8 +1,10 @@
 .explanation {
+        animation: fadeIn 0.35s ease-in-out;
         text-align: center;
         font-size: 20px;
         color: #ffffff; 
         z-index: 9999;
+        height: 50px;
 }
 
 .explanation_appear {

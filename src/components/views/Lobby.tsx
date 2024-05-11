@@ -1,26 +1,29 @@
-import React, {createContext, useEffect, useState} from "react";
-import {Button} from "components/ui/Button";
+import React, { createContext, useEffect, useState } from "react";
+import { Button } from "components/ui/Button";
 import QuitPopup from "components/popup-ui/QuitPopup";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
-import {api, handleError} from "../../helpers/api.js";
+import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 
-
-const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
-                          {
-                              gamemode: Gamemode;
-                              onSelect: (gamemode: Gamemode) => void;
-                              isSelected: boolean;
-                              ownerMode: boolean;
-                          }) => (
+const GamemodeItem = ({
+    gamemode,
+    onSelect,
+    isSelected,
+    ownerMode,
+}: {
+    gamemode: Gamemode;
+    onSelect: (gamemode: Gamemode) => void;
+    isSelected: boolean;
+    ownerMode: boolean;
+}) => (
     <div
         className={`gamemode container${isSelected ? " selected" : ""}${
             gamemode.active && ownerMode ? "" : " inactive"
@@ -259,13 +262,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
 
         const iconNames = Object.keys(ICONS);
-    
+
         // Get the index based on the hash value
         const iconIndex = Math.abs(hash) % iconNames.length;
-    
+
         // Get the icon name based on the index
         return iconNames[iconIndex];
-    }
+    };
 
     //Basic String hashing, hash it to the concatenated ASCII values
     //e.g h("abba") = 97989897
@@ -274,7 +277,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         let asciiConcatenation = "";
 
         for (let i = 0; i < name.length; i++) {
-            asciiConcatenation += name.charCodeAt(i).toString(); 
+            asciiConcatenation += name.charCodeAt(i).toString();
         }
 
         hash = parseInt(asciiConcatenation);
@@ -282,8 +285,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         const iconIndex = Math.abs(hash) % iconNames.length;
 
         return iconNames[iconIndex];
-    }
-
+    };
 
     let content = (
         <div>
@@ -312,8 +314,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                         <div className="player container">
                             <div className="player icon">
                                 <img
-                                    src={player.user === null ? ICONS[hashForAnon2(player.name)] : IMAGES[player.user.profilePicture]}
-                                    alt={"profile picture"} />
+                                    src={
+                                        player.user === null
+                                            ? ICONS[hashForAnon2(player.name)]
+                                            : IMAGES[player.user.profilePicture]
+                                    }
+                                    alt={"profile picture"}
+                                />
                             </div>
                             <div
                                 className={
@@ -322,7 +329,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                         : "player name"
                                 }
                             >
-                                {player.id === lobby.owner.id ? player.name + " (Owner)" : player.name}
+                                {player.id === lobby.owner.id
+                                    ? player.name + " (Owner)"
+                                    : player.name}
                             </div>
                         </div>
                     </li>
@@ -386,7 +395,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            <div className="container-wrapper">
+            <div>
                 <BaseContainer>
                     <div className="lobbypage container">
                         {ownerMode && (
@@ -407,50 +416,49 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             </Button>
                         )}
 
-                    <h2>
-                        {editLobbyName()}
-                        {ownerMode && (
+                        <h2>
+                            {editLobbyName()}
+                            {ownerMode && (
+                                <Button
+                                    className="edit-button"
+                                    onClick={handleEdit}
+                                >
+                                    {isEditing ? "Save" : "Edit"}
+                                </Button>
+                            )}
+                        </h2>
+                        <div className="lobbypage game-and-players-container">
+                            <div className="gamemode standard">{content}</div>
+                            <BaseContainer className="player-list-container">
+                                <div>{playerListContent}</div>
+                            </BaseContainer>
+                        </div>
+                        <div className="button-container">
                             <Button
-                                className="edit-button"
-                                onClick={handleEdit}
+                                className="button-container button"
+                                onClick={() => startGame()}
+                                disabled={!selectedGamemode || !ownerMode}
                             >
-                                {isEditing ? "Save" : "Edit"}
+                                Start Game
                             </Button>
-                        )}
-                    </h2>
-                    <div className="lobbypage game-and-players-container">
-                        <div className="gamemode standard">{content}</div>
-                        <BaseContainer className="player-list-container">
-                            <div>{playerListContent}</div>
-                        </BaseContainer>
+                            <Button
+                                className="button-container button"
+                                onClick={() => handleQuit()}
+                            >
+                                Quit
+                            </Button>
+                        </div>
+                        <div>
+                            <CopyButton copyText={lobby.code} />
+                        </div>
                     </div>
-                    <div className="button-container">
-                        <Button
-                            className="button-container button"
-                            onClick={() => startGame()}
-                            disabled={!selectedGamemode || !ownerMode}
-                        >
-                            Start Game
-                        </Button>
-                        <Button
-                            className="button-container button"
-                            onClick={() => handleQuit()}
-                        >
-                            Quit
-                        </Button>
-                    </div>
-                    <div>
-                        <CopyButton copyText={lobby.code}/>
-                    </div>
-                </div>
-            </BaseContainer>
-            {quitPopup && (
-                <LobbyContext.Provider
-                    value={{ quitPopup, setQuitPopup }}
-                >
-                    <QuitPopup />
-                </LobbyContext.Provider>
-            )}
+                </BaseContainer>
+                {quitPopup && (
+                    <LobbyContext.Provider value={{ quitPopup, setQuitPopup }}>
+                        <QuitPopup />
+                    </LobbyContext.Provider>
+                )}
+            </div>
         </div>
     );
 };
