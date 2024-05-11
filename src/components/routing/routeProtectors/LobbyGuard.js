@@ -20,6 +20,7 @@ export const LobbyGuard = () => {
     }
 
     const {lobbycode} = useParams()
+    
     return <Navigate to={"/lobby/" + lobbycode + "/anonymous"} replace />;
 };
 

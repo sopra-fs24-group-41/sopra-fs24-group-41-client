@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "styles/views/AnonEnterLobby.scss";
 import Lobby from "../../models/Lobby.js";
 import { api, handleError } from "helpers/api";
-import { useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
 
 const FormField = (props) => {
@@ -34,7 +34,7 @@ const AnonEnterLobbyPage = () => {
     const params = useParams();
     const lobbyCode = params.lobbycode;
     const [lobby, setLobby] = useState<Lobby[]>([]);
-    const [playerName, setPlayerName] = useState<String>("")
+    const [playerName, setPlayerName] = useState<String>("");
 
     useEffect(() => {
         const fetchLobby = async () => {
@@ -48,17 +48,19 @@ const AnonEnterLobbyPage = () => {
                 }
             } catch (error) {
                 handleError(error, navigate);
-                navigate("/lobbyoverview")
+                navigate("/lobbyoverview");
             }
         };
         fetchLobby();
     }, []);
 
     const joinLobby = async () => {
-
         try {
-            const requestBody = {playerName: playerName};
-            const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody);
+            const requestBody = { playerName: playerName };
+            const response = await api.post(
+                "/lobbies/" + lobbyCode + "/players",
+                requestBody
+            );
             localStorage.setItem("playerToken", response.data.playerToken);
             localStorage.setItem("playerId", response.data.playerId);
             localStorage.setItem("lobbyCode", lobbyCode);
@@ -66,14 +68,18 @@ const AnonEnterLobbyPage = () => {
         } catch (error) {
             handleError(error, navigate);
         }
-    }
+    };
 
     const joinLobbyAsRegisteredUser = async () => {
         const userToken = localStorage.getItem("userToken");
         try {
             const requestBody = {};
             const config = { headers: { userToken: userToken } };
-            const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
+            const response = await api.post(
+                "/lobbies/" + lobbyCode + "/players",
+                requestBody,
+                config
+            );
             localStorage.setItem("playerToken", response.data.playerToken);
             localStorage.setItem("playerId", response.data.playerId);
             localStorage.setItem("lobbyCode", lobbyCode);
@@ -81,7 +87,7 @@ const AnonEnterLobbyPage = () => {
         } catch (error) {
             handleError(error, navigate);
         }
-    }
+    };
 
     let content = (
         <div>
@@ -90,7 +96,7 @@ const AnonEnterLobbyPage = () => {
                 value={playerName}
                 onChange={(pn: string) => setPlayerName(pn)}
             />
-            </div>
+        </div>
     );
 
     return (
@@ -117,10 +123,9 @@ const AnonEnterLobbyPage = () => {
                         Join Lobby
                     </Button>
                 </div>
-
             </BaseContainer>
         </div>
-);
-}
+    );
+};
 
 export default AnonEnterLobbyPage;
