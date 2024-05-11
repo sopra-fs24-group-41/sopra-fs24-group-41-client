@@ -145,6 +145,29 @@
   box-shadow: $dropShadow;
 }
 
+.glow {
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px 0 rgba($textColor, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba($textColor, 1.0);
+  }
+  100% {
+    box-shadow: 0 0 10px 0 rgba($textColor, 0.4);
+  }
+}
+
+.small-text {
+  color: $buttonCol;
+  font-size: 12px;
+  margin-top: -5px;
+  text-align: center;
+}
+
 .popup-container {
   min-height: auto;
   width: auto;
