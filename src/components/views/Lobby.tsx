@@ -1,15 +1,15 @@
-import React, { createContext, useEffect, useState } from "react";
-import { Button } from "components/ui/Button";
+import React, {createContext, useEffect, useState} from "react";
+import {Button} from "components/ui/Button";
 import QuitPopup from "components/popup-ui/QuitPopup";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
-import { api, handleError } from "../../helpers/api.js";
+import {api, handleError} from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 
@@ -194,8 +194,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         const iconIndex = Math.abs(hash) % iconNames.length;
     
         // Get the icon name based on the index
-        const iconName = iconNames[iconIndex];
-        return iconName;
+        return iconNames[iconIndex];
     }
 
     //Basic String hashing, hash it to the concatenated ASCII values
@@ -211,8 +210,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         hash = parseInt(asciiConcatenation);
         const iconNames = Object.keys(ICONS);
         const iconIndex = Math.abs(hash) % iconNames.length;
-        const iconName = iconNames[iconIndex];
-        return iconName;
+
+        return iconNames[iconIndex];
     }
 
 
