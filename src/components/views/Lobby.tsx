@@ -12,27 +12,33 @@ import Gamemode from "../../models/GameMode.js";
 import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 
-
-const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
-                          {
-                              gamemode: Gamemode;
-                              onSelect: (gamemode: Gamemode) => void;
-                              isSelected: boolean;
-                              ownerMode: boolean;
-                          }) => (
+const GamemodeItem = ({
+    gamemode,
+    onSelect,
+    isSelected,
+    ownerMode,
+}: {
+    gamemode: Gamemode;
+    onSelect: (gamemode: Gamemode) => void;
+    isSelected: boolean;
+    ownerMode: boolean;
+}) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode ? "" : " inactive"}`}
-        onClick={(gamemode.active && ownerMode) ? () => onSelect(gamemode) : undefined}
+        className={`gamemode container${isSelected ? " selected" : ""}${
+            gamemode.active && ownerMode ? "" : " inactive"
+        }`}
+        onClick={
+            gamemode.active && ownerMode ? () => onSelect(gamemode) : undefined
+        }
     >
         <div className="gamemode name">{gamemode.name}</div>
-        {isSelected ? <div className="gamemode description">{longerdesc[gamemode.name]}</div> : <div className="gamemode description">{gamemode.description}</div>
-}
-
-
-
-
-
-
+        {isSelected ? (
+            <div className="gamemode description">
+                {longerdesc[gamemode.name]}
+            </div>
+        ) : (
+            <div className="gamemode description">{gamemode.description}</div>
+        )}
     </div>
 );
 
@@ -41,18 +47,42 @@ GamemodeItem.propTypes = {
 };
 
 const gamemodes = [
-    { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
-    { name: "Wombo Combo", description: "Make some bomb combos!", serverName: "WOMBOCOMBO", active: true },
-    { name: "Finite Fusion", description: "Use your resources wisely.", serverName: "FINITEFUSION", active: true },
-    { name: "Sandbox", description: "Explore infinite combinations.", serverName: "STANDARD", active: true },
+    {
+        name: "Fusion Frenzy",
+        description: "How fast are you?",
+        serverName: "FUSIONFRENZY",
+        active: true,
+    },
+    {
+        name: "Wombo Combo",
+        description: "Make some bomb combos!",
+        serverName: "WOMBOCOMBO",
+        active: true,
+    },
+    {
+        name: "Finite Fusion",
+        description: "Use your resources wisely.",
+        serverName: "FINITEFUSION",
+        active: true,
+    },
+    {
+        name: "Sandbox",
+        description: "Explore infinite combinations.",
+        serverName: "STANDARD",
+        active: true,
+    },
 ];
 
 const longerdesc: { [key: string]: string } = {
-    "Fusion Frenzy": "All players get the same target word, whoever gets it first, wins.",
-    "Wombo Combo": "All players will get a different set of target words, the one that gets all their target words first, wins.",
-    "Finite Fusion": "You have only a limited number of words to get the target word.",
-    "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?"
+    "Fusion Frenzy":
+        "All players get the same target word, whoever gets it first, wins.",
+    "Wombo Combo":
+        "All players will get a different set of target words, the one that gets all their target words first, wins.",
+    "Finite Fusion":
+        "You have only a limited number of words to get the target word.",
+    Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
 };
+
 export const LobbyContext = createContext();
 
 const LobbyPage = ({ stompWebSocketHook }) => {
@@ -66,7 +96,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [selectedTimer, setSelectedTimer] = useState(0);
     const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
     const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
-    const [displayText, setDisplayText] = useState("Hi There!");
 
     const navigate = useNavigate();
     const params = useParams();
