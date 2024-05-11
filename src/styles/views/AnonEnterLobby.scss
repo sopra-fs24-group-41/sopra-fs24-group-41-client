@@ -40,17 +40,6 @@
 }
 
 .player {
-  &.container {
-
-    text-align: center;
-    margin: 0.5em 0;
-    width: 20em;
-    padding: 10px;
-    border-radius: $borderRadius;
-    display: flex;
-    align-items: center;
-  }
-
   &.input-container {
     text-align: center;
     margin: 10px;
