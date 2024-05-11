@@ -206,7 +206,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                         <div className="player container">
                             <div className="player icon">
                                 <img
-                                    src={IMAGES[(player.user === null || player.user.profilePicture === "") ? "BlueFrog"
+                                    src={IMAGES[(player.user === null || player.user.profilePicture === "") ? "AnonPenguin"
                                         : player.user.profilePicture]} alt={"profile picture"} />
                             </div>
                             <div
