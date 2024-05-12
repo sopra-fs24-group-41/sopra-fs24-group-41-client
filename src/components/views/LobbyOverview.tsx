@@ -35,6 +35,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
     const [lobbyCode, setLobbyCode] = useState<String>(null);
     const userToken = localStorage.getItem("userToken");
+    const [isIconClicked, setIconClicked] = useState(false);
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -94,7 +95,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const iconClick = () => {
+        setIconClicked(true);
+        setTimeout(() => setIconClicked(false), 200); // 200ms = 0.2s
         setLoginRegisterPopup((prevState) => !prevState);
+
     };
 
     const joinLobby = async () => {
@@ -223,7 +227,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     localStorage.getItem("userToken") !== null && (
                     <ProfilePopup />)}
             </div>
-            <Icon onClick={iconClick} />
+            <div className={isIconClicked ? "icon-wiggle" : ""}><Icon onClick={iconClick} /></div>
         </div>
     );
 };

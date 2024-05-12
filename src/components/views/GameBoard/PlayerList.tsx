@@ -17,8 +17,17 @@ const PlayerContainer = ({ otherPlayer }) => {
     return (
         <div className="player-word container">
             <div className="player-icon">
-            <img src={IMAGES[otherPlayer.profilePicture] || ICONS[hashForAnon(otherPlayer.name)]} alt="player icon" /></div>
-            <div className={`player-word ${wordFormat}`}>{otherPlayerWord.name}</div>
+                <img
+                    src={
+                        IMAGES[otherPlayer.profilePicture] ||
+                        ICONS[hashForAnon(otherPlayer.name)]
+                    }
+                    alt="player icon"
+                />
+            </div>
+            <div className={`player-word ${wordFormat}`}>
+                {otherPlayerWord.name}
+            </div>
         </div>
     );
 };

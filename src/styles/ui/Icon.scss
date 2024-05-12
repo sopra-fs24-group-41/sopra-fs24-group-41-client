@@ -19,6 +19,7 @@
     padding: 0;
     cursor: pointer;
 
+
     .icon-svg {
         width: 70px; // Adjust size as needed
         height: 90px; // Adjust size as needed
@@ -35,7 +36,7 @@
         max-height: 60px;
     }
 
-    //This part makes sure to adjust the position when using mobile.
+//This part makes sure to adjust the position when using mobile.
 @media only screen and (max-width: 768px) {
     &.container {
             position: fixed;
@@ -49,4 +50,25 @@
             justify-content: center;
             align-items: center;
     }}
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.icon-wiggle {
+    animation: wiggle 0.2s ease-in-out;
+    position: fixed;
+    top: 0%;
+    z-index: 0;
+    max-width: 60px;
+    max-height: 60px;
+    @media only screen and (max-width: 768px) {
+        top: 63%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
