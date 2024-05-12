@@ -25,7 +25,6 @@
         box-shadow: $dropShadow;
     }
 
-
     &.field {
         display: flex;
         flex-direction: column;
@@ -73,12 +72,10 @@
         padding: 10px;
         padding-right: 15px;
         font-weight: bold;
-
-
-}
+    }
 }
 
-.input-css{
+.input-css {
     border: none;
     border-radius: $borderRadius;
     padding: 1px;
