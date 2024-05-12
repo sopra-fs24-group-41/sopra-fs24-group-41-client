@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Player from "../../models/Player.js";
 import { Button } from "components/ui/Button";
+import PropTypes from "prop-types";
+import ICONS from "../../assets/icons/index.js";
 
-const Result = () => {
+
+const Result = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [player, setPlayer] = useState<Player>(new Player);
     const [winner, setWinner] = useState();
@@ -16,7 +19,6 @@ const Result = () => {
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-    const [res, setRes] = useState();
     const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
     const [resultStatus, setResultStatus] = useState<boolean>(false);
     const [pID, setPID] = useState();
@@ -29,17 +31,20 @@ const Result = () => {
                 foundPlayer.id = playerId;
                 foundPlayer.token = playerToken;
                 foundPlayer.lobbyCode = lobbyCode;
+                console.log(foundPlayer);
                 setPlayer(foundPlayer);
                 setPID(foundPlayer.id);
             } catch (error) {
                 handleError(error, navigate);
             }
         };
+        
 
         const fetchOtherPlayers = async () => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
+                console.log(response.data);
             } catch (error) {
                 handleError(error, navigate);
             }
@@ -74,6 +79,64 @@ const Result = () => {
         navigate("/lobby/" + lobbyCode);
     }
 
+    const kick = () => {
+        localStorage.removeItem("playerId");
+        localStorage.removeItem("playerToken");
+        localStorage.removeItem("lobbyCode");
+        navigate("/lobbyoverview");
+    };
+
+    useEffect(() => {
+        if (stompWebSocketHook.connected === true) {
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
+        }
+
+        return () => {
+            if (stompWebSocketHook.connected === true) {
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}`);
+                stompWebSocketHook.unsubscribe(
+                    `/topic/lobbies/${lobbyCode}/game`
+                );
+            }
+            stompWebSocketHook.resetMessagesList();
+        };
+    }, [stompWebSocketHook.connected]);
+
+    useEffect(() => {
+        let messagesLength = stompWebSocketHook.messages.length;
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
+            const newObject = stompWebSocketHook.messages[messagesLength - 1];
+            if (newObject.instruction === "start") {
+                navigate("/lobby/game");
+            }
+
+            if (newObject.instruction === "kick") {
+                kick();
+            }
+        }
+    }, [stompWebSocketHook.messages]);
+
+    //Basic String hashing, hash it to the concatenated ASCII values
+    //e.g h("abba") = 97989897
+    const hashForAnon = (name: string) => {
+        let hash = 0;
+        let asciiConcatenation = "";
+
+        for (let i = 0; i < name.length; i++) {
+            asciiConcatenation += name.charCodeAt(i).toString();
+        }
+
+        hash = parseInt(asciiConcatenation);
+        const iconNames = Object.keys(ICONS);
+        const iconIndex = Math.abs(hash) % iconNames.length;
+
+        return iconNames[iconIndex];
+    };
+
     const userContent = (
         <div className="res">
             <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
@@ -91,7 +154,7 @@ const Result = () => {
                             )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
                             <div className={renderIcon(player.id)}>
-                                <img src={IMAGES[player.profilePicture] || IMAGES.BlueFrog} alt="player icon" />
+                                <img src={IMAGES[player.profilePicture] || ICONS[hashForAnon(player.name)]} alt="player icon" />
                             </div>
                             <div className="player-details">
                                 <div className="player-name">
@@ -120,6 +183,18 @@ const Result = () => {
             <Button onClick={handleBackToLobby}>Back to Lobby</Button>
         </BaseContainer>
     );
+};
+
+Result.propTypes = {
+    stompWebSocketHook: PropTypes.shape({
+        subscribe: PropTypes.func.isRequired,
+        unsubscribe: PropTypes.func.isRequired,
+        sendMessage: PropTypes.func.isRequired,
+        messages: PropTypes.array.isRequired,
+        resetMessagesList: PropTypes.func.isRequired,
+        connected: PropTypes.bool.isRequired,
+        subscriptionsRef: PropTypes.object.isRequired,
+    }).isRequired,
 };
 
 export default Result;

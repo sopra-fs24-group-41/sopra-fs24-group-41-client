@@ -242,26 +242,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     };
 
-    //ChatGPT
-    const hashForAnon = (name: string) => {
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = (hash << 5) - hash + name.charCodeAt(i);
-            hash |= 0; // Convert to 32bit integer
-        }
-
-        const iconNames = Object.keys(ICONS);
-
-        // Get the index based on the hash value
-        const iconIndex = Math.abs(hash) % iconNames.length;
-
-        // Get the icon name based on the index
-        return iconNames[iconIndex];
-    };
-
     //Basic String hashing, hash it to the concatenated ASCII values
     //e.g h("abba") = 97989897
-    const hashForAnon2 = (name: string) => {
+    const hashForAnon = (name: string) => {
         let hash = 0;
         let asciiConcatenation = "";
 
@@ -305,7 +288,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                 <img
                                     src={
                                         player.user === null
-                                            ? ICONS[hashForAnon2(player.name)]
+                                            ? ICONS[hashForAnon(player.name)]
                                             : IMAGES[player.user.profilePicture]
                                     }
                                     alt={"profile picture"}

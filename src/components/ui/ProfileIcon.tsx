@@ -6,19 +6,15 @@ import PropTypes from "prop-types";
 
 
 const ProfileIcon = ({ Current, isEditing, SelectedImage }) => {
-    const currValid = (Profile) =>{
-        const Output = (Profile === "") ? "BlueFrog" : Profile;
-        
-        return Output;
-    }
 
     useEffect(() => {
-        setSelectedImage(IMAGES[currValid(Current)]);
+        setSelectedImage(IMAGES[Current]);
+        console.log(IMAGES);
     }, [Current]);
 
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(IMAGES[currValid(Current)]);
+    const [selectedImage, setSelectedImage] = useState(IMAGES[Current]);
     const [imageX, setImageX] = useState();
     
     useEffect(() => {

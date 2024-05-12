@@ -8,14 +8,14 @@ import SpaceDude from "../../assets/images/SpaceDude.jpg"
 import AnonPenguin from "../../assets/images/AnonPenguin.jpg"
 
 const IMAGES = {
-    BlueFrog: BlueFrog,
-    PinkBunny: PinkBunny,
-    RedSquid : RedSquid,
-    PixelShiba : PixelShiba,
-    SunglassesGorilla : SunglassesGorilla,
-    AlienDude : AlienDude,
-    SpaceDude : SpaceDude,
-    AnonPenguin : AnonPenguin
+    BlueFrog,
+    PinkBunny,
+    RedSquid,
+    PixelShiba,
+    SunglassesGorilla,
+    AlienDude,
+    SpaceDude,
+    AnonPenguin,
 }
 
 export default IMAGES

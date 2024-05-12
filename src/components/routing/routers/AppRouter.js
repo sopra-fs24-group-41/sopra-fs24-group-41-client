@@ -35,7 +35,7 @@ const AppRouter = ({ stompWebSocketHook }) => {
 
                 <Route path="/registration" element={<Registration />} />
 
-                <Route path="/result" element={<Result />} />
+                <Route path="/result" element={<Result stompWebSocketHook={stompWebSocketHook} />} />
 
                 <Route path="/lobby/game" element={<Game stompWebSocketHook={stompWebSocketHook}/>} />
 
