@@ -99,6 +99,13 @@ const Profile = () => {
         }
     };
 
+    const formatWord = (word) => {
+        if (word) {
+            return word.name[0].toUpperCase() + word.name.slice(1);
+        }
+        return null;
+    };
+
     const tableData = [
         {
             label: "Username:",
@@ -132,7 +139,10 @@ const Profile = () => {
         },
         { label: "Combinations Made:", value: userData.combinationsMade },
         { label: "Discovered Words:", value: userData.discoveredWords },
-        { label: "Rarest Word Found:", value: userData.rarestWordFound },
+        {
+            label: "Rarest Word Found:",
+            value: formatWord(userData.rarestWordFound),
+        },
         { label: "Fastest Win:", value: userData.fastestWin },
     ];
 
