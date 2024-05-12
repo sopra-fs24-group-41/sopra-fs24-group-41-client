@@ -12,6 +12,7 @@ import Gamemode from "../../models/GameMode.js";
 import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
+import hashForAnon from "components/views/utils";
 
 const GamemodeItem = ({
     gamemode,
@@ -240,23 +241,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         } catch (error) {
             handleError(error, navigate);
         }
-    };
-
-    //Basic String hashing, hash it to the concatenated ASCII values
-    //e.g h("abba") = 97989897
-    const hashForAnon = (name: string) => {
-        let hash = 0;
-        let asciiConcatenation = "";
-
-        for (let i = 0; i < name.length; i++) {
-            asciiConcatenation += name.charCodeAt(i).toString();
-        }
-
-        hash = parseInt(asciiConcatenation);
-        const iconNames = Object.keys(ICONS);
-        const iconIndex = Math.abs(hash) % iconNames.length;
-
-        return iconNames[iconIndex];
     };
 
     let content = (

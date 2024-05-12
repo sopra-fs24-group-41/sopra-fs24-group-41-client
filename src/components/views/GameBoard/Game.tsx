@@ -27,7 +27,6 @@ const Game = ({ stompWebSocketHook }) => {
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
 
 

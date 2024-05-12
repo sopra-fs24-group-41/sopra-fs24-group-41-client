@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import IMAGES from "../../assets/images/index1.js";
@@ -8,6 +8,7 @@ import Player from "../../models/Player.js";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import ICONS from "../../assets/icons/index.js";
+import hashForAnon from "components/views/utils";
 
 
 const Result = ({ stompWebSocketHook }) => {
@@ -119,23 +120,6 @@ const Result = ({ stompWebSocketHook }) => {
             }
         }
     }, [stompWebSocketHook.messages]);
-
-    //Basic String hashing, hash it to the concatenated ASCII values
-    //e.g h("abba") = 97989897
-    const hashForAnon = (name: string) => {
-        let hash = 0;
-        let asciiConcatenation = "";
-
-        for (let i = 0; i < name.length; i++) {
-            asciiConcatenation += name.charCodeAt(i).toString();
-        }
-
-        hash = parseInt(asciiConcatenation);
-        const iconNames = Object.keys(ICONS);
-        const iconIndex = Math.abs(hash) % iconNames.length;
-
-        return iconNames[iconIndex];
-    };
 
     const userContent = (
         <div className="res">
