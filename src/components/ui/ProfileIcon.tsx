@@ -9,7 +9,6 @@ const ProfileIcon = ({ Current, isEditing, SelectedImage }) => {
 
     useEffect(() => {
         setSelectedImage(IMAGES[Current]);
-        console.log(IMAGES);
     }, [Current]);
 
 
