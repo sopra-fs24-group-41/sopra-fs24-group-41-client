@@ -2,9 +2,12 @@
 
 .loading-spinner {
     display: inline-block;
-    position: relative;
+    position: absolute;
+    left: 45%;
+    top: 40%;
     width: 60px;
     height: 35px;
+    z-index: 1000000;
 
     & div {
         position: absolute;
@@ -12,7 +15,7 @@
         width: 11px;
         height: 11px;
         border-radius: 50%;
-        background: $accent;
+        background: violet;
         animation-timing-function: cubic-bezier(0, 1, 1, 0);
 
         &:nth-child(1) {

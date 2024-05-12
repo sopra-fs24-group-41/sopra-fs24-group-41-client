@@ -12,6 +12,7 @@ import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../Explanations/Typewriter";
+import { Spinner } from "components/ui/Spinner";
 
 export const playerContext = createContext(new Player());
 
@@ -28,6 +29,7 @@ const Game = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const popupMessages = {
@@ -127,6 +129,7 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+        let loadingTimeoutId = setTimeout(() => setIsLoading(true), 1000);
         try {
             let response = await api.put(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
@@ -146,6 +149,9 @@ const Game = ({ stompWebSocketHook }) => {
             return resultPlayerWord;
         } catch (error) {
             handleError(error, navigate);
+        } finally {
+            clearTimeout(loadingTimeoutId);
+            setIsLoading(false);
         }
     };
 
@@ -155,6 +161,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
+            {isLoading ? <Spinner /> : null}
             <Typewriter text={remainingTime}/>
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={{ player, setPlayer }}>

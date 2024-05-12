@@ -146,7 +146,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             );
         if (lobby.name) setLobbyname(lobby.name);
         if (lobby.publicAccess) setPublicA(lobby.publicAccess);
-        if (lobby.gameTime) setSelectedTimer(lobby.gameTime);
     }, [lobby]);
 
     useEffect(() => {
