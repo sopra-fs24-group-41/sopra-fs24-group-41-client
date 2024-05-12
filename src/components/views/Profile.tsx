@@ -31,7 +31,8 @@ const Profile = () => {
                 const userdata = new User(response.data);
                 setUserData(userdata);
                 setUsername(userdata.username);
-                let fav = userdata.favourite === null ? "Zaddy" : userdata.favourite;
+                let fav =
+                    userdata.favourite === null ? "Zaddy" : userdata.favourite;
                 setFavourite(fav);
             } catch (error) {
                 alert("Server Connection lost");
@@ -129,6 +130,10 @@ const Profile = () => {
                 favourite
             ),
         },
+        { label: "Combinations Made:", value: userData.combinationsMade },
+        { label: "Discovered Words:", value: userData.discoveredWords },
+        { label: "Rarest Word Found:", value: userData.rarestWordFound },
+        { label: "Fastest Win:", value: userData.fastestWin },
     ];
 
     return (
