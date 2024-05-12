@@ -133,6 +133,7 @@ const Profile = () => {
         { label: "Combinations Made:", value: userData.combinationsMade },
         { label: "Discovered Words:", value: userData.discoveredWords },
         { label: "Rarest Word Found:", value: userData.rarestWordFound },
+        { label: "Fastest Win:", value: userData.fastestWin },
     ];
 
     return (

@@ -15,6 +15,7 @@ class User {
         this.combinationsMade = null;
         this.discoveredWords = null;
         this.rarestWordFound = null;
+        this.fastestWin = null;
         Object.assign(this, data);
     }
 }
