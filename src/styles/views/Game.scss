@@ -66,19 +66,20 @@
 .player-word {
   &.container {
     margin: 0.5em 0;
-    padding: 10px;
+    padding: 1px;
     border-radius: $borderRadius;
     display: flex;
     align-items: center;
   }
   &.player-name {
     margin-right: 10px;
-    font-size: 1.5em;
+    font-size: 1em;
     text-align: left;
     display: flex;
   }
   &.visible-word {
-    font-size: 1.5em;
+    margin-left: 10%;
+    font-size: 1em;
     text-align: left;
     display: flex;
   }
@@ -160,4 +161,19 @@
   font-size: 20px;
   text-transform: uppercase;
   z-index: 99000;
+}
+
+
+.player-icon {
+  position: relative;
+  max-width: 80px;
+  max-height: 80px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 25%;
+    border: 1px solid rgb(26, 26, 26);
+  }
+
 }
