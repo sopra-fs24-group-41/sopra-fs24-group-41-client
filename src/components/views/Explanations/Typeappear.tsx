@@ -8,7 +8,7 @@ const Typeappear = ({ text }) => {
             {text}
         </div>
     );
-}
+};
 
 Typeappear.propTypes = {
     text: PropTypes.string.isRequired,
