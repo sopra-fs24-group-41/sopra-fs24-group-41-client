@@ -122,7 +122,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             if (newObject.instruction === "start") {
                 navigate("/lobby/game");
             }
-            if (newObject.instruction === "kick" && !ownerMode) {
+            if (newObject.instruction === "kick") {
+                console.log("kicked because: ", newObject.reason) // replace with showing message
                 kick();
             }
         }
