@@ -12,6 +12,9 @@ class User {
         this.creationDate = null;
         this.ownedLobby = null;
         this.favourite = null;
+        this.combinationsMade = null;
+        this.discoveredWords = null;
+        this.rarestWordFound = null;
         Object.assign(this, data);
     }
 }
