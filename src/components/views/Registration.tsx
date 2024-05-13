@@ -28,7 +28,7 @@ const FormField = (props) => {
         <div className="login field">
             <label className="login label">{props.label}</label>
             <input
-                className="login input"
+                className={`login input ${props.error ? "error" : ""}`}
                 placeholder="enter here.."
                 type={props.type}
                 value={props.value}
@@ -43,12 +43,16 @@ FormField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     type: PropTypes.string,
+    error: PropTypes.bool,
 };
 
 const Registration = () => {
     const navigate = useNavigate();
     const [password, setPassword] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const [registerError, setRegisterError] = useState(false);
+    const [registerErrorMsg, setRegisterErrorMsg] = useState("");
+
 
     const doRegistration = async () => {
         try {
@@ -68,9 +72,9 @@ const Registration = () => {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             navigate("/lobbyoverview");
         } catch (error) {
-            alert(
-                `Something went wrong during the registration: \n${handleError(error, navigate)}`
-            );
+            setRegisterErrorMsg(error.response.data.message);
+            setRegisterError(true);
+
         }
     };
 
@@ -82,14 +86,17 @@ const Registration = () => {
                     <FormField
                         label="Username"
                         value={validUsername(username)}
-                        onChange={(un: string) => setUsername(un)}
+                        onChange={(un: string) => {setUsername(un); setRegisterError(false);}}
+                        error={registerError}
                     />
                     <FormField
                         label="Password"
                         value={password}
-                        onChange={(pw) => setPassword(pw)}
+                        onChange={(pw) => {setPassword(pw); setRegisterError(false);}}
                         type="password"
+                        error={registerError}
                     />
+                    {registerError && <p className="error-message">{registerErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}

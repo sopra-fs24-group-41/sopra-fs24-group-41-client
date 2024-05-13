@@ -135,7 +135,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         if (!checkLogin()) {
             setCreateWithoutAccount(true);
             setShowError(true);
-            setTimeout(() => setCreateWithoutAccount(false), 200);
+            setTimeout(() => setCreateWithoutAccount(false), 2000);
             
             return;
         }

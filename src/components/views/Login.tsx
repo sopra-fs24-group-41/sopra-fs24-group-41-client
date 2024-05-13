@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
@@ -12,7 +12,7 @@ const FormField = (props) => {
         <div className="login field">
             <label className="login label">{props.label}</label>
             <input
-                className="login input"
+                className={`login input ${props.error ? "error" : ""}`}
                 placeholder="enter here.."
                 type={props.type}
                 value={props.value}
@@ -27,13 +27,18 @@ FormField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     type: PropTypes.string,
+    error: PropTypes.bool, 
+
 };
 
 const Login = () => {
     const navigate = useNavigate();
     const [password, setPassword] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const [loginError, setLoginError] = useState(false);
+    const [loginErrorMsg, setLoginErrorMsg] = useState("");
 
+    
     const doLogin = async () => {
         try {
             const requestBodyLogin = JSON.stringify({ username, password });
@@ -45,9 +50,11 @@ const Login = () => {
             localStorage.setItem("userToken", user.token);
             navigate("/lobbyoverview");
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error, navigate)}`);
+            setLoginErrorMsg(error.response.data.message);
+            setLoginError(true);
         }
     };
+
 
     return (
         <BaseContainer>
@@ -56,14 +63,23 @@ const Login = () => {
                     <FormField
                         label="Username"
                         value={username}
-                        onChange={(un: string) => setUsername(un)}
+                        onChange={(un: string) => {
+                            setUsername(un);
+                            setLoginError(false);
+                        }}
+                        error={loginError}
                     />
                     <FormField
                         label="Password"
                         value={password}
-                        onChange={(pw) => setPassword(pw)}
+                        onChange={(pw: string) => {
+                            setPassword(pw);
+                            setLoginError(false);
+                        }}
                         type="password"
+                        error={loginError}
                     />
+                    {loginError && <p className="error-message">{loginErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
