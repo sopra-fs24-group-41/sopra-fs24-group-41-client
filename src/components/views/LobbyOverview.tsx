@@ -11,8 +11,11 @@ import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import "styles/views/Explanation.scss";
 
-
-const LobbyItem = ({ lobby, onSelect, isSelected }: {
+const LobbyItem = ({
+    lobby,
+    onSelect,
+    isSelected,
+}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
@@ -38,8 +41,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [isIconClicked, setIconClicked] = useState(false);
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
     const [warningCreateWithoutLogin, setShowError] = useState(false);
-
-
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -102,7 +103,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         setIconClicked(true);
         setTimeout(() => setIconClicked(false), 200); // 200ms = 0.2s
         setLoginRegisterPopup((prevState) => !prevState);
-
     };
 
     const joinLobby = async () => {
@@ -136,6 +136,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             setCreateWithoutAccount(true);
             setShowError(true);
             setTimeout(() => setCreateWithoutAccount(false), 200);
+            
             return;
         }
         try {
@@ -154,12 +155,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     useEffect(() => {
-        if(warningCreateWithoutLogin) {
+        if (warningCreateWithoutLogin) {
             setTimeout(() => setShowError(false), 1500);
         }
     }, [warningCreateWithoutLogin]);
-
-
 
     let content;
 
@@ -220,7 +219,13 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             <div className="container-wrapper">
                 <BaseContainer className="lobbyoverview container">
                     <h2>Lobby Overview</h2>
-                    {warningCreateWithoutLogin ? <p className="create_lobby_without_login">Please log in to create a lobby.</p> : <p>Select a Lobby to Join</p>}
+                    {warningCreateWithoutLogin ? (
+                        <p className="create_lobby_without_login">
+                            Please log in to create a lobby.
+                        </p>
+                    ) : (
+                        <p>Select a Lobby to Join</p>
+                    )}
                     {content}
                 </BaseContainer>
 
@@ -231,7 +236,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     localStorage.getItem("userToken") !== null && (
                     <ProfilePopup />)}
             </div>
-            <div className={(isIconClicked || createWithoutAccount) ? "icon-wiggle" : ""}><Icon onClick={iconClick} /></div>
+            <div className={createWithoutAccount ? "icon-wiggle" : ""}>
+                <Icon onClick={iconClick} />
+            </div>
         </div>
     );
 };
