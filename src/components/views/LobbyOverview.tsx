@@ -213,12 +213,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 </div>
             </div>
         );
-    } else {
-        content = (
-            <div className="lobbyoverview">
-                <p color="red">Currently no open lobbies</p>
-            </div>
-        );
     }
 
     return (

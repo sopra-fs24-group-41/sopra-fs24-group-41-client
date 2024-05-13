@@ -71,8 +71,8 @@ const Result = ({ stompWebSocketHook }) => {
     
     const renderIcon = (playerId) => {
         if (winner && playerId === winner.id) return "winner";
-        if (playerId === player.id) return "loser";
-        else return "player-icon";
+        if (playerId.toString() === player.id.toString()) return "loser";
+        else return "player-container player-icon";
     };
 
     const handleBackToLobby = () =>{
@@ -133,7 +133,7 @@ const Result = ({ stompWebSocketHook }) => {
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
                         <div
-                            className={`player-container ${renderPlayer(
+                            className={`${renderPlayer(
                                 player.id
                             )} ${selectedPlayer === player ? "selected" : ""}`}
                         >
@@ -149,7 +149,7 @@ const Result = ({ stompWebSocketHook }) => {
                                     <div className="player-info">
                                         <div>
                                             Words Generated:{" "}
-                                            {player.wordCount || 0}
+                                            {player.wordCount-4}
                                         </div>
                                     </div>
                                 )}

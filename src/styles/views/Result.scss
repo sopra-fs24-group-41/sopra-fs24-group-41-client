@@ -50,7 +50,6 @@
   .player-container {
     z-index: 4;
     transition: transform 0.3s;
-    margin: 0.5em 0;
     background: lighten($background, 20);
     padding: 4px;
     border-radius: $borderRadius;
@@ -91,7 +90,6 @@
     }
 
     &.selected {
-      background: lighten($background, 40);
       width: max-content;
       max-width: max-content;
       height: max-content;
@@ -111,15 +109,20 @@
     }
 
     .player-icon {
-      position: relative;
-      max-width: 80px;
-      max-height: 80px;
+      z-index: 4;
+      width: 50px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      height: max-content;
+      background: lighten($background, 20);
 
       img {
         width: 50px;
         height: 50px;
         border-radius: 25%;
         border: 5px solid rgb(26, 26, 26);
+        margin: 0;
       }
 
     }

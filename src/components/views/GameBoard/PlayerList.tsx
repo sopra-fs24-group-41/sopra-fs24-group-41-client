@@ -17,6 +17,7 @@ const PlayerContainer = ({ otherPlayer }) => {
     return (
         <div className="player-word container">
             <div className="player-icon">
+
                 <img
                     src={
                         IMAGES[otherPlayer.profilePicture] ||
@@ -24,9 +25,11 @@ const PlayerContainer = ({ otherPlayer }) => {
                     }
                     alt="player icon"
                 />
-            </div>
+                {otherPlayer.name + " | "}
+
             <div className={`player-word ${wordFormat}`}>
                 {otherPlayerWord.name}
+            </div>
             </div>
         </div>
     );
@@ -38,15 +41,15 @@ PlayerContainer.propTypes = {
 
 const PlayerList = ({ }) => {
     const { otherPlayers } = useContext(otherPlayersContext);
-    
+
 
     return (
         <div className="game vertical-container">
-            <h2>Players</h2>
+            <h1>Players | Recent Word</h1>
             <ul className="player-list list">
                 {otherPlayers.map((p, index) => (
-                    <li key={index}>
-                        <PlayerContainer otherPlayer={p}/>
+                    <li className="player-list player" key={index}>
+                            <PlayerContainer otherPlayer={p}/>
                     </li>
                 ))}
             </ul>

@@ -55,11 +55,17 @@
     background-color: $background;
     box-shadow: $dropShadow;
     height: 100%;
+    flex-direction: column;
     @include center;
   }
   &.list {
     list-style: none;
     padding: 0;
+
+  }
+  &.player {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -78,7 +84,7 @@
     display: flex;
   }
   &.visible-word {
-    margin-left: 10%;
+    margin-left: 5px;
     font-size: 1em;
     text-align: left;
     display: flex;
@@ -166,14 +172,20 @@
 
 .player-icon {
   position: relative;
-  max-width: 80px;
+  width: 200px;
   max-height: 80px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+
+
 
   img {
     width: 40px;
     height: 40px;
     border-radius: 25%;
     border: 1px solid rgb(26, 26, 26);
+    margin-right: 5px;
   }
 
 }
