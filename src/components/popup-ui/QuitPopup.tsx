@@ -5,7 +5,7 @@ import "styles/popup-ui/QuitPopup.scss";
 import { LobbyContext } from "../views/Lobby";
 import { GameContext } from "components/views/GameBoard/Game";
 import { api, handleError } from "../../helpers/api.js";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const QuitPopup = () => {

@@ -20,12 +20,12 @@ const LobbyItem = ({
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
 }) => (
-    <div
+    <button
         className={`lobby container${isSelected ? "-selected" : ""}`}
         onClick={() => onSelect(lobby)}
     >
-        <div className="lobby lobby-name">{lobby.name}</div>
-    </div>
+        <label className="lobby lobby-name">{lobby.name}</label>
+    </button>
 );
 LobbyItem.propTypes = {
     lobby: PropTypes.object,
@@ -35,12 +35,10 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [lobbies, setLobbies] = useState<Lobby[]>([]);
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
-    const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
-    const [lobbyCode, setLobbyCode] = useState<String>(null);
+    const [loginRegisterPopup, setLoginRegisterPopup] = useState(false);
+    const [lobbyCode, setLobbyCode] = useState<string>(null);
     const userToken = localStorage.getItem("userToken");
-    const [isIconClicked, setIconClicked] = useState(false);
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
-    const [warningCreateWithoutLogin, setShowError] = useState(false);
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -100,8 +98,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const iconClick = () => {
-        setIconClicked(true);
-        setTimeout(() => setIconClicked(false), 200); // 200ms = 0.2s
         setLoginRegisterPopup((prevState) => !prevState);
     };
 
@@ -134,7 +130,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const createLobby = async () => {
         if (!checkLogin()) {
             setCreateWithoutAccount(true);
-            setShowError(true);
             setTimeout(() => setCreateWithoutAccount(false), 2000);
             
             return;
@@ -153,12 +148,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             handleError(error, navigate);
         }
     };
-
-    useEffect(() => {
-        if (warningCreateWithoutLogin) {
-            setTimeout(() => setShowError(false), 1500);
-        }
-    }, [warningCreateWithoutLogin]);
 
     let content;
 
@@ -219,7 +208,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             <div className="container-wrapper">
                 <BaseContainer className="lobbyoverview container">
                     <h2>Lobby Overview</h2>
-                    {warningCreateWithoutLogin ? (
+                    {createWithoutAccount ? (
                         <p className="create_lobby_without_login">
                             Please log in to create a lobby.
                         </p>
@@ -229,16 +218,14 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     {content}
                 </BaseContainer>
 
-                {LoginRegisterPopup &&
+                {loginRegisterPopup &&
                     localStorage.getItem("userToken") === null && (
                     <LoginRegister />)}
-                {LoginRegisterPopup &&
+                {loginRegisterPopup &&
                     localStorage.getItem("userToken") !== null && (
                     <ProfilePopup />)}
             </div>
-            <div className={createWithoutAccount ? "icon-wiggle" : ""}>
-                <Icon onClick={iconClick} />
-            </div>
+            <Icon onClick={iconClick} wiggle={createWithoutAccount} />
         </div>
     );
 };
