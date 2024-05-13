@@ -37,6 +37,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const userToken = localStorage.getItem("userToken");
     const [isIconClicked, setIconClicked] = useState(false);
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
+    const [warningCreateWithoutLogin, setShowError] = useState(false);
+
 
 
     useEffect(() => {
@@ -132,8 +134,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const createLobby = async () => {
         if (!checkLogin()) {
             setCreateWithoutAccount(true);
-            console.log("createWithoutAccount: ", createWithoutAccount);
-            setTimeout(() => setIconClicked(false), 200);
+            setShowError(true);
+            setTimeout(() => setCreateWithoutAccount(false), 200);
+            return;
         }
         try {
             const requestBody = { publicAccess: true };
@@ -149,6 +152,14 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             handleError(error, navigate);
         }
     };
+
+    useEffect(() => {
+        if(warningCreateWithoutLogin) {
+            setTimeout(() => setShowError(false), 1500);
+        }
+    }, [warningCreateWithoutLogin]);
+
+
 
     let content;
 
@@ -191,7 +202,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                         >
                             Join Lobby
                         </Button>
-
                         <Button
                             width="100%"
                             onClick={() => createLobby()}
@@ -216,7 +226,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             <div className="container-wrapper">
                 <BaseContainer className="lobbyoverview container">
                     <h2>Lobby Overview</h2>
-                    <p>Select a Lobby to Join</p>
+                    {warningCreateWithoutLogin ? <p className="create_lobby_without_login">Please log in to create a lobby.</p> : <p>Select a Lobby to Join</p>}
                     {content}
                 </BaseContainer>
 
