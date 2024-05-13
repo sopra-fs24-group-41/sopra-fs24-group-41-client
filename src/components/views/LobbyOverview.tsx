@@ -36,6 +36,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [lobbyCode, setLobbyCode] = useState<String>(null);
     const userToken = localStorage.getItem("userToken");
     const [isIconClicked, setIconClicked] = useState(false);
+    const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
+
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -129,11 +131,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     const createLobby = async () => {
         if (!checkLogin()) {
-            alert(
-                "Only logged in users can create lobbies\nPlease login or join an existing lobby"
-            );
-
-            return;
+            setCreateWithoutAccount(true);
+            console.log("createWithoutAccount: ", createWithoutAccount);
+            setTimeout(() => setIconClicked(false), 200);
         }
         try {
             const requestBody = { publicAccess: true };
@@ -227,7 +227,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     localStorage.getItem("userToken") !== null && (
                     <ProfilePopup />)}
             </div>
-            <div className={isIconClicked ? "icon-wiggle" : ""}><Icon onClick={iconClick} /></div>
+            <div className={(isIconClicked || createWithoutAccount) ? "icon-wiggle" : ""}><Icon onClick={iconClick} /></div>
         </div>
     );
 };

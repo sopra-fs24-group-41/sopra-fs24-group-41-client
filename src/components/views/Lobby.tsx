@@ -330,6 +330,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         updateLobby(null, !publicA, null, null);
     };
 
+    const getLabelForValue = (value) =>{
+        return timerOptions.find(option => option.value === value).label;
+    }
+
     //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
     const toggleTimer = () => {
         setSelectedTimer(
@@ -346,6 +350,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             updateLobby(null, null, null, selectedTimer);
             setToggleTimerTriggered(false);
         }
+
     }, [toggleTimerTriggered]);
 
     return (
@@ -367,7 +372,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                 className="timer-label"
                                 onClick={toggleTimer}
                             >
-                                Timer: {timerOptions[selectedTimerIndex].label}
+                                Timer: {lobby.gameTime !== 0 ? getLabelForValue(lobby.gameTime) : timerOptions[selectedTimerIndex].label}
                             </Button>
                         )}
 
