@@ -31,15 +31,19 @@
   }
   &.input {
     height: 35px;
+    border: none;
     padding-left: 15px;
     margin-left: 0px;
     margin-right: 0px;
-    border: none;
     border-radius: 0.75em;
     margin-bottom: 20px;
     background: transparentize(white, 0.85);
     color: $textColor;
+    &.error {
+      border: 1px solid red;
+    }
   }
+
   &.label {
     color: $textColor;
     margin-left: 4px;
@@ -65,4 +69,9 @@
   }
 }
 
-
+.error-message {
+  z-index: 999999;
+  position: fixed;
+  top: 38%;
+  color:rgb(151, 0, 0)
+}
