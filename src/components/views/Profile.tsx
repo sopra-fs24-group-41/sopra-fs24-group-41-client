@@ -19,6 +19,8 @@ const Profile = () => {
         username: "...",
         status: "...",
     });
+    const [editError, setEditError] = useState(false);
+    const [editErrorMsg, setEditErrorMsg] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,10 +44,7 @@ const Profile = () => {
     }, []);
 
     const updateUserData = async (username, favourite) => {
-        const prevUsername = userData.username;
-        const prevFavourite =
-            userData.favourite === null ? "Zaddy" : userData.favourite;
-        const prevProfilePicture = userData.profilePicture;
+        userData.favourite === null ? "Zaddy" : userData.favourite;
         try {
             const token = localStorage.getItem("userToken");
             const userId = localStorage.getItem("userId");
@@ -67,23 +66,30 @@ const Profile = () => {
             );
 
             setFavourite(favourite);
+
+            return true;
         } catch (error) {
             handleError(error, navigate);
-            let error_msg = error.response.data.message;
-            alert("Failed to update user data: " + error_msg);
-            setUsername(prevUsername);
-            setFavourite(prevFavourite);
-            setProfilePicture(prevProfilePicture);
+            setEditError(true);
+            setEditErrorMsg(error.response.data.message);
+
+            return false;
+        
         }
     };
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (isEditing) {
-            setUsername(username);
-            setFavourite(favourite);
-            updateUserData(username, favourite);
+            const updateSuccessful = await updateUserData(username, favourite);
+    
+            if (updateSuccessful) {
+                setUsername(username);
+                setFavourite(favourite);
+                setIsEditing(false);
+            }
+        } else {
+            setIsEditing(true);
         }
-        setIsEditing(!isEditing);
     };
 
     const handleDate = (dateString) => {
@@ -103,9 +109,9 @@ const Profile = () => {
             label: "Username:",
             value: isEditing ? (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {setUsername(e.target.value); setEditError(false);}}
                 />
             ) : (
                 username
@@ -119,9 +125,9 @@ const Profile = () => {
             label: "Favourite Word:",
             value: isEditing ? (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={favourite}
-                    onChange={(e) => setFavourite(e.target.value)}
+                    onChange={(e) => {setFavourite(e.target.value); setEditError(false);}}
                 />
             ) : favourite === "" ? (
                 "Zaddy"
@@ -134,6 +140,7 @@ const Profile = () => {
     return (
         <BaseContainer>
             <div className="profile container">
+                {editError && <p className="error-message">{editErrorMsg}</p>}
                 <div className="profile back">
                     <ProfileIcon
                         Current={userData.profilePicture}
