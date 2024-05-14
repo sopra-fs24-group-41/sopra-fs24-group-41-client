@@ -7,7 +7,7 @@
   for more information visit https://sass-lang.com/guide
  */
 
-.game {
+ .game {
   &.container {
     margin: 1em;
     border-radius: $borderRadius;
@@ -16,23 +16,27 @@
     height: 100%;
     width: 100%;
     @include center;
+    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
+
   &.vertical-container {
     flex-direction: column;
     background-color: transparent;
     width: 100%;
     height: 100%;
     @include center;
+    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
+
   &.horizontal-container {
     flex-direction: row;
     background-color: transparent;
     width: 100%;
     height: 100%;
     @include center;
+    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
 }
-
 .target-word {
   &.text {
     font-size: 4em;
@@ -187,5 +191,28 @@
     border: 1px solid rgb(26, 26, 26);
     margin-right: 5px;
   }
+}
 
+
+.word-board {
+  .search-bar {
+    margin-bottom: 1rem;
+    border-radius: $borderRadius;
+  }
+
+  .input-css{
+    border: none;
+    border-radius: $borderRadius;
+    padding: 1px;
+    background: lighten($background, 15);
+    color: inherit;
+  }
+
+  .word-table {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    max-height: 400px;
+    overflow-y: auto;
+  }
 }
