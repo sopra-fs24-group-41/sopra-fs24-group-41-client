@@ -15,8 +15,8 @@
     box-shadow: $dropShadow;
     height: 100%;
     width: 100%;
+    overflow: hidden;
     @include center;
-    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
 
   &.vertical-container {
@@ -24,8 +24,8 @@
     background-color: transparent;
     width: 100%;
     height: 100%;
+    overflow: hidden;
     @include center;
-    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
 
   &.horizontal-container {
@@ -33,8 +33,8 @@
     background-color: transparent;
     width: 100%;
     height: 100%;
+    overflow:hidden;
     @include center;
-    overflow: hidden; /* Ensure container doesn't grow beyond its dimensions */
   }
 }
 .target-word {
@@ -60,12 +60,12 @@
     box-shadow: $dropShadow;
     height: 100%;
     flex-direction: column;
+    overflow: hidden;
     @include center;
-  }
+   }
   &.list {
     list-style: none;
     padding: 0;
-
   }
   &.player {
     display: flex;
@@ -117,6 +117,7 @@
     background-color: #454545;
     margin: 0.5em;
     box-shadow: $dropShadow;
+    overflow: hidden;
   }
 
   &.symbol {
@@ -136,15 +137,8 @@
     background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-height: 30em; 
+    max-height: 400px; 
   }
-}
-
-.word-row {
-  display: flex;
-  flex-direction: row;
 }
 
 .word {
@@ -171,8 +165,7 @@
   font-size: 20px;
   text-transform: uppercase;
   z-index: 99000;
-}
-
+ }
 
 .player-icon {
   position: relative;
@@ -181,8 +174,6 @@
   display: flex;
   align-items: center;
   margin-right: 10px;
-
-
 
   img {
     width: 40px;
@@ -193,12 +184,11 @@
   }
 }
 
+.search-bar {
+  margin: 0.5em;
+  padding: 0.5em;
+}
 
-.word-board {
-  .search-bar {
-    margin-bottom: 1rem;
-    border-radius: $borderRadius;
-  }
 
   .input-css{
     border: none;
@@ -212,7 +202,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-    max-height: 400px;
+    max-height: 285px;
     overflow-y: auto;
+    overflow-x: hidden;
+
   }
-}
+
+
