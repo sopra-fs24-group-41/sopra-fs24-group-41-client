@@ -85,12 +85,11 @@
     padding: 1px;
     background: lighten($background, 25);
     color: inherit;
-}
 
     &.error {
         border: 1px solid red;
       }
-}
+    }
 
 .error-message {
     z-index: 999999;
