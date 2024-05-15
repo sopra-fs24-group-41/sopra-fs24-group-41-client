@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
+import Typewriter from "components/popup-ui/Typewriter";
 
 export const playerContext = createContext(new Player());
 
@@ -27,7 +28,7 @@ const Game = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
-    const [remainingTime, setRemainingTime] = useState();
+    const [remainingTime, setRemainingTime] = useState(" ");
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
@@ -69,7 +70,7 @@ const Game = ({ stompWebSocketHook }) => {
         if (TimeMSG) {
             setShowPopup(true);
             setRemainingTime(TimeMSG);
-            setTimeout(() => setShowPopup(false), 2000);
+            setTimeout(() => setRemainingTime(" "), 2000);
         }
     };
 
@@ -155,11 +156,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            {showPopup && (
-                <div className="popup-container">
-                    <p>{remainingTime}</p>
-                </div>
-            )}
+            <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">

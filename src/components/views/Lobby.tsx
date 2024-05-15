@@ -1,32 +1,46 @@
-import React, {createContext, useEffect, useState} from "react";
-import {Button} from "components/ui/Button";
+import React, { createContext, useEffect, useState } from "react";
+import { Button } from "components/ui/Button";
 import QuitPopup from "components/popup-ui/QuitPopup";
 import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
-import {api, handleError} from "../../helpers/api.js";
+import { api, handleError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
+import hashForAnon from "../../helpers/utils";
 
-
-const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }:
-                          {
-                              gamemode: Gamemode;
-                              onSelect: (gamemode: Gamemode) => void;
-                              isSelected: boolean;
-                              ownerMode: boolean;
-                          }) => (
+const GamemodeItem = ({
+    gamemode,
+    onSelect,
+    isSelected,
+    ownerMode,
+}: {
+    gamemode: Gamemode;
+    onSelect: (gamemode: Gamemode) => void;
+    isSelected: boolean;
+    ownerMode: boolean;
+}) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${gamemode.active && ownerMode ? "" : " inactive"}`}
-        onClick={(gamemode.active && ownerMode) ? () => onSelect(gamemode) : undefined}
+        className={`gamemode container${isSelected ? " selected" : ""}${
+            gamemode.active && ownerMode ? "" : " inactive"
+        }`}
+        onClick={
+            gamemode.active && ownerMode ? () => onSelect(gamemode) : undefined
+        }
     >
         <div className="gamemode name">{gamemode.name}</div>
-        <div className="gamemode description">{gamemode.description}</div>
+        {isSelected ? (
+            <div className="gamemode description">
+                {longerdesc[gamemode.name]}
+            </div>
+        ) : (
+            <div className="gamemode description">{gamemode.description}</div>
+        )}
     </div>
 );
 
@@ -35,13 +49,56 @@ GamemodeItem.propTypes = {
 };
 
 const gamemodes = [
-    { name: "Fusion Frenzy", description: "How fast are you?", serverName: "FUSIONFRENZY", active: true },
-    { name: "Wombo Combo", description: "Make some bomb combos!", serverName: "WOMBOCOMBO", active: true },
-    { name: "Finite Fusion", description: "Use your resources wisely.", serverName: "FINITEFUSION", active: true },
-    { name: "Sandbox", description: "Explore infinite combinations.", serverName: "STANDARD", active: true },
+    {
+        name: "Fusion Frenzy",
+        description: "How fast are you?",
+        serverName: "FUSIONFRENZY",
+        active: true,
+    },
+    {
+        name: "Wombo Combo",
+        description: "Make some bomb combos!",
+        serverName: "WOMBOCOMBO",
+        active: true,
+    },
+    {
+        name: "Finite Fusion",
+        description: "Use your resources wisely.",
+        serverName: "FINITEFUSION",
+        active: true,
+    },
+    {
+        name: "Sandbox",
+        description: "Explore infinite combinations.",
+        serverName: "STANDARD",
+        active: true,
+    },
 ];
 
+const longerdesc: { [key: string]: string } = {
+    "Fusion Frenzy":
+        "All players get the same target word, whoever gets it first, wins.",
+    "Wombo Combo":
+        "All players will get a different set of target words, the one that gets all their target words first, wins.",
+    "Finite Fusion":
+        "You have only a limited number of words to get the target word.",
+    Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
+};
+
 export const LobbyContext = createContext();
+
+const timerOptions = [
+    { label: "None", value: 0 },
+    { label: "1 min", value: 60 },
+    { label: "1 min 30s", value: 90 },
+    { label: "2 min", value: 120 },
+    { label: "2 min 30s", value: 150 },
+    { label: "3 min", value: 180 },
+    { label: "3 min 30s", value: 210 },
+    { label: "4 min", value: 240 },
+    { label: "4 min 30s", value: 270 },
+    { label: "5 min", value: 300 },
+];
 
 const LobbyPage = ({ stompWebSocketHook }) => {
     const [selectedGamemode, setSelectedGamemode] = useState<Gamemode>(null);
@@ -51,26 +108,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
     const [publicA, setPublicA] = useState();
-    const [selectedTimer, setSelectedTimer] = useState(0);
-    const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
-    const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
-
+    const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
-
-    const timerOptions = [
-        { label: "None", value: 0 },
-        { label: "1 min", value: 60 },
-        { label: "1 min 30s", value: 90},
-        { label: "2 min", value: 120},
-        { label: "2 min 30s", value: 150},
-        { label: "3 min", value: 180 },
-        { label: "3 min 30s", value: 180 },
-        { label: "4 min", value: 240 },
-        { label: "4 min 30s", value: 240 },
-        { label: "5 min", value: 300 },
-    ];
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -79,7 +120,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbycode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
-                if (lobbyData.owner.id === parseInt(localStorage.getItem("playerId"))) setOwnerMode(true);
+                if (
+                    lobbyData.owner.id ===
+                    parseInt(localStorage.getItem("playerId"))
+                )
+                    setOwnerMode(true);
             } catch (error) {
                 handleError(error, navigate);
                 localStorage.removeItem("playerId");
@@ -92,10 +137,12 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     }, []);
 
     useEffect(() => {
-        if (lobby.mode) setSelectedGamemode(gamemodes.find(mode => mode.serverName === lobby.mode));
+        if (lobby.mode)
+            setSelectedGamemode(
+                gamemodes.find((mode) => mode.serverName === lobby.mode)
+            );
         if (lobby.name) setLobbyname(lobby.name);
         if (lobby.publicAccess) setPublicA(lobby.publicAccess);
-        if (lobby.gameTime) setSelectedTimer(lobby.gameTime);
     }, [lobby]);
 
     useEffect(() => {
@@ -107,7 +154,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         return () => {
             if (stompWebSocketHook.connected === true) {
                 stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}/game`);
+                stompWebSocketHook.unsubscribe(
+                    `/topic/lobbies/${lobbycode}/game`
+                );
             }
             stompWebSocketHook.resetMessagesList();
         };
@@ -115,7 +164,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
             const newObject = stompWebSocketHook.messages[messagesLength - 1];
             const newLobbyData = new Lobby(newObject);
             if (newLobbyData.code !== null) setLobby(newLobbyData);
@@ -123,14 +175,20 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 navigate("/lobby/game");
             }
             if (newObject.instruction === "kick") {
-                console.log("kicked because: ", newObject.reason) // replace with showing message
+                console.log("kicked because: ", newObject.reason); // replace with showing message
                 kick();
             }
         }
     }, [stompWebSocketHook.messages]);
 
-    const updateLobby = async (name: string, publicAccess: boolean, mode: string, gameTime: number) => {
-        if (!ownerMode) return alert("Not allowed! Only lobby owners can change this");
+    const updateLobby = async (
+        name: string,
+        publicAccess: boolean,
+        mode: string,
+        gameTime: number
+    ) => {
+        if (!ownerMode) return;
+
         const config = {
             headers: {
                 playerToken: localStorage.getItem("playerToken"),
@@ -140,7 +198,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             name: name,
             publicAccess: publicAccess,
             mode: mode,
-            gameTime: gameTime
+            gameTime: gameTime,
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
@@ -150,11 +208,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const selectGamemode = (gamemode: Gamemode) => {
-        if (gamemode !== selectedGamemode) updateLobby(null, null, gamemode.serverName, null);
+        if (gamemode !== selectedGamemode)
+            updateLobby(null, null, gamemode.serverName, null);
         if (!ownerMode) return;
-        setSelectedGamemode((prevSelectedGamemode) =>
-            prevSelectedGamemode === gamemode ? null : gamemode,
-        );
     };
 
     const handleQuit = () => {
@@ -180,41 +236,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             handleError(error, navigate);
         }
     };
-
-    //ChatGPT
-    const hashForAnon = (name: string) => {
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = (hash << 5) - hash + name.charCodeAt(i);
-            hash |= 0; // Convert to 32bit integer
-        }
-
-        const iconNames = Object.keys(ICONS);
-    
-        // Get the index based on the hash value
-        const iconIndex = Math.abs(hash) % iconNames.length;
-    
-        // Get the icon name based on the index
-        return iconNames[iconIndex];
-    }
-
-    //Basic String hashing, hash it to the concatenated ASCII values
-    //e.g h("abba") = 97989897
-    const hashForAnon2 = (name: string) => {
-        let hash = 0;
-        let asciiConcatenation = "";
-
-        for (let i = 0; i < name.length; i++) {
-            asciiConcatenation += name.charCodeAt(i).toString(); 
-        }
-
-        hash = parseInt(asciiConcatenation);
-        const iconNames = Object.keys(ICONS);
-        const iconIndex = Math.abs(hash) % iconNames.length;
-
-        return iconNames[iconIndex];
-    }
-
 
     let content = (
         <div>
@@ -243,13 +264,24 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                         <div className="player container">
                             <div className="player icon">
                                 <img
-                                    src={player.user === null ? ICONS[hashForAnon2(player.name)] : IMAGES[player.user.profilePicture]}
-                                    alt={"profile picture"} />
+                                    src={
+                                        player.user === null
+                                            ? ICONS[hashForAnon(player.name)]
+                                            : IMAGES[player.user.profilePicture]
+                                    }
+                                    alt={"profile picture"}
+                                />
                             </div>
                             <div
-                                className={player.id === lobby.owner.id ? "player name owner" : "player name"}
+                                className={
+                                    player.id === lobby.owner.id
+                                        ? "player name owner"
+                                        : "player name"
+                                }
                             >
-                                {player.id === lobby.owner.id ? player.name + " (Owner)" : player.name}
+                                {player.id === lobby.owner.id
+                                    ? player.name + " (Owner)"
+                                    : player.name}
                             </div>
                         </div>
                     </li>
@@ -279,7 +311,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 />
             );
         } else {
-
             return <span>{lobbyname}</span>;
         }
     };
@@ -290,86 +321,95 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     };
 
     const handlePublicButton = () => {
-        setPublicA(prevPublicA => !prevPublicA);
+        setPublicA((prevPublicA) => !prevPublicA);
         updateLobby(null, !publicA, null, null);
     };
 
-    //Each time toggleTimer is clicked, the toggleTimerTriggered is set to true and the update happens via useEffect
-    const toggleTimer = () => {
-        setSelectedTimer(timerOptions[(selectedTimerIndex + 1) % timerOptions.length].value);
-        setSelectedTimerIndex((prevIndex) => (prevIndex + 1) % timerOptions.length);
-        setToggleTimerTriggered(true);
+    const selectionTimer = () => {
+        return (
+            <select
+                className="timer-label"
+                value={selectedTimer}
+                onChange={(e) => setSelectedTimer(e.target.value)}
+            >
+                {timerOptions.map((option, index) => (
+                    <option
+                        className="option-label"
+                        key={index}
+                        value={option.value}
+                    >
+                        {"Timer: " + option.label}
+                    </option>
+                ))}
+            </select>
+        );
     };
-        
+
     useEffect(() => {
-        if (toggleTimerTriggered) {
+        if (selectedTimer) {
             updateLobby(null, null, null, selectedTimer);
-            setToggleTimerTriggered(false);
         }
-    }, [toggleTimerTriggered]); 
+    }, [selectedTimer]);
 
     return (
-        <div className="container-wrapper">
-            <BaseContainer>
-                <div className="lobbypage container">
-                    {ownerMode && (
-                        <Button
-                            className="public-private-button"
-                            onClick={handlePublicButton}
-                        >
-                            {returnPublicStatus()}
-                        </Button>
-                    )}
-
-                    {ownerMode && (
-                        <Button className="timer-label" onClick={toggleTimer}>Timer: {timerOptions[selectedTimerIndex].label}</Button>
-
-                    )}
-
-                    <h2>
-                        {editLobbyName()}
+        <div>
+            <div>
+                <BaseContainer>
+                    <div className="lobbypage container">
                         {ownerMode && (
                             <Button
-                                className="edit-button"
-                                onClick={handleEdit}
+                                className="public-private-button"
+                                onClick={handlePublicButton}
                             >
-                                {isEditing ? "Save" : "Edit"}
+                                {returnPublicStatus()}
                             </Button>
                         )}
-                    </h2>
-                    <div className="lobbypage game-and-players-container">
-                        <div className="gamemode standard">{content}</div>
-                        <BaseContainer className="player-list-container">
-                            <div>{playerListContent}</div>
-                        </BaseContainer>
+
+                        {ownerMode && selectionTimer()}
+
+                        <h2>
+                            {editLobbyName()}
+                            {ownerMode && (
+                                <Button
+                                    className="edit-button"
+                                    onClick={handleEdit}
+                                >
+                                    {isEditing ? "Save" : "Edit"}
+                                </Button>
+                            )}
+                        </h2>
+                        <div className="lobbypage game-and-players-container">
+                            <div className="gamemode standard">{content}</div>
+                            <BaseContainer className="player-list-container">
+                                <div>{playerListContent}</div>
+                            </BaseContainer>
+                        </div>
+                        <div className="button-container">
+                            <Button
+                                className="button-container button"
+                                onClick={() => startGame()}
+                                disabled={!selectedGamemode || !ownerMode}
+                            >
+                                Start Game
+                            </Button>
+                            <Button
+                                className="button-container button"
+                                onClick={() => handleQuit()}
+                            >
+                                Quit
+                            </Button>
+                        </div>
+                        <div>
+                            <CopyButton copyText={lobby.code} />
+                        </div>
                     </div>
-                    <div className="button-container">
-                        <Button
-                            className="button-container button"
-                            onClick={() => startGame()}
-                            disabled={!selectedGamemode || !ownerMode}
-                        >
-                            Start Game
-                        </Button>
-                        <Button
-                            className="button-container button"
-                            onClick={() => handleQuit()}
-                        >
-                            Quit
-                        </Button>
-                    </div>
-                    <div>
-                        <CopyButton copyText={lobby.code}/>
-                    </div>
-                </div>
-            </BaseContainer>
-            {quitPopup && (
-                <LobbyContext.Provider
-                    value={{ quitPopup, setQuitPopup }}
-                >
-                    <QuitPopup />
-                </LobbyContext.Provider>
-            )}
+                </BaseContainer>
+                {quitPopup && (
+                    <LobbyContext.Provider value={{ quitPopup, setQuitPopup }}>
+                        <QuitPopup />
+                    </LobbyContext.Provider>
+                )}
+            </div>
         </div>
     );
 };
