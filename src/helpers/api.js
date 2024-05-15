@@ -55,7 +55,7 @@ export const ErrorProvider = ({ children }) => {
     return (
         <ErrorContext.Provider value={{ handleError }}>
             {children}
-            {errorInfo && <ErrorPopup ErrorInfo={errorInfo} />}
+            {errorInfo && <ErrorPopup ErrorInfo={errorInfo} resetError={() => setErrorInfo(false)} />}
         </ErrorContext.Provider>
     );
 };
