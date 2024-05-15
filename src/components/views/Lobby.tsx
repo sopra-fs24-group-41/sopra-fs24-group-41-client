@@ -190,7 +190,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         gameTime: number
     ) => {
         if (!ownerMode)
-            return alert("Not allowed! Only lobby owners can change this");
+            return 
         const config = {
             headers: {
                 playerToken: localStorage.getItem("playerToken"),

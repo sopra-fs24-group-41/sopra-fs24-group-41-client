@@ -13,16 +13,6 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
-const validUsername = (un) => {
-    if(un.length > 20){
-        alert("Invalid username, must be less than 20 characters");
-        
-        return ""
-    }
-
-    return un;
-}
-
 const FormField = (props) => {
     return (
         <div className="login field">
@@ -74,6 +64,7 @@ const Registration = () => {
         } catch (error) {
             setRegisterErrorMsg(error.response.data.message);
             setRegisterError(true);
+            handleError(error);
 
         }
     };
@@ -85,7 +76,7 @@ const Registration = () => {
                     e.preventDefault(), doRegistration();}}>
                     <FormField
                         label="Username"
-                        value={validUsername(username)}
+                        value={username}
                         onChange={(un: string) => {setUsername(un); setRegisterError(false);}}
                         error={registerError}
                     />
@@ -96,7 +87,7 @@ const Registration = () => {
                         type="password"
                         error={registerError}
                     />
-                    {registerError && <p className="error-message">{registerErrorMsg}</p>}
+                    {registerError && <p className="error-message-login">{registerErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}

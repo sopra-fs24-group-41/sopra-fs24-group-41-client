@@ -9,12 +9,13 @@ import Game, { playerContext } from "./Game";
 import WordMergeBar from "./WordMergeBar";
 
 export const mergeWordListContext = createContext([]);
+
 export const nextWordIndexContext = createContext(0);
 
 const WordBoard = ({ playFunction }) => {
     const [mergeWordList, setMergeWordList] = useState<String[]>([]);
     const [nextWordIndex, setNextWordIndex] = useState<number>(0);
-    const [searchWord, setSearchWord] = useState<string>('');
+    const [searchWord, setSearchWord] = useState<string>("");
     const { player } = useContext(playerContext);
 
     const addWordToMerge = async (playerWord: PlayerWord) => {

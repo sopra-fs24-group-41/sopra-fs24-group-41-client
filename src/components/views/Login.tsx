@@ -52,6 +52,7 @@ const Login = () => {
         } catch (error) {
             setLoginErrorMsg(error.response.data.message);
             setLoginError(true);
+            handleError(error);
         }
     };
 
@@ -79,7 +80,7 @@ const Login = () => {
                         type="password"
                         error={loginError}
                     />
-                    {loginError && <p className="error-message">{loginErrorMsg}</p>}
+                    {loginError && <p className="error-message-login">{loginErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
