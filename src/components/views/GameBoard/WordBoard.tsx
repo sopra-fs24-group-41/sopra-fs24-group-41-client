@@ -125,8 +125,6 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
             return;
         }
 
-        console.log(mergeWordList);
-
         if (mergeWordList[0].uses !== null && mergeWordList[0].uses !== undefined && !isNaN(mergeWordList[0])) {
             mergeWordList[0].uses += 1;
         }
