@@ -19,6 +19,8 @@ const Profile = () => {
         username: "...",
         status: "...",
     });
+    const [editError, setEditError] = useState(false);
+    const [editErrorMsg, setEditErrorMsg] = useState(" ");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,10 +45,7 @@ const Profile = () => {
     }, []);
 
     const updateUserData = async (username, favourite) => {
-        const prevUsername = userData.username;
-        const prevFavourite =
-            userData.favourite === null ? "Zaddy" : userData.favourite;
-        const prevProfilePicture = userData.profilePicture;
+        userData.favourite === null ? "Zaddy" : userData.favourite;
         try {
             const token = localStorage.getItem("userToken");
             const userId = localStorage.getItem("userId");
@@ -68,23 +67,29 @@ const Profile = () => {
             );
 
             setFavourite(favourite);
+
+            return true;
         } catch (error) {
             handleError(error, navigate);
-            let error_msg = error.response.data.message;
-            alert("Failed to update user data: " + error_msg);
-            setUsername(prevUsername);
-            setFavourite(prevFavourite);
-            setProfilePicture(prevProfilePicture);
+            setEditError(true);
+            setEditErrorMsg(error.response.data.message);
+
+            return false;
         }
     };
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (isEditing) {
-            setUsername(username);
-            setFavourite(favourite);
-            updateUserData(username, favourite);
+            const updateSuccessful = await updateUserData(username, favourite);
+
+            if (updateSuccessful) {
+                setUsername(username);
+                setFavourite(favourite);
+                setIsEditing(false);
+            }
+        } else {
+            setIsEditing(true);
         }
-        setIsEditing(!isEditing);
     };
 
     const handleDate = (dateString) => {
@@ -103,7 +108,7 @@ const Profile = () => {
         if (word) {
             return word.name[0].toUpperCase() + word.name.slice(1);
         }
-        
+
         return null;
     };
 
@@ -112,9 +117,13 @@ const Profile = () => {
             label: "Username:",
             value: isEditing ? (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        setEditError(false);
+                        setEditErrorMsg(" ");
+                    }}
                 />
             ) : (
                 username
@@ -128,9 +137,13 @@ const Profile = () => {
             label: "Favourite Word:",
             value: isEditing ? (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={favourite}
-                    onChange={(e) => setFavourite(e.target.value)}
+                    onChange={(e) => {
+                        setFavourite(e.target.value);
+                        setEditError(false);
+                        setEditErrorMsg(" ");
+                    }}
                 />
             ) : favourite === "" ? (
                 "Zaddy"
@@ -148,35 +161,35 @@ const Profile = () => {
     ];
 
     return (
-        <BaseContainer>
+        <BaseContainer className="fixup">
             <div className="profile container">
-                <div className="profile back">
-                    <ProfileIcon
-                        Current={userData.profilePicture}
-                        isEditing={isEditing}
-                        SelectedImage={handleSelectImage}
-                    />
-                    <table className="profile table">
-                        <tbody>
-                            {tableData.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.label}</td>
-                                    <td>{row.value}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="login button-container">
-                        <Button width="100%" onClick={handleEdit}>
-                            {isEditing ? "Save" : "Edit"}
-                        </Button>
-                        <Button
-                            width="100%"
-                            onClick={() => navigate("/lobbyoverview")}
-                        >
-                            Return to Lobby Overview
-                        </Button>
-                    </div>
+                <ProfileIcon
+                    Current={userData.profilePicture}
+                    isEditing={isEditing}
+                    SelectedImage={handleSelectImage}
+                />
+                {<p className="error-message">{editErrorMsg}</p>}
+
+                <table className="profile table">
+                    <tbody>
+                        {tableData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.label}</td>
+                                <td>{row.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <div className="login button-container">
+                    <Button width="100%" onClick={handleEdit}>
+                        {isEditing ? "Save" : "Edit"}
+                    </Button>
+                    <Button
+                        width="100%"
+                        onClick={() => navigate("/lobbyoverview")}
+                    >
+                        Return to Lobby Overview
+                    </Button>
                 </div>
             </div>
         </BaseContainer>

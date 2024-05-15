@@ -13,22 +13,12 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
-const validUsername = (un) => {
-    if(un.length > 20){
-        alert("Invalid username, must be less than 20 characters");
-        
-        return ""
-    }
-
-    return un;
-}
-
 const FormField = (props) => {
     return (
         <div className="login field">
             <label className="login label">{props.label}</label>
             <input
-                className="login input"
+                className={`login input ${props.error ? "error" : ""}`}
                 placeholder="enter here.."
                 type={props.type}
                 value={props.value}
@@ -43,16 +33,22 @@ FormField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     type: PropTypes.string,
+    error: PropTypes.bool,
 };
 
 const Registration = () => {
     const navigate = useNavigate();
     const [password, setPassword] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const [registerError, setRegisterError] = useState(false);
+    const [registerErrorMsg, setRegisterErrorMsg] = useState("");
 
     const doRegistration = async () => {
         try {
-            const requestBodyRegistration = JSON.stringify({ username, password });
+            const requestBodyRegistration = JSON.stringify({
+                username,
+                password,
+            });
             const responseRegistration = await api.post(
                 "/users",
                 requestBodyRegistration
@@ -68,28 +64,45 @@ const Registration = () => {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             navigate("/lobbyoverview");
         } catch (error) {
-            alert(
-                `Something went wrong during the registration: \n${handleError(error, navigate)}`
-            );
+            setRegisterErrorMsg(error.response.data.message);
+            setRegisterError(true);
+            handleError(error);
         }
     };
 
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={(e) => {
-                    e.preventDefault(), doRegistration();}}>
+                <form
+                    className="login form"
+                    onSubmit={(e) => {
+                        e.preventDefault(), doRegistration();
+                    }}
+                >
+                    <h2>Registration</h2>
+
                     <FormField
                         label="Username"
-                        value={validUsername(username)}
-                        onChange={(un: string) => setUsername(un)}
+                        value={username}
+                        onChange={(un: string) => {
+                            setUsername(un);
+                            setRegisterError(false);
+                            setRegisterErrorMsg(" ");
+                        }}
+                        error={registerError}
                     />
                     <FormField
                         label="Password"
                         value={password}
-                        onChange={(pw) => setPassword(pw)}
+                        onChange={(pw) => {
+                            setPassword(pw);
+                            setRegisterError(false);
+                            setRegisterErrorMsg(" ");
+                        }}
                         type="password"
+                        error={registerError}
                     />
+                    {<p className="error-message-login">{registerErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
@@ -99,13 +112,9 @@ const Registration = () => {
                             Sign up
                         </Button>
 
-                        <Button
-                            disabled={username && password}
-                            width="100%"
-                            onClick={() => navigate("/login")}
-                        >
+                        <Button width="100%" onClick={() => navigate("/login")}>
                             <span style={{ fontSize: "16px" }}>
-                            Already signed up? Login here
+                                Already signed up? Login here
                             </span>
                         </Button>
                     </div>

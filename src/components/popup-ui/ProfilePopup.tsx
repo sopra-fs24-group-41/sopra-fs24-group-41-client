@@ -28,7 +28,7 @@ const ProfilePopup = () => {
 
     return (
         <BaseContainer className="profilepopup container">
-            <div className="profilepopup button-container">
+            <div className="profilepopup profile-button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
                 <Button onClick={() => doLogout()}>Logout</Button>
             </div>

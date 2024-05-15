@@ -384,16 +384,16 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                 <div>{playerListContent}</div>
                             </BaseContainer>
                         </div>
-                        <div className="button-container">
+                        <div className="lobby-button-container">
                             <Button
-                                className="button-container button"
+                                className="lobby-button-container button"
                                 onClick={() => startGame()}
                                 disabled={!selectedGamemode || !ownerMode}
                             >
                                 Start Game
                             </Button>
                             <Button
-                                className="button-container button"
+                                className="lobby-button-container button"
                                 onClick={() => handleQuit()}
                             >
                                 Quit
