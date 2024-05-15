@@ -6,11 +6,12 @@ import "styles/views/Profile.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { format, isValid } from "date-fns";
 import ProfileIcon from "components/ui/ProfileIcon";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import User from "models/User";
 
 const Profile = () => {
     const navigate = useNavigate();
+    const { handleError } = useError();
     const [username, setUsername] = useState();
     const [favourite, setFavourite] = useState(null);
     const [profilePicture, setProfilePicture] = useState();
@@ -21,6 +22,7 @@ const Profile = () => {
     });
     const [editError, setEditError] = useState(false);
     const [editErrorMsg, setEditErrorMsg] = useState(" ");
+
 
     useEffect(() => {
         const fetchData = async () => {

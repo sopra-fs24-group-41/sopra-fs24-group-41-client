@@ -3,10 +3,11 @@ import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 
 const ProfilePopup = () => {
     const navigate = useNavigate();
+    const { handleError } = useError();
 
     const doLogout = async () => {
         try {

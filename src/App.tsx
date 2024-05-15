@@ -6,6 +6,7 @@ import "styles/add/Starscape.scss";
 import useStompWebSocket from "./components/hooks/useStompWebSocket";
 import { Client } from "@stomp/stompjs";
 import { getDomain } from "./helpers/getDomain";
+import {ErrorProvider} from "./helpers/api";
 
 /**
  * Happy coding!
@@ -24,13 +25,15 @@ const App = () => {
     const stompWebSocketHook = useStompWebSocket(client);
 
     return (
-        <div>
-            <Header height="100" />
-            <AppRouter stompWebSocketHook={stompWebSocketHook}/>
-            <div className="starscape">
-                <Starscape />
+        <ErrorProvider>
+            <div>
+                <Header height="100" />
+                <AppRouter stompWebSocketHook={stompWebSocketHook}/>
+                <div className="starscape">
+                    <Starscape />
+                </div>
             </div>
-        </div>
+        </ErrorProvider>
     );
 };
 

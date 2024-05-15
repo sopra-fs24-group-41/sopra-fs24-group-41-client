@@ -9,7 +9,7 @@ import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
-import { api, handleError } from "../../helpers/api.js";
+import { api, useError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
@@ -109,6 +109,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [lobbyname, setLobbyname] = useState();
     const [publicA, setPublicA] = useState();
     const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
+    const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
+    const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
+    const { handleError } = useError();
+
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;

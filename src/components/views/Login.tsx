@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import User from "models/User";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
