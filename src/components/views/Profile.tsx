@@ -103,6 +103,7 @@ const Profile = () => {
         if (word) {
             return word.name[0].toUpperCase() + word.name.slice(1);
         }
+        
         return null;
     };
 
