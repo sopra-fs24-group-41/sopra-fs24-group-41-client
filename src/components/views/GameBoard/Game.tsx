@@ -165,9 +165,13 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            <Typewriter text={remainingTime}/>
+            <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
-            {isLoading ? <div className="spinner-pos"><RotateSpinner/></div> : null}
+                {isLoading ? (
+                    <div className="spinner-pos">
+                        <RotateSpinner />
+                    </div>
+                ) : null}
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
