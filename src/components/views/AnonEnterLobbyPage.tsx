@@ -109,7 +109,7 @@ const AnonEnterLobbyPage = () => {
                 </div>
                 <div className="login button-container">
                     <Button
-                        className="button-container button"
+                        width="100%"
                         onClick={() => navigate("/lobbyoverview")}
                     >
                         Back to Overview

@@ -19,19 +19,4 @@
         gap: 1em;
     }
 
-   @media only screen and (max-width: 768px) {
-        &.container {
-                position: fixed;
-                top: 73%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: $background;
-                padding: 1.5em;
-                border-radius: $borderRadius;
-                margin-top: 2em;
-                min-height: 100px;
-                /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-            }
-}
-
 }
