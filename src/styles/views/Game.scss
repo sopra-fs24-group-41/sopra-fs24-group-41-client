@@ -152,6 +152,7 @@
 
 .glow {
   animation: glow 1.5s infinite alternate;
+  z-index: 9999999999;
 }
 
 @keyframes glow {

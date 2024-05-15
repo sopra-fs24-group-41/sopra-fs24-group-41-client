@@ -51,7 +51,6 @@
     z-index: 4;
     transition: transform 0.3s;
     background: lighten($background, 20);
-    padding: 4px;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
@@ -108,7 +107,7 @@
       margin-left: 5px;
     }
 
-    .player-icon {
+    .player-icon-result {
       z-index: 4;
       width: 50px;
       display: flex;

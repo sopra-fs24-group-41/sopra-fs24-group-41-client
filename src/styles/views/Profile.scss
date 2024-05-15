@@ -1,21 +1,18 @@
 @import "../theme";
 
+.fixup {
+    @include center;
+}
+
+
 .profile {
     &.container {
-        position: relative;
-        margin-top: 2em;
-        min-height: 300px;
-        /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-        @include center;
-        flex-direction: column;
-    }
-    &.back {
         display: flex;
         flex-direction: column;
         justify-content: center;
         width: 100%;
         max-width: 30em;
-        height: 28em;
+        height: 30em;
         font-size: 18px;
         font-weight: 300;
         padding-left: 37px;
@@ -23,7 +20,6 @@
         border-radius: 0.75em;
         background-color: $background;
         transition: opacity 0.5s ease, transform 0.5s ease;
-        box-shadow: $dropShadow;
     }
 
     &.field {
@@ -70,7 +66,6 @@
     }
 
     &.table {
-        margin-top: 10%;
         background: lighten($background, 10);
         border-radius: 0.75em;
         padding: 10px;
@@ -92,9 +87,9 @@
     }
 
 .error-message {
+    min-height: 20px;
     z-index: 999999;
-    position: absolute;
-    top: 27.5%;
+    margin: 0;
     color:rgb(151, 0, 0)
   }
 

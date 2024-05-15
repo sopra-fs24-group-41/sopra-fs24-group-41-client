@@ -67,6 +67,8 @@ const Login = () => {
                         onChange={(un: string) => {
                             setUsername(un);
                             setLoginError(false);
+                            setLoginErrorMsg(" ");
+
                         }}
                         error={loginError}
                     />
@@ -76,11 +78,13 @@ const Login = () => {
                         onChange={(pw: string) => {
                             setPassword(pw);
                             setLoginError(false);
+                            setLoginErrorMsg(" ");
+
                         }}
                         type="password"
                         error={loginError}
                     />
-                    {loginError && <p className="error-message-login">{loginErrorMsg}</p>}
+                    {<p className="error-message-login">{loginErrorMsg || ' '}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
@@ -91,7 +95,6 @@ const Login = () => {
                         </Button>
 
                         <Button
-                            disabled={username && password}
                             width="100%"
                             onClick={() => navigate("/registration")}
                         >

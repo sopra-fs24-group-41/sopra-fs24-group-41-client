@@ -77,17 +77,17 @@ const Registration = () => {
                     <FormField
                         label="Username"
                         value={username}
-                        onChange={(un: string) => {setUsername(un); setRegisterError(false);}}
+                        onChange={(un: string) => {setUsername(un); setRegisterError(false); setRegisterErrorMsg(" ");}}
                         error={registerError}
                     />
                     <FormField
                         label="Password"
                         value={password}
-                        onChange={(pw) => {setPassword(pw); setRegisterError(false);}}
+                        onChange={(pw) => {setPassword(pw); setRegisterError(false); setRegisterErrorMsg(" ");}}
                         type="password"
                         error={registerError}
                     />
-                    {registerError && <p className="error-message-login">{registerErrorMsg}</p>}
+                    {<p className="error-message-login">{registerErrorMsg}</p>}
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
@@ -98,7 +98,6 @@ const Registration = () => {
                         </Button>
 
                         <Button
-                            disabled={username && password}
                             width="100%"
                             onClick={() => navigate("/login")}
                         >

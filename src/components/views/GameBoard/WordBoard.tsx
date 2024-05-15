@@ -75,7 +75,6 @@ const WordBoard = ({ playFunction }) => {
     }
 
 
-
     const removeWord = () => {
         if (nextWordIndex !== 1) {
             return;

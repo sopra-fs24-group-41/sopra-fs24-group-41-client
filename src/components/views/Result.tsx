@@ -72,7 +72,7 @@ const Result = ({ stompWebSocketHook }) => {
     const renderIcon = (playerId) => {
         if (winner && playerId === winner.id) return "winner";
         if (playerId === player.id) return "loser";
-        else return "player-container player-icon";
+        else return "player-container player-icon-result";
     };
 
     const handleBackToLobby = () =>{

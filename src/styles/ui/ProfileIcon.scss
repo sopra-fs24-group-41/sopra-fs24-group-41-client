@@ -1,9 +1,9 @@
 .profile-icon {
     position: relative;
-    top: 10%;
     max-width: 150px;
     max-height: 150px;
     cursor: pointer;
+    margin-bottom: 20px;
 
     &:hover {
         transform: translateY(-2px);
@@ -16,14 +16,7 @@
         border: 5px solid rgb(108, 108, 108)
     }
 
-     @media only screen and (max-width: 768px) {
-        position: relative;
-        top: -5%;
-        max-width: 60px;
-        max-height: 60px;
-        cursor: pointer;
 
-     }
 }
 
 

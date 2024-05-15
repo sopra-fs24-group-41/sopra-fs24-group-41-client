@@ -20,7 +20,7 @@ const Profile = () => {
         status: "...",
     });
     const [editError, setEditError] = useState(false);
-    const [editErrorMsg, setEditErrorMsg] = useState("");
+    const [editErrorMsg, setEditErrorMsg] = useState(" ");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -109,6 +109,7 @@ const Profile = () => {
         if (word) {
             return word.name[0].toUpperCase() + word.name.slice(1);
         }
+
         return null;
     };
 
@@ -119,7 +120,7 @@ const Profile = () => {
                 <input
                     className={`input-css ${editError ? "error" : ""}`}
                     value={username}
-                    onChange={(e) => {setUsername(e.target.value); setEditError(false);}}
+                    onChange={(e) => {setUsername(e.target.value); setEditError(false); setEditErrorMsg(" ");}}
                 />
             ) : (
                 username
@@ -135,7 +136,7 @@ const Profile = () => {
                 <input
                     className={`input-css ${editError ? "error" : ""}`}
                     value={favourite}
-                    onChange={(e) => {setFavourite(e.target.value); setEditError(false);}}
+                    onChange={(e) => {setFavourite(e.target.value); setEditError(false); setEditErrorMsg(" ");}}
                 />
             ) : favourite === "" ? (
                 "Zaddy"
@@ -153,15 +154,16 @@ const Profile = () => {
     ];
 
     return (
-        <BaseContainer>
+        <BaseContainer className="fixup">
             <div className="profile container">
-                {editError && <p className="error-message">{editErrorMsg}</p>}
-                <div className="profile back">
+
                     <ProfileIcon
                         Current={userData.profilePicture}
                         isEditing={isEditing}
                         SelectedImage={handleSelectImage}
                     />
+                    {<p className="error-message">{editErrorMsg}</p>}
+
                     <table className="profile table">
                         <tbody>
                             {tableData.map((row, index) => (
@@ -184,7 +186,6 @@ const Profile = () => {
                         </Button>
                     </div>
                 </div>
-            </div>
         </BaseContainer>
     );
 };
