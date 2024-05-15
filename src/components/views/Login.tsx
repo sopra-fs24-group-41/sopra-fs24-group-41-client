@@ -27,8 +27,7 @@ FormField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     type: PropTypes.string,
-    error: PropTypes.bool, 
-
+    error: PropTypes.bool,
 };
 
 const Login = () => {
@@ -38,7 +37,6 @@ const Login = () => {
     const [loginError, setLoginError] = useState(false);
     const [loginErrorMsg, setLoginErrorMsg] = useState("");
 
-    
     const doLogin = async () => {
         try {
             const requestBodyLogin = JSON.stringify({ username, password });
@@ -56,11 +54,16 @@ const Login = () => {
         }
     };
 
-
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={(e) => {e.preventDefault(), doLogin();}}>
+                <form
+                    className="login form"
+                    onSubmit={(e) => {
+                        e.preventDefault(), doLogin();
+                    }}
+                >
+                    <h2>Login</h2>
                     <FormField
                         label="Username"
                         value={username}
@@ -68,7 +71,6 @@ const Login = () => {
                             setUsername(un);
                             setLoginError(false);
                             setLoginErrorMsg(" ");
-
                         }}
                         error={loginError}
                     />
@@ -79,12 +81,15 @@ const Login = () => {
                             setPassword(pw);
                             setLoginError(false);
                             setLoginErrorMsg(" ");
-
                         }}
                         type="password"
                         error={loginError}
                     />
-                    {<p className="error-message-login">{loginErrorMsg || ' '}</p>}
+                    {
+                        <p className="error-message-login">
+                            {loginErrorMsg || " "}
+                        </p>
+                    }
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}
@@ -99,7 +104,7 @@ const Login = () => {
                             onClick={() => navigate("/registration")}
                         >
                             <span style={{ fontSize: "16px" }}>
-                            No account? Sign up here
+                                No account? Sign up here
                             </span>
                         </Button>
                     </div>

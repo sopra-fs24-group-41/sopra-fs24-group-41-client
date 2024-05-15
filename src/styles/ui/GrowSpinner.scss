@@ -1,0 +1,19 @@
+@keyframes spinner-grow {
+    0% { transform: scale(0); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+  
+  .loading-spinner-grow {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loading-spinner-grow > div {
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+    border-radius: 50%;
+    background-color: #c332af;
+    animation: spinner-grow 1s linear infinite;
+  }

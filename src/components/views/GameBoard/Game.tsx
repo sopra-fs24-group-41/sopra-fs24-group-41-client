@@ -13,6 +13,9 @@ import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../Explanations/Typewriter";
 import { Spinner } from "components/ui/Spinner";
+import { GrowSpinner } from "components/ui/GrowSpinner";
+import {RotateSpinner} from "components/ui/RotateSpinner";
+
 
 export const playerContext = createContext(new Player());
 
@@ -162,9 +165,9 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
-            {isLoading ? <Spinner /> : null}
             <Typewriter text={remainingTime}/>
             <BaseContainer className="game vertical-container">
+            {isLoading ? <div className="spinner-pos"><RotateSpinner/></div> : null}
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">

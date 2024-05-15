@@ -215,10 +215,10 @@
 }
 
 
-  .input-css{
+  .search-input-css{
     border: none;
     border-radius: $borderRadius;
-    padding: 1px;
+    padding: 5px;
     background: lighten($background, 15);
     color: inherit;
   }
@@ -232,5 +232,12 @@
     overflow-x: hidden;
 
   }
+
+.spinner-pos {
+  position: absolute;
+  padding: 0.5em;
+  top: 0;
+  left: 0;
+}
 
 

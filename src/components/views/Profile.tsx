@@ -75,14 +75,13 @@ const Profile = () => {
             setEditErrorMsg(error.response.data.message);
 
             return false;
-        
         }
     };
 
     const handleEdit = async () => {
         if (isEditing) {
             const updateSuccessful = await updateUserData(username, favourite);
-    
+
             if (updateSuccessful) {
                 setUsername(username);
                 setFavourite(favourite);
@@ -120,7 +119,11 @@ const Profile = () => {
                 <input
                     className={`input-css ${editError ? "error" : ""}`}
                     value={username}
-                    onChange={(e) => {setUsername(e.target.value); setEditError(false); setEditErrorMsg(" ");}}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        setEditError(false);
+                        setEditErrorMsg(" ");
+                    }}
                 />
             ) : (
                 username
@@ -136,7 +139,11 @@ const Profile = () => {
                 <input
                     className={`input-css ${editError ? "error" : ""}`}
                     value={favourite}
-                    onChange={(e) => {setFavourite(e.target.value); setEditError(false); setEditErrorMsg(" ");}}
+                    onChange={(e) => {
+                        setFavourite(e.target.value);
+                        setEditError(false);
+                        setEditErrorMsg(" ");
+                    }}
                 />
             ) : favourite === "" ? (
                 "Zaddy"
@@ -156,36 +163,35 @@ const Profile = () => {
     return (
         <BaseContainer className="fixup">
             <div className="profile container">
+                <ProfileIcon
+                    Current={userData.profilePicture}
+                    isEditing={isEditing}
+                    SelectedImage={handleSelectImage}
+                />
+                {<p className="error-message">{editErrorMsg}</p>}
 
-                    <ProfileIcon
-                        Current={userData.profilePicture}
-                        isEditing={isEditing}
-                        SelectedImage={handleSelectImage}
-                    />
-                    {<p className="error-message">{editErrorMsg}</p>}
-
-                    <table className="profile table">
-                        <tbody>
-                            {tableData.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.label}</td>
-                                    <td>{row.value}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="login button-container">
-                        <Button width="100%" onClick={handleEdit}>
-                            {isEditing ? "Save" : "Edit"}
-                        </Button>
-                        <Button
-                            width="100%"
-                            onClick={() => navigate("/lobbyoverview")}
-                        >
-                            Return to Lobby Overview
-                        </Button>
-                    </div>
+                <table className="profile table">
+                    <tbody>
+                        {tableData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.label}</td>
+                                <td>{row.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <div className="login button-container">
+                    <Button width="100%" onClick={handleEdit}>
+                        {isEditing ? "Save" : "Edit"}
+                    </Button>
+                    <Button
+                        width="100%"
+                        onClick={() => navigate("/lobbyoverview")}
+                    >
+                        Return to Lobby Overview
+                    </Button>
                 </div>
+            </div>
         </BaseContainer>
     );
 };

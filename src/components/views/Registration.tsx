@@ -43,10 +43,12 @@ const Registration = () => {
     const [registerError, setRegisterError] = useState(false);
     const [registerErrorMsg, setRegisterErrorMsg] = useState("");
 
-
     const doRegistration = async () => {
         try {
-            const requestBodyRegistration = JSON.stringify({ username, password });
+            const requestBodyRegistration = JSON.stringify({
+                username,
+                password,
+            });
             const responseRegistration = await api.post(
                 "/users",
                 requestBodyRegistration
@@ -65,25 +67,38 @@ const Registration = () => {
             setRegisterErrorMsg(error.response.data.message);
             setRegisterError(true);
             handleError(error);
-
         }
     };
 
     return (
         <BaseContainer>
             <div className="login container">
-                <form className="login form" onSubmit={(e) => {
-                    e.preventDefault(), doRegistration();}}>
+                <form
+                    className="login form"
+                    onSubmit={(e) => {
+                        e.preventDefault(), doRegistration();
+                    }}
+                >
+                    <h2>Registration</h2>
+
                     <FormField
                         label="Username"
                         value={username}
-                        onChange={(un: string) => {setUsername(un); setRegisterError(false); setRegisterErrorMsg(" ");}}
+                        onChange={(un: string) => {
+                            setUsername(un);
+                            setRegisterError(false);
+                            setRegisterErrorMsg(" ");
+                        }}
                         error={registerError}
                     />
                     <FormField
                         label="Password"
                         value={password}
-                        onChange={(pw) => {setPassword(pw); setRegisterError(false); setRegisterErrorMsg(" ");}}
+                        onChange={(pw) => {
+                            setPassword(pw);
+                            setRegisterError(false);
+                            setRegisterErrorMsg(" ");
+                        }}
                         type="password"
                         error={registerError}
                     />
@@ -97,12 +112,9 @@ const Registration = () => {
                             Sign up
                         </Button>
 
-                        <Button
-                            width="100%"
-                            onClick={() => navigate("/login")}
-                        >
+                        <Button width="100%" onClick={() => navigate("/login")}>
                             <span style={{ fontSize: "16px" }}>
-                            Already signed up? Login here
+                                Already signed up? Login here
                             </span>
                         </Button>
                     </div>

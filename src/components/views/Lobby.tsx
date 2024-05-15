@@ -98,6 +98,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [selectedTimer, setSelectedTimer] = useState(0);
     const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
     const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const navigate = useNavigate();
     const params = useParams();
@@ -110,9 +111,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         { label: "2 min", value: 120 },
         { label: "2 min 30s", value: 150 },
         { label: "3 min", value: 180 },
-        { label: "3 min 30s", value: 180 },
+        { label: "3 min 30s", value: 210 },
         { label: "4 min", value: 240 },
-        { label: "4 min 30s", value: 240 },
+        { label: "4 min 30s", value: 270 },
         { label: "5 min", value: 300 },
     ];
 
@@ -192,6 +193,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     ) => {
         if (!ownerMode)
             return 
+
+        setIsUpdating(true); // Start updating
+
         const config = {
             headers: {
                 playerToken: localStorage.getItem("playerToken"),
@@ -208,6 +212,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         } catch (e) {
             handleError(e);
         }
+        setIsUpdating(false); // Stop updating
     };
 
     const selectGamemode = (gamemode: Gamemode) => {
@@ -370,6 +375,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
                         {ownerMode && (
                             <Button
+                                disabled={isUpdating}
                                 className="timer-label"
                                 onClick={toggleTimer}
                             >

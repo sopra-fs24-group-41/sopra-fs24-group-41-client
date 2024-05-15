@@ -1,9 +1,13 @@
 @import "../theme";
 
 .login {
+  h2{
+    @include center;
+  }
+
   &.container {
     margin-top: 2em;
-    min-height: 300px;
+    min-height: 330px;
     /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
     @include center;
     flex-direction: column;
@@ -14,7 +18,7 @@
     justify-content: center;
     width: 100%;
     max-width: 30em;
-    height: 20em;
+    height: 24em;
     font-size: 18px;
     font-weight: 300;
     padding-left: 37px;

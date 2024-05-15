@@ -7,6 +7,7 @@ import PlayerWord from "models/PlayerWord";
 import WordButton from "./WordButton";
 import Game, { playerContext } from "./Game";
 import WordMergeBar from "./WordMergeBar";
+import { Button } from "components/ui/Button";
 
 export const mergeWordListContext = createContext([]);
 
@@ -102,12 +103,13 @@ const WordBoard = ({ playFunction }) => {
             </mergeWordListContext.Provider>
             <BaseContainer className="word-board container">
                 <div className="search-bar">
-                    <input className="input-css"
+                    <input className="search-input-css"
                         type="text"
                         value={searchWord}
                         onChange={(e) => setSearchWord(e.target.value)}
                         placeholder="Search words..."
                     />
+                    <Button onClick={() => setSearchWord("")}>✖️</Button>
                 </div>
                 <div className="word-table">
                     {WordList.map((playerWord, index) => (
