@@ -112,6 +112,7 @@ const Game = ({ stompWebSocketHook }) => {
             }
 
             if (newObject.instruction === "kick") {
+                console.log("kicked because: ", newObject.reason) // replace with showing message
                 kick();
             }
 

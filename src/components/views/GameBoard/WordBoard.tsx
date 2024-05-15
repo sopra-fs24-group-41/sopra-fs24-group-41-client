@@ -33,7 +33,7 @@ const WordBoard = ({ playFunction }) => {
         newWordList[newWordIndex] = playerWord;
         newWordIndex++;
 
-        if (playerWord.uses !== null && playerWord.uses !== undefined) {
+        if (playerWord.uses !== null && playerWord.uses !== undefined && !isNaN(playerWord.uses)) {
             playerWord.uses -= 1;
         }
 
@@ -64,14 +64,24 @@ const WordBoard = ({ playFunction }) => {
 
     const wordAvailable = (playerWord: PlayerWord) => {
         return playerWord.uses === null || playerWord.uses === undefined || playerWord.uses > 0;
-    };
+    }
+
+    const isNew = (playerWord: PlayerWord) => {
+        if (playerWord !== null && playerWord !== undefined) {
+            return playerWord.word.newlyDiscovered
+        }
+
+        return false
+    }
+
+
 
     const removeWord = () => {
         if (nextWordIndex !== 1) {
             return;
         }
 
-        if (mergeWordList[0].uses !== null || mergeWordList[0].uses !== undefined) {
+        if (mergeWordList[0].uses !== null && mergeWordList[0].uses !== undefined && !isNaN(mergeWordList[0])) {
             mergeWordList[0].uses += 1;
         }
 
@@ -107,6 +117,7 @@ const WordBoard = ({ playFunction }) => {
                             onClick={() => {
                                 addWordToMerge(playerWord);
                             }}
+                            className={isNew(player.playerWords[index]) ? "glow" : ""}
                             disabled={!wordAvailable(playerWord)}
                         >
                             {formatWord(playerWord)}
