@@ -133,7 +133,7 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
-        let loadingTimeoutId = setTimeout(() => setIsLoading(true), 1000);
+        let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
         try {
             let response = await api.put(
                 `/lobbies/${lobbyCode}/players/${playerId}`,

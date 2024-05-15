@@ -20,6 +20,7 @@
   }
 
   &.vertical-container {
+    padding: 0;
     flex-direction: column;
     background-color: transparent;
     width: 100%;
@@ -29,6 +30,7 @@
   }
 
   &.horizontal-container {
+    padding: 0;
     flex-direction: row;
     background-color: transparent;
     width: 100%;
@@ -38,8 +40,10 @@
   }
 }
 .target-word {
+  margin: 0;
+  padding: 0;
   &.text {
-    font-size: 4em;
+    font-size: 3em;
     text-align: center;
     display: flex;
   }
@@ -47,7 +51,7 @@
   &.word {
     padding: 0.5em;
     border-radius: calc(#{$borderRadius}/4);
-    font-size: 3em;
+    font-size: 2em;
     height: 100%;
   }
 }
@@ -129,7 +133,7 @@
 
 .word-board {
   &.container {
-    padding: 0.5em;
+    padding: 0;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
@@ -138,6 +142,7 @@
     margin: 0.5em;
     box-shadow: $dropShadow;
     max-height: 400px; 
+    overflow: hidden;
   }
 }
 
@@ -152,7 +157,7 @@
 
 .glow {
   animation: glow 1.5s infinite alternate;
-  z-index: 9999999999;
+  z-index: 9999999;
 }
 
 @keyframes glow {
@@ -224,6 +229,7 @@
   }
 
   .word-table {
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
