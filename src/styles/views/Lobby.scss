@@ -32,7 +32,7 @@
   &.game-and-players-container {
     justify-content: space-evenly;
   }
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 780px) {
     &.container {
       padding-top: 1em;
       padding-right: 1em;
@@ -88,7 +88,7 @@
       background: lighten($background, 25);
       border: solid rgb(0, 0, 0)
     }
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 900px) {
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -130,7 +130,7 @@
     flex-direction: row;
     width: 225px;
     height: 60px;
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 900px) {
       width: 200px;
     }
   }
@@ -142,7 +142,7 @@
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 900px) {
       max-height: 200px;
     }
   }
@@ -187,6 +187,7 @@
   justify-content: space-around;
   gap: 1em;
   align-items: center;
+  padding-right: 1em;
 
   &.button {
     width: 240px;

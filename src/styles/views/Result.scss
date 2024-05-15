@@ -50,15 +50,14 @@
   .player-container {
     z-index: 4;
     transition: transform 0.3s;
-    margin: 0.5em 0;
     background: lighten($background, 20);
-    padding: 4px;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     width: 200px;
     height: max-content;
+    padding: 4px;
 
     &.winner {
       z-index: 4;
@@ -91,7 +90,6 @@
     }
 
     &.selected {
-      background: lighten($background, 40);
       width: max-content;
       max-width: max-content;
       height: max-content;
@@ -110,10 +108,13 @@
       margin-left: 5px;
     }
 
-    .player-icon {
-      position: relative;
-      max-width: 80px;
-      max-height: 80px;
+    .player-icon-result {
+      z-index: 4;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      height: max-content;
+      background: lighten($background, 20);
 
       img {
         width: 50px;
