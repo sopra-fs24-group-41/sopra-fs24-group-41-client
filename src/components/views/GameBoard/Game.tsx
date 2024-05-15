@@ -11,7 +11,11 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
-import Typewriter from "components/popup-ui/Typewriter";
+import Typewriter from "../../popup-ui/Typewriter";
+import { Spinner } from "components/ui/Spinner";
+import { GrowSpinner } from "components/ui/GrowSpinner";
+import {RotateSpinner} from "components/ui/RotateSpinner";
+
 
 export const playerContext = createContext(new Player());
 
@@ -27,8 +31,9 @@ const Game = ({ stompWebSocketHook }) => {
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
@@ -37,6 +42,7 @@ const Game = ({ stompWebSocketHook }) => {
         "180": "You have 3 minutes left!",
         "300": "You have 5 minutes left!",
     };
+
 
     const fetchPlayer = async () => {
         try {
@@ -68,7 +74,6 @@ const Game = ({ stompWebSocketHook }) => {
 
     const renderPopupMessage = (TimeMSG) => {
         if (TimeMSG) {
-            setShowPopup(true);
             setRemainingTime(TimeMSG);
             setTimeout(() => setRemainingTime(" "), 2000);
         }
@@ -128,6 +133,7 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+        let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
         try {
             let response = await api.put(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
@@ -147,6 +153,9 @@ const Game = ({ stompWebSocketHook }) => {
             return resultPlayerWord;
         } catch (error) {
             handleError(error, navigate);
+        } finally {
+            clearTimeout(loadingTimeoutId);
+            setIsLoading(false);
         }
     };
 
@@ -158,6 +167,11 @@ const Game = ({ stompWebSocketHook }) => {
         <div>
             <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
+                {isLoading ? (
+                    <div className="spinner-pos">
+                        <RotateSpinner />
+                    </div>
+                ) : null}
                 <playerContext.Provider value={{ player, setPlayer }}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
