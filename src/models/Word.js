@@ -6,6 +6,7 @@ class Word {
         this.name = null;
         this.depth = null;
         this.reachability = null;
+        this.newlyDiscovered = false;
         Object.assign(this, data);
     }
 }
