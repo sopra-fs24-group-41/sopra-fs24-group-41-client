@@ -113,7 +113,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const params = useParams();
     const lobbycode = params.lobbycode;
 
-
     useEffect(() => {
         // Fetch lobby and players data
         const fetchLobbyAndPlayers = async () => {
@@ -176,7 +175,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 navigate("/lobby/game");
             }
             if (newObject.instruction === "kick") {
-                console.log("kicked because: ", newObject.reason) // replace with showing message
+                console.log("kicked because: ", newObject.reason); // replace with showing message
                 kick();
             }
         }
@@ -188,8 +187,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         mode: string,
         gameTime: number
     ) => {
-        if (!ownerMode)
-            return 
+        if (!ownerMode) return;
 
         const config = {
             headers: {
@@ -327,22 +325,30 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         updateLobby(null, !publicA, null, null);
     };
 
-
     const selectionTimer = () => {
         return (
-        (<select className="timer-label" value={selectedTimer} onChange={(e) => setSelectedTimer(e.target.value)}>
-        {timerOptions.map((option, index) => (
-            <option className="option-label" key={index} value={option.value}>
-                {"Timer: " + option.label}
-            </option>
-        ))}
-    </select>) )};
+            <select
+                className="timer-label"
+                value={selectedTimer}
+                onChange={(e) => setSelectedTimer(e.target.value)}
+            >
+                {timerOptions.map((option, index) => (
+                    <option
+                        className="option-label"
+                        key={index}
+                        value={option.value}
+                    >
+                        {"Timer: " + option.label}
+                    </option>
+                ))}
+            </select>
+        );
+    };
 
     useEffect(() => {
         if (selectedTimer) {
             updateLobby(null, null, null, selectedTimer);
         }
-
     }, [selectedTimer]);
 
     return (
@@ -359,7 +365,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                             </Button>
                         )}
 
-                        {ownerMode &&  selectionTimer()}
+                        {ownerMode && selectionTimer()}
 
                         <h2>
                             {editLobbyName()}
