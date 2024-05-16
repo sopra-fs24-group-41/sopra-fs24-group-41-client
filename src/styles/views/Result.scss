@@ -115,6 +115,7 @@
       align-items: flex-start;
       height: max-content;
       background: lighten($background, 20);
+      border-radius: $borderRadius;
 
       img {
         width: 50px;

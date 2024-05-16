@@ -269,7 +269,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                                             ? ICONS[hashForAnon(player.name)]
                                             : IMAGES[player.user.profilePicture]
                                     }
-                                    alt={"profile picture"}
+                                    alt=""
                                 />
                             </div>
                             <div
@@ -332,10 +332,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 value={selectedTimer}
                 onChange={(e) => setSelectedTimer(e.target.value)}
             >
-                {timerOptions.map((option, index) => (
+                {timerOptions.map((option) => (
                     <option
                         className="option-label"
-                        key={index}
+                        key={option.value} // Fix: Use a unique identifier from the option itself as the key
                         value={option.value}
                     >
                         {"Timer: " + option.label}

@@ -58,17 +58,12 @@
 
   &.container {
     display: block;
-    align-items: center;
     overflow: auto; 
     text-overflow: ellipsis;
-    padding-bottom: 20%;
     text-align: start;
     margin: 0.5em 0;
     width: auto;
     padding: 12px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 10px;
     border-radius: $borderRadius;
     flex-direction: column;
     align-items: center;
