@@ -36,9 +36,13 @@
         justify-content: center;
     }
 
-    & p,
-    h2 {
+    & p {
         margin: 0.5em 0;
+    }
+
+    & h2 {
+        margin: 0.5em 0;
+        font-size:30px;
     }
 
     @media only screen and (max-width: 768px) {
