@@ -10,17 +10,21 @@ import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 
-const LobbyItem = ({ lobby, onSelect, isSelected }: {
+const LobbyItem = ({
+    lobby,
+    onSelect,
+    isSelected,
+}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
 }) => (
-    <div
+    <button
         className={`lobby container${isSelected ? "-selected" : ""}`}
         onClick={() => onSelect(lobby)}
     >
-        <div className="lobby lobby-name">{lobby.name}</div>
-    </div>
+        <label className="lobby lobby-name">{lobby.name}</label>
+    </button>
 );
 LobbyItem.propTypes = {
     lobby: PropTypes.object,
@@ -30,15 +34,18 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [lobbies, setLobbies] = useState<Lobby[]>([]);
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
-    const [LoginRegisterPopup, setLoginRegisterPopup] = useState(false);
-    const [lobbyCode, setLobbyCode] = useState<String>(null);
+    const [loginRegisterPopup, setLoginRegisterPopup] = useState(false);
+    const [lobbyCode, setLobbyCode] = useState<string>(null);
     const userToken = localStorage.getItem("userToken");
+    const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
 
     useEffect(() => {
         const fetchLobbies = async () => {
             try {
                 const response = await api.get("/lobbies");
-                const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
+                const lobbyData = response.data.map(
+                    (lobby: any) => new Lobby(lobby)
+                );
                 setLobbies(lobbyData);
             } catch (error) {
                 handleError(error, navigate);
@@ -62,16 +69,21 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (messagesLength > 0 && stompWebSocketHook.messages[messagesLength - 1] !== undefined) {
-            const lobbyDataRAW = stompWebSocketHook.messages[messagesLength - 1];
-            if (Array.isArray(lobbyDataRAW)) setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
+        if (
+            messagesLength > 0 &&
+            stompWebSocketHook.messages[messagesLength - 1] !== undefined
+        ) {
+            const lobbyDataRAW =
+                stompWebSocketHook.messages[messagesLength - 1];
+            if (Array.isArray(lobbyDataRAW))
+                setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
         }
     }, [stompWebSocketHook.messages]);
 
     // Allows selection / deselection
     const selectLobby = (lobby: Lobby) => {
         setSelectedLobby((prevSelectedLobby) =>
-            prevSelectedLobby === lobby ? null : lobby,
+            prevSelectedLobby === lobby ? null : lobby
         );
         if (lobby === selectedLobby) {
             setLobbyCode("");
@@ -83,7 +95,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const checkLogin = () => {
         return localStorage.getItem("userToken") !== null;
     };
-
 
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
@@ -100,7 +111,11 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 const requestBody = {};
                 const config = { headers: { userToken: userToken } };
-                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
+                const response = await api.post(
+                    "/lobbies/" + lobbyCode + "/players",
+                    requestBody,
+                    config
+                );
                 localStorage.setItem("playerToken", response.data.playerToken);
                 localStorage.setItem("playerId", response.data.playerId);
                 localStorage.setItem("lobbyCode", lobbyCode);
@@ -113,12 +128,13 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
     const createLobby = async () => {
         if (!checkLogin()) {
-            alert("Only logged in users can create lobbies\nPlease login or join an existing lobby");
-
+            setCreateWithoutAccount(true);
+            setTimeout(() => setCreateWithoutAccount(false), 2000);
+            
             return;
         }
         try {
-            const requestBody = { "publicAccess": true };
+            const requestBody = { publicAccess: true };
             const config = { headers: { userToken: userToken } };
             const response = await api.post("/lobbies", requestBody, config);
             const createdLobby = response.data.lobby;
@@ -152,7 +168,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                     <p> Or enter a lobby code: </p>
                     <form>
                         <input
-                            className={`lobby input-container ${lobbyCode ? "has-input" : ""}`}
+                            className={`lobby input-container ${
+                                lobbyCode ? "has-input" : ""
+                            }`}
                             name="lobbyCode"
                             value={lobbyCode || ""}
                             onChange={(lobbyCode) => {
@@ -171,7 +189,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                         >
                             Join Lobby
                         </Button>
-
                         <Button
                             width="100%"
                             onClick={() => createLobby()}
@@ -183,29 +200,31 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 </div>
             </div>
         );
-    } else {
-        content = (
-            <div className="lobbyoverview">
-                <p color="red">Currently no open lobbies</p>
-            </div>
-        );
     }
 
-
     return (
-        <div className="container-wrapper">
-            <BaseContainer className="lobbyoverview container">
-                <h2>Lobby Overview</h2>
-                <p>Select a Lobby to Join</p>
-                {content}
-            </BaseContainer>
-            <Icon onClick={() => iconClick()} />
-            {LoginRegisterPopup && localStorage.getItem("userToken") === null && (
-                <LoginRegister />
-            )}
-            {LoginRegisterPopup && localStorage.getItem("userToken") !== null && (
-                <ProfilePopup />
-            )}
+        <div>
+            <div className="container-wrapper">
+                <BaseContainer className="lobbyoverview container">
+                    <h2>Lobby Overview</h2>
+                    {createWithoutAccount ? (
+                        <p className="create_lobby_without_login">
+                            Please log in to create a lobby.
+                        </p>
+                    ) : (
+                        <p>Select a Lobby to Join</p>
+                    )}
+                    {content}
+                </BaseContainer>
+
+                {loginRegisterPopup &&
+                    localStorage.getItem("userToken") === null && (
+                    <LoginRegister />)}
+                {loginRegisterPopup &&
+                    localStorage.getItem("userToken") !== null && (
+                    <ProfilePopup />)}
+            </div>
+            <Icon onClick={iconClick} wiggle={createWithoutAccount} />
         </div>
     );
 };

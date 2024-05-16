@@ -2,34 +2,21 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import Word from "models/Word";
 import PlayerWord from "models/PlayerWord";
 import WordButton from "./WordButton";
-import Game, {playerContext} from "./Game";
+import { playerContext } from "./Game";
 import WordMergeBar from "./WordMergeBar";
+import { Button } from "components/ui/Button";
 
 export const mergeWordListContext = createContext([]);
 
 export const nextWordIndexContext = createContext(0);
 
-const WordRow = (props) => {
-    return (
-        <div {...props} className="word-row">
-            {" "}
-            {props.children}{" "}
-        </div>
-    );
-};
-
-WordRow.propTypes = {
-    children: PropTypes.node,
-};
-
-const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => any }) => {
+const WordBoard = ({ playFunction }) => {
     const [mergeWordList, setMergeWordList] = useState<String[]>([]);
     const [nextWordIndex, setNextWordIndex] = useState<number>(0);
+    const [searchWord, setSearchWord] = useState<string>("");
     const { player } = useContext(playerContext);
-    const rowLength = 8;
 
     const addWordToMerge = async (playerWord: PlayerWord) => {
         if (nextWordIndex === 2) {
@@ -66,16 +53,16 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
         executePlayFunction();
     }, [nextWordIndex]);
 
-    const formatWord = (playerWord : PlayerWord) => {
+    const formatWord = (playerWord: PlayerWord) => {
         let result = playerWord.word.name;
         if (playerWord.uses !== null && playerWord.uses !== undefined && playerWord.uses > 0) {
             result += " " + playerWord.uses.toString();
         }
 
         return result;
-    }
+    };
 
-    const wordAvailable = (playerWord : PlayerWord) => {
+    const wordAvailable = (playerWord: PlayerWord) => {
         return playerWord.uses === null || playerWord.uses === undefined || playerWord.uses > 0;
     }
 
@@ -87,38 +74,6 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
         return false
     }
 
-    const createWordMatrix = () => {
-        let matrix = [];
-        let row = [];
-
-        for (let i = 0; i < player.playerWords.length; i++) {
-            if (i > 0 && i % rowLength === 0) {
-                matrix.push(<WordRow key={matrix.length}>{row}</WordRow>);
-                row = [];
-            }
-
-            row.push(
-                <WordButton
-                    key={i}
-                    onClick={() => {
-                        addWordToMerge(player.playerWords[i]);
-                    }}
-                    className={isNew(player.playerWords[i]) ? "glow" : ""}
-                    disabled={!wordAvailable(player.playerWords[i])}
-                >
-                    {formatWord(player.playerWords[i])}
-                </WordButton>
-            );
-        }
-
-        matrix.push(<WordRow key={matrix.length}>{row}</WordRow>);
-
-        return matrix;
-    };
-
-    useEffect(() => {
-        createWordMatrix();
-    }, [player]);
 
     const removeWord = () => {
         if (nextWordIndex !== 1) {
@@ -131,8 +86,12 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
 
         setNextWordIndex(0);
         setMergeWordList([null, null, null]);
-        createWordMatrix();
-    }
+    };
+
+    
+    const WordList = player.playerWords.filter((playerWord) =>
+        playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase())
+    );
 
     return (
         <BaseContainer className="game vertical-container">
@@ -142,7 +101,29 @@ const WordBoard = ({ playFunction }: { playFunction: (arg0: any, arg1: any) => a
                 </nextWordIndexContext.Provider>
             </mergeWordListContext.Provider>
             <BaseContainer className="word-board container">
-                {createWordMatrix()}
+                <div className="search-bar">
+                    <input className="search-input-css"
+                        type="text"
+                        value={searchWord}
+                        onChange={(e) => setSearchWord(e.target.value)}
+                        placeholder="Search words..."
+                    />
+                    <Button onClick={() => setSearchWord("")}>✖️</Button>
+                </div>
+                <div className="word-table">
+                    {WordList.map((playerWord, index) => (
+                        <WordButton
+                            key={index}
+                            onClick={() => {
+                                addWordToMerge(playerWord);
+                            }}
+                            className={isNew(player.playerWords[index]) ? "glow" : ""}
+                            disabled={!wordAvailable(playerWord)}
+                        >
+                            {formatWord(playerWord)}
+                        </WordButton>
+                    ))}
+                </div>
             </BaseContainer>
         </BaseContainer>
     );
