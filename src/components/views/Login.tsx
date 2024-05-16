@@ -50,7 +50,6 @@ const Login = () => {
         } catch (error) {
             setLoginErrorMsg(error.response.data.message);
             setLoginError(true);
-            handleError(error);
         }
     };
 

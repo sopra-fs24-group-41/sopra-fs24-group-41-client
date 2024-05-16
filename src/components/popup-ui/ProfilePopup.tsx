@@ -23,6 +23,7 @@ const ProfilePopup = () => {
                 alert(`Something went wrong during the logout: \n${handleError(error, navigate)}`);
             }
             localStorage.removeItem("userToken");
+            localStorage.removeItem("userId")
             window.location.reload();
         }
     };

@@ -27,6 +27,7 @@ const QuitPopup = () => {
         } catch (error) {
             handleError(error, navigate);
             alert("Something went wrong on the server side, please try again");
+            navigate("/lobbyoverview")
         }
     };
     
