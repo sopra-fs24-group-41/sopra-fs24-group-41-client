@@ -11,6 +11,7 @@ import { LobbyGuard } from "../routeProtectors/LobbyGuard";
 import PropTypes from "prop-types";
 import ServerDownPage from "../../views/ServerDownPage";
 import AnonEnterLobbyPage from "../../views/AnonEnterLobbyPage";
+import Achievements from "../../views/Achievements";
 
 /**
  * Main router of your application.
@@ -31,6 +32,8 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 <Route path="/login" element={<Login />} />
 
                 <Route path="/profile" element={<Profile />} />
+
+                <Route path="/profile/achievements" element={<Achievements />} />
 
                 <Route path="/registration" element={<Registration />} />
 
