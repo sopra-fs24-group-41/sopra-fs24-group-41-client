@@ -8,17 +8,26 @@ import { api, handleError } from "../../helpers/api"
 import User from "../../models/User";
 import PropTypes from "prop-types";
 import Achievement from "../../models/Achievement"
+import "styles/views/Achievements.scss";
+import IMAGES from "../../assets/images/index1.js";
 
-
-const DummyAchievement = [[100, "Wow this is the dummy achievement", "description", "goofy picture here"]]
+const DummyAchievement = [
+    { id: 100, title: "Wow this is the dummy achievement", description: "description", profilePicture: "BlueFrog" }
+]
 
 const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
-    <div
-        className="achievement container"
-    >
-        <div className="achievement title">{achievement.title}</div>
-        <div className="achievement description">{achievement.description}</div>
-        <div className="achievement picture">{achievement.profilePicture}</div>
+    <div>
+        <div className="achievement icon">
+            <img src={IMAGES[achievement.profilePicture]} alt="achievement icon" />
+        </div>
+        <div className="achievement-details">
+            <div className="achievement-title">
+                {achievement.title}
+            </div>
+            <div className="achievement-description">
+                {achievement.description}
+            </div>
+        </div>
     </div>
 );
 
@@ -29,8 +38,7 @@ AchievementItem.propTypes = {
 const Achievements = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({username: "...", status: "..."});
-    const [achievements, setAchievements] = useState(DummyAchievement) //Achievements is an Array that contains the
-    // achievements which were achieved by the user, if empty array = No achievements reached
+    const [achievements, setAchievements] = useState(DummyAchievement)
 
     useEffect(() => {
         const fetchData = async () => {
