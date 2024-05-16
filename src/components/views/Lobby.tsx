@@ -107,12 +107,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [ownerMode, setOwnerMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
+    const [originalLobbyname, setOriginalLobbyname] = useState("");
     const [publicA, setPublicA] = useState();
     const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
-    const [selectedTimerIndex, setSelectedTimerIndex] = useState(0);
-    const [toggleTimerTriggered, setToggleTimerTriggered] = useState(false);
     const { handleError } = useError();
-
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
@@ -206,8 +204,9 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
-        } catch (e) {
-            handleError(e);
+        } catch (error) {
+            handleError(error);
+            setLobbyname(originalLobbyname);
         }
     };
 
@@ -296,9 +295,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
 
     const handleEdit = () => {
         if (isEditing) {
+            setOriginalLobbyname(lobbyname);
             updateLobby(lobbyname, null, null, null);
             setIsEditing(false);
         } else {
+            setOriginalLobbyname(lobbyname)
             setIsEditing(true);
         }
     };

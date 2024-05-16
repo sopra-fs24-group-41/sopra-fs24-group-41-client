@@ -8,11 +8,8 @@ const ErrorPopup = ({ErrorInfo, resetError}) => {
 
     let [errorPopup, setErrorPopup] = useState(true)
     const Errordata = ErrorInfo.split("\n");
-    console.log(Errordata);
-    const requestTo = Errordata[1];
-    const statuscode = Errordata[2];
-    const error = Errordata[3];
     const errormessage = Errordata[4];
+    console.log(ErrorInfo);
 
     const handleClose = () => {
         setErrorPopup(false);
@@ -21,10 +18,7 @@ const ErrorPopup = ({ErrorInfo, resetError}) => {
 
     if (errorPopup) return (
         <BaseContainer className="errorpopup container">
-            <h2>{errormessage}</h2>
-            <p>{requestTo}</p>
-            <p>{statuscode}</p>
-            <p>{error}</p>
+            <p>{errormessage}</p>
 
             <Button className="errorpopup button-container" onClick={() => handleClose()}>Ok</Button>
         </BaseContainer>
