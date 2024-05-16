@@ -33,7 +33,7 @@ const AppRouter = ({ stompWebSocketHook }) => {
 
                 <Route path="/profile" element={<Profile />} />
 
-                <Route path="/profile/achievements" element={<Achievements />} />
+                <Route path="/achievements" element={<Achievements />} />
 
                 <Route path="/registration" element={<Registration />} />
 

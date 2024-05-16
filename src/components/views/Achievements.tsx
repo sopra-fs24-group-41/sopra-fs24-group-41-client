@@ -12,7 +12,12 @@ import "styles/views/Achievements.scss";
 import IMAGES from "../../assets/images/index1.js";
 
 const DummyAchievement = [
-    { id: 100, title: "Wow this is the dummy achievement", description: "description", profilePicture: "BlueFrog" }
+    { id: 100, title: "But it was not an accident!", description: "Zaddy, don't hurt me!", profilePicture: "BlueFrog" },
+    { id: 120, title: "You Created A Cutie!", description: "Munya Munya...!", profilePicture: "PinkBunny" },
+    { id: 150, title: "Ooga Booga!", description: "They shot me, never forget that.", profilePicture: "SunglassesGorilla" },
+    { id: 170, title: "I'm Coming For You, Human!", description: "Rust won't replace C, C is okay, Zig is meh.", profilePicture: "SpaceDude" },
+    { id: 200, title: "Club Penguin!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
+    { id: 200, title: "Club Penguin!!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
 ]
 
 const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
@@ -20,11 +25,11 @@ const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
         <div className="achievement icon">
             <img src={IMAGES[achievement.profilePicture]} alt="achievement icon" />
         </div>
-        <div className="achievement-details">
-            <div className="achievement-title">
+        <div>
+            <div className="achievement title">
                 {achievement.title}
             </div>
-            <div className="achievement-description">
+            <div className="achievement description">
                 {achievement.description}
             </div>
         </div>
@@ -57,14 +62,22 @@ const Achievements = () => {
         fetchData();
     }, []);
 
+    //Temporary, so Achievements render whenever mock changes.
+    useEffect(() => {
+        setAchievements(DummyAchievement);
+    }
+    , [DummyAchievement]);
+
     const achievementFormat = ( user, achievement ) => {
         if (achievements.indexOf(achievement)) return "achievement unlocked";
         else return "achievement locked";
     }
 
+
     return (
         <BaseContainer>
             <div className="achievements container">
+                <h2>Achievements</h2>
                 <ul className="achievements list">
                     {achievements.map((achievement: Achievement) => (
                         <li key={achievement.id}
@@ -76,12 +89,12 @@ const Achievements = () => {
                         </li>
                     ))}
                 </ul>
-                <div className="profile button-container">
+                <div className="achievement-button-container">
                     <Button
                         width="100%"
-                        onClick={() => navigate("/profile")}
+                        onClick={() => navigate("/lobbyoverview")}
                     >
-                        Return to profile
+                        Return to Overview
                     </Button>
                 </div>
             </div>

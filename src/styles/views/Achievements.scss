@@ -15,55 +15,67 @@
     box-shadow: $dropShadow;
     padding-right: 2em;
     padding-bottom: 2em;
+    max-height: 640px;
   }
 
   & p,
   h2 {
     margin: 0.5em 0;
     text-decoration: underline;
+    word-wrap: break-word;
   }
 
   &.list {
+    width: 300px;
+    padding: 0;
     margin: 0;
+    overflow-y: auto;
     width: auto;
+    list-style: none;
     flex-direction: column;
+    @include center;
   }
 }
 
 .achievement {
+  margin-top: 0.5em;
   background: lighten($background, 20);
   float: left;
-  padding: 1.5em;
+  padding: 2.5em;
   border-radius: $borderRadius;
   display: flex;
   flex-direction: row; // Changed from column to row
   align-items: center;
   margin-left: 30px;
-  max-width: 500px; // Set a maximum width
+  max-width: 450px; // Set a maximum width
 
-  &.name {
+  &.title {
+    color: rgb(44, 45, 46);
+    margin-top: 5px;
     text-align: center;
-    margin: auto;
-    color: $accentDark;
-    text-transform: uppercase;
+    padding: 0;
   }
+
 
   &.description {
     color: $textColor;
     margin-top: 5px;
     text-align: center;
     padding: 0;
+    word-wrap: break-word;
   }
 
   &.unlocked {
     color: gold;
-    padding: 0;
+    padding: 8px;
   }
 
   &.locked {
-    color: white;
+    filter: grayscale(100%);
     opacity: 50%;
-    padding: 0;
+    padding: 8px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    color: transparent;
   }
   
   &.icon {
@@ -82,10 +94,12 @@
   }
 }
 
-.button-container {
+.achievement-button-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 1em;
-  align-items: center;
+  margin-top: 2em;
+  margin-left: 2em;
+  width: 100%;
 }
