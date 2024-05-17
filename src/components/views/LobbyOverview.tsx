@@ -38,7 +38,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [lobbyCode, setLobbyCode] = useState<string>(null);
     const userToken = localStorage.getItem("userToken");
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
-    const { handleError } = useError();
+    const { handleError, resetError } = useError();
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -177,6 +177,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                             onChange={(lobbyCode) => {
                                 setLobbyCode(lobbyCode.target.value);
                                 setSelectedLobby(null);
+                                resetError();
                             }}
                             onSubmit={joinLobby}
                         />
