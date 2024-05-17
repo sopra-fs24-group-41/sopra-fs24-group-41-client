@@ -12,11 +12,11 @@ import "styles/views/Achievements.scss";
 import IMAGES from "../../assets/images/index1.js";
 
 const DummyAchievement = [
-    { id: 100, title: "But it was not an accident!", description: "Zaddy, don't hurt me!", profilePicture: "BlueFrog" },
-    { id: 120, title: "You Created A Cutie!", description: "Munya Munya...!", profilePicture: "PinkBunny" },
-    { id: 150, title: "Ooga Booga!", description: "They shot me, never forget that.", profilePicture: "SunglassesGorilla" },
-    { id: 170, title: "I'm Coming For You, Human!", description: "Rust won't replace C, C is okay, Zig is meh.", profilePicture: "SpaceDude" },
-    { id: 200, title: "Club Penguin!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
+    { id: 1, title: "But it was not an accident!", description: "Zaddy, don't hurt me!", profilePicture: "BlueFrog" },
+    { id: 2, title: "You Created A Cutie!", description: "Munya Munya...!", profilePicture: "PinkBunny" },
+    { id: 3, title: "Ooga Booga!", description: "They shot me, never forget that.", profilePicture: "SunglassesGorilla" },
+    { id: 4, title: "I'm Coming For You, Human!", description: "Rust won't replace C, C is okay, Zig is meh.", profilePicture: "SpaceDude" },
+    { id: 5, title: "Club Penguin!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
 ]
 
 const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
@@ -72,6 +72,12 @@ const Achievements = () => {
         else return "achievement locked";
     }
 
+    //Temporary achievmentFormat
+    const achievementFormat2 = (achievement) => {
+        if(achievement.id % 2 === 0) return "achievement unlocked";
+        else return "achievement locked"
+    }
+
 
     return (
         <BaseContainer>
@@ -80,7 +86,7 @@ const Achievements = () => {
                 <ul className="achievements list">
                     {achievements.map((achievement: Achievement) => (
                         <li key={achievement.id}
-                            className={achievementFormat(userData, achievement)}
+                            className={achievementFormat2(achievement)}
                         >
                             <AchievementItem
                                 achievement={achievement}

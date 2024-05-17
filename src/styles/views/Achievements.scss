@@ -21,19 +21,19 @@
 
 
   &.list {
-    width: 300px;
     padding: 0;
-    margin: 0;
+    margin: 0;;
     overflow-y: auto;
     width: auto;
     list-style: none;
     flex-direction: column;
     @include center;
+
   }
 }
 
 .achievement {
-  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   background: lighten($background, 20);
   float: left;
   padding: 2.5em;
@@ -42,9 +42,11 @@
   flex-direction: row; // Changed from column to row
   align-items: center;
   justify-content: flex-start;
-  margin-left: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
   max-width: 450px; // Set a maximum width
   flex-wrap: wrap; // allow
+
 
   p{
     color: rgb(44, 45, 46);
@@ -57,11 +59,12 @@
   &.title {
     color: rgb(44, 45, 46);
     padding: 0;
+    min-width: 300px;
+
   }
   &.description {
     color: $textColor;
     padding: 0;
-    word-wrap: break-word;
     flex: 1 1 auto;
 
   }
@@ -69,15 +72,27 @@
   &.unlocked {
     color: gold;
     padding: 8px;
+    text-align: left;
+    word-wrap: break-word;
+
+
 
   }
-
+ 
   &.locked {
     filter: grayscale(100%);
     opacity: 50%;
     padding: 8px;
-    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    word-wrap: break-word;
+    text-align: left;
+    display: flex;
     color: transparent;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    img {
+      filter: grayscale(100%) blur(3px);
+      opacity: 50%;
+    
+    }
   }
   
   &.icon {
@@ -98,11 +113,11 @@
 }
 
 .achievement-button-container {
+  padding: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 1em;
   margin-top: 2em;
-  margin-left: 2em;
   width: 100%;
 }
