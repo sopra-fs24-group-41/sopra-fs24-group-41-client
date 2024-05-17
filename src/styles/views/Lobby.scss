@@ -265,3 +265,12 @@
   font-size: 14px;
   font-family: $fontDefault;
 }
+
+.error-message-lobby {
+  min-height: 20px;
+  z-index: 999999;
+  color:rgb(151, 0, 0);
+  font-size: 16px;
+  left: 20px;
+  position: relative;
+}

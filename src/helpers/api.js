@@ -52,10 +52,12 @@ export const ErrorProvider = ({ children }) => {
         }
     };
 
+    const resetError = () => setErrorInfo(null);
+
     return (
-        <ErrorContext.Provider value={{ handleError }}>
+        <ErrorContext.Provider value={{ handleError, resetError }}>
             {children}
-            {errorInfo && <ErrorPopup ErrorInfo={errorInfo} resetError={() => setErrorInfo(false)} />}
+            {errorInfo && <ErrorPopup ErrorInfo={errorInfo} resetError={resetError} />}
         </ErrorContext.Provider>
     );
 };

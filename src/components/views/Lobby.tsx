@@ -114,6 +114,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
+    const [editError, setEditError] = useState(false);
+    const { resetError } = useError();
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -204,9 +206,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
+
+            return true;
         } catch (error) {
             handleError(error);
-            setLobbyname(originalLobbyname);
+            setEditError(true);
+            
+            return false;
         }
     };
 
@@ -293,13 +299,19 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         </div>
     );
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (isEditing) {
-            setOriginalLobbyname(lobbyname);
-            updateLobby(lobbyname, null, null, null);
-            setIsEditing(false);
+            const updateSuccessful = await updateLobby(
+                lobbyname,
+                null,
+                null,
+                null
+            );
+            if (updateSuccessful) {
+                setOriginalLobbyname(lobbyname);
+                setIsEditing(false);
+            }
         } else {
-            setOriginalLobbyname(lobbyname)
             setIsEditing(true);
         }
     };
@@ -308,10 +320,12 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         if (isEditing) {
             return (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={lobbyname}
                     onChange={(e) => {
                         setLobbyname(e.target.value);
+                        setEditError(false);
+                        resetError();
                     }}
                 />
             );

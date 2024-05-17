@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 const ErrorPopup = ({ErrorInfo, resetError}) => {
 
+
     let [errorPopup, setErrorPopup] = useState(true)
     const Errordata = ErrorInfo.split("\n");
     const errormessage = Errordata[4];
