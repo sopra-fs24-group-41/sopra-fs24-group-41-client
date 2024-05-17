@@ -103,7 +103,7 @@ const AnonEnterLobbyPage = () => {
 
     return (
         <div className="container-wrapper">
-            <BaseContainer className="lobbyoverview container">
+            <BaseContainer className="base container">
                 <h2>Currently joining {lobby.name} as an anonymous user</h2>
                 <div className="player input-container">
                     Enter a playername you want to be represented as:
