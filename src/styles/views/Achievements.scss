@@ -14,16 +14,11 @@
     align-items: center;
     box-shadow: $dropShadow;
     padding-right: 2em;
+    padding-left: 2em;
     padding-bottom: 2em;
     max-height: 640px;
   }
 
-  & p,
-  h2 {
-    margin: 0.5em 0;
-    text-decoration: underline;
-    word-wrap: break-word;
-  }
 
   &.list {
     width: 300px;
@@ -46,28 +41,35 @@
   display: flex;
   flex-direction: row; // Changed from column to row
   align-items: center;
+  justify-content: flex-start;
   margin-left: 30px;
   max-width: 450px; // Set a maximum width
+  flex-wrap: wrap; // allow
+
+  p{
+    color: rgb(44, 45, 46);
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+  }
 
   &.title {
     color: rgb(44, 45, 46);
-    margin-top: 5px;
-    text-align: center;
     padding: 0;
   }
-
-
   &.description {
     color: $textColor;
-    margin-top: 5px;
-    text-align: center;
     padding: 0;
     word-wrap: break-word;
+    flex: 1 1 auto;
+
   }
 
   &.unlocked {
     color: gold;
     padding: 8px;
+
   }
 
   &.locked {
@@ -80,6 +82,7 @@
   
   &.icon {
     position: relative;
+    flex: 0 0 auto;
     max-width: 80px;
     max-height: 80px;
     margin: 0;

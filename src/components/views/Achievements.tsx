@@ -17,7 +17,6 @@ const DummyAchievement = [
     { id: 150, title: "Ooga Booga!", description: "They shot me, never forget that.", profilePicture: "SunglassesGorilla" },
     { id: 170, title: "I'm Coming For You, Human!", description: "Rust won't replace C, C is okay, Zig is meh.", profilePicture: "SpaceDude" },
     { id: 200, title: "Club Penguin!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
-    { id: 200, title: "Club Penguin!!", description: "Did you know the dark stories begind Club Penguin?", profilePicture: "AnonPenguin" },
 ]
 
 const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
@@ -25,14 +24,14 @@ const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
         <div className="achievement icon">
             <img src={IMAGES[achievement.profilePicture]} alt="achievement icon" />
         </div>
-        <div>
-            <div className="achievement title">
+        <p>
+            <text className="achievement title">
                 {achievement.title}
-            </div>
-            <div className="achievement description">
+            </text>
+            <text className="achievement description">
                 {achievement.description}
-            </div>
-        </div>
+            </text>
+        </p>
     </div>
 );
 
