@@ -43,12 +43,11 @@ const useStompWebSocket = (client) => {
                     setMessages((prevMessages) => [...prevMessages, receivedMessage]);
                 } catch (e) {
                     console.error("error when parsing the message: ", message.body);
-                    // setMessages((prevMessages) => [...prevMessages, message.body]);
                 }
             });
             console.log("subscribed to ", destination);
         } else {
-            alert("no websocket connection");
+            console.error("could not connect to ", destination, "because there is no active websocket connection");
         }
     };
 
@@ -61,7 +60,7 @@ const useStompWebSocket = (client) => {
             }
             console.log("unsubscribed from ", destination);
         } else {
-            alert("no websocket connection");
+            console.error("could not unsubscribe from ", destination, "because there is no active websocket connection");
         }
     };
 
@@ -70,7 +69,7 @@ const useStompWebSocket = (client) => {
             client.current.publish({ destination, body: JSON.stringify(message) });
             console.log("Sent message to ", destination, " : ", message);
         } else {
-            alert("no websocket connection");
+            console.error("could not send the following message to ", destination, "because there is no active websocket connection: ", message);
         }
     };
 
