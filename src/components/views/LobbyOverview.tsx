@@ -10,11 +10,7 @@ import ProfilePopup from "components/popup-ui/ProfilePopup";
 import { api, useError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 
-const LobbyItem = ({
-                       lobby,
-                       onSelect,
-                       isSelected,
-                   }: {
+const LobbyItem = ({lobby, onSelect, isSelected}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
@@ -109,9 +105,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 if (lobby.data.status !== "PREGAME") {
                     setlobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
                     setTimeout(() => setlobbyIngameErrorMsg(""), 3000)
+
                     return
                 }
-
                 navigate("/lobby/" + lobbyCode + "/anonymous");
             } catch (error) {
                 handleError(error, navigate);
@@ -232,11 +228,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 </BaseContainer>
 
                 {loginRegisterPopup &&
-                    localStorage.getItem("userToken") === null && (
-                        <LoginRegister />)}
+                    localStorage.getItem("userToken") === null && (<LoginRegister />)}
                 {loginRegisterPopup &&
-                    localStorage.getItem("userToken") !== null && (
-                        <ProfilePopup />)}
+                    localStorage.getItem("userToken") !== null && (<ProfilePopup />)}
             </div>
             <Icon onClick={iconClick} wiggle={createWithoutAccount} />
         </div>
