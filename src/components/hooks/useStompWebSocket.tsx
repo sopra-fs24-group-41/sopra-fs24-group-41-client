@@ -39,6 +39,7 @@ const useStompWebSocket = (client) => {
             subscriptionsRef.current[destination] = client.current.subscribe(destination, (message) => {
                 try {
                     const receivedMessage = JSON.parse(message.body);
+                    receivedMessage.subscription = destination.split("/")[2]; 
                     console.log("new message received:", receivedMessage);
                     if (receivedMessage.instruction !== null) {
                         setMessages((prevMessages) => [...prevMessages, receivedMessage]);

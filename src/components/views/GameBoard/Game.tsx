@@ -9,13 +9,12 @@ import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import {Button} from "../../ui/Button";
+import { Button } from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
 import { Spinner } from "components/ui/Spinner";
 import { GrowSpinner } from "components/ui/GrowSpinner";
-import {RotateSpinner} from "components/ui/RotateSpinner";
-
+import { RotateSpinner } from "components/ui/RotateSpinner";
 
 export const playerContext = createContext(new Player());
 
@@ -33,6 +32,9 @@ const Game = ({ stompWebSocketHook }) => {
     const [quitPopup, setQuitPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
     const [isLoading, setIsLoading] = useState(false);
+    const [achievementPopup, setAchievementPopup] = useState(false);
+    const [achievementMsg, setAchievementMsg] = useState(null);
+    const [popupClass, setPopupClass] = useState("");
     const { handleError } = useError();
 
 
@@ -43,7 +45,6 @@ const Game = ({ stompWebSocketHook }) => {
         "180": "You have 3 minutes left!",
         "300": "You have 5 minutes left!",
     };
-
 
     const fetchPlayer = async () => {
         try {
@@ -89,12 +90,18 @@ const Game = ({ stompWebSocketHook }) => {
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
+            stompWebSocketHook.subscribe(
+                `/topic/achievements/${localStorage.getItem("userId")}`
+            );
         }
 
         return () => {
             if (stompWebSocketHook.connected.current === true) {
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbyCode}/game`
+                );
+                stompWebSocketHook.unsubscribe(
+                    `/topic/achievements/${localStorage.getItem("userId")}`
                 );
             }
             stompWebSocketHook.resetMessagesList();
@@ -168,8 +175,26 @@ const Game = ({ stompWebSocketHook }) => {
         setQuitPopup((prevState) => !prevState);
     };
 
+    useEffect(() => {
+        if (achievementPopup) {
+            setPopupClass("show");
+            const timer = setTimeout(() => {
+                setPopupClass("hide");
+            }, 4 * 1000); // Change 5000 (5 seconds) to the delay you want
+
+            return () => clearTimeout(timer); // This will clear the timeout if the component unmounts before the timeout is reached
+        } else {
+            setPopupClass("");
+        }
+    }, [achievementPopup]);
+
     return (
         <div>
+            {achievementPopup && (
+                <p className={`achievement-popup ${popupClass}`}>
+                    {achievementMsg}
+                </p>
+            )}
             <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
                 {isLoading ? (

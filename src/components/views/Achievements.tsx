@@ -25,12 +25,12 @@ const AchievementItem = ({ achievement }: {achievement: Achievement}) => (
             <img src={IMAGES[achievement.profilePicture]} alt="achievement icon" />
         </div>
         <p>
-            <text className="achievement title">
+            <div className="achievement title">
                 {achievement.title}
-            </text>
-            <text className="achievement description">
+            </div>
+            <div className="achievement description">
                 {achievement.description}
-            </text>
+            </div>
         </p>
     </div>
 );
@@ -52,7 +52,6 @@ const Achievements = () => {
                 const user = new User(response.data);
                 setUserData(user);
                 console.log(achievements);
-                // setAchievements(user.achievements);
             } catch (error) {
                 console.log(error)
                 handleError(error)
@@ -61,21 +60,11 @@ const Achievements = () => {
         fetchData();
     }, []);
 
-    //Temporary, so Achievements render whenever mock changes.
-    useEffect(() => {
-        setAchievements(DummyAchievement);
-    }
-    , [DummyAchievement]);
-
-    const achievementFormat = ( user, achievement ) => {
-        if (achievements.indexOf(achievement)) return "achievement unlocked";
-        else return "achievement locked";
-    }
 
     //Temporary achievmentFormat
     const achievementFormat2 = (achievement) => {
-        if(achievement.id % 2 === 0) return "achievement unlocked";
-        else return "achievement locked"
+        if(achievement.id % 2 === 0) return "achievement locked";
+        else return "achievement unlocked"
     }
 
 

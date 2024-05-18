@@ -121,3 +121,54 @@
   margin-top: 2em;
   width: 100%;
 }
+
+.achievement-popup{
+  position: absolute;
+  margin: 8px;
+  background-color: $background;
+  padding: 1em;
+  border-radius: $borderRadius;
+  color: $textColor;
+  font-size: 20px;
+  text-transform: uppercase;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $dropShadow;
+  max-width: 400px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+  &.show {
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  &.hide {
+    animation: slideOut 0.5s ease forwards;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translate(-100%, -50%); //translate(x-cordinate, y-cordinate)
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, -50%);
+    opacity: 0;
+  }
+}

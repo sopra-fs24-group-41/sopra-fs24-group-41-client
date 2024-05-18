@@ -4,6 +4,7 @@
 class Achievement {
     constructor(data = {}) {
         this.id = null;
+        this.name = null;
         this.title = null;
         this.description = null;
         this.profilePicture = null;
