@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../../styles/views/ServerDown.scss";
 import BaseContainer from "../ui/BaseContainer";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../helpers/api";
-import { Spinner } from "../ui/Spinner";
 
 const ServerDownPage = () => {
 

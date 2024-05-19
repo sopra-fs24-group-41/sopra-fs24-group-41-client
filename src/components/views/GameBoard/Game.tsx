@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
@@ -12,8 +12,6 @@ import "styles/views/Game.scss";
 import { Button } from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
-import { Spinner } from "components/ui/Spinner";
-import { GrowSpinner } from "components/ui/GrowSpinner";
 import { RotateSpinner } from "components/ui/RotateSpinner";
 
 export const playerContext = createContext(new Player());
@@ -35,6 +33,10 @@ const Game = ({ stompWebSocketHook }) => {
     const [achievementPopup, setAchievementPopup] = useState(false);
     const [achievementMsg, setAchievementMsg] = useState(null);
     const [popupClass, setPopupClass] = useState("");
+    const playerValue = useMemo(() => ({ player, setPlayer }), [player, setPlayer]);
+    const quitPopupValue = useMemo(() => ({ quitPopup, setQuitPopup }), [quitPopup, setQuitPopup]);
+    const otherPlayersValue = useMemo(() => ({ otherPlayers, setOtherPlayers }), [otherPlayers, setOtherPlayers]);
+
     const { handleError } = useError();
 
 
@@ -202,14 +204,14 @@ const Game = ({ stompWebSocketHook }) => {
                         <RotateSpinner />
                     </div>
                 ) : null}
-                <playerContext.Provider value={{ player, setPlayer }}>
+                <playerContext.Provider value={playerValue}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
                             <TargetWord></TargetWord>
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
                                 <GameContext.Provider
-                                    value={{ quitPopup, setQuitPopup }}
+                                    value={quitPopupValue}
                                 >
                                     <QuitPopup />
                                 </GameContext.Provider>
@@ -222,7 +224,7 @@ const Game = ({ stompWebSocketHook }) => {
                         </BaseContainer>
                         <BaseContainer className="player-list container">
                             <otherPlayersContext.Provider
-                                value={{ otherPlayers, setOtherPlayers }}
+                                value={otherPlayersValue}
                             >
                                 <PlayerList></PlayerList>
                             </otherPlayersContext.Provider>

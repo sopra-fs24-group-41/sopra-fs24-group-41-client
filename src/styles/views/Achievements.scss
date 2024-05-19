@@ -122,6 +122,13 @@
   width: 100%;
 }
 
+
+.achievement-popup::before {
+  content: "Achievement Unlocked: ";
+  color: black;
+}
+
+
 .achievement-popup{
   position: absolute;
   margin: 8px;

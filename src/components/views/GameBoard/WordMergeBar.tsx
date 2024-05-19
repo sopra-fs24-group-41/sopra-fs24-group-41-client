@@ -7,7 +7,7 @@ import PlayerWord from "models/PlayerWord";
 import { mergeWordListContext } from "./WordBoard";
 
 const WordMergeBar = ({ removeWordFunction }) => {
-    const { mergeWordList, setMergeWordList } = useContext(mergeWordListContext);
+    const { mergeWordList } = useContext(mergeWordListContext);
 
     const formatPlayerWord = (playerWord: PlayerWord, placeholder: string) => {
         if (playerWord !== null && playerWord !== undefined) {
