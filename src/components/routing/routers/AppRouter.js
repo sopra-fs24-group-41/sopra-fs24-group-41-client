@@ -8,7 +8,6 @@ import Profile from "../../views/Profile";
 import Result from "../../views/Result";
 import Game from "../../views/GameBoard/Game";
 import { LobbyGuard } from "../routeProtectors/LobbyGuard";
-import StompWebSocketComponent from "../../views/StompWebSocketComponent";
 import PropTypes from "prop-types";
 import ServerDownPage from "../../views/ServerDownPage";
 import AnonEnterLobbyPage from "../../views/AnonEnterLobbyPage";
@@ -52,8 +51,6 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 <Route path="/*" element={
                     <Navigate to="/lobbyoverview" replace />
                 } />
-
-                <Route path="/websocket-demo" element={<StompWebSocketComponent stompWebSocketHook={stompWebSocketHook} />} />
 
                 <Route path="/server-down" element={<ServerDownPage />} />
 

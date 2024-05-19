@@ -84,44 +84,47 @@ const Game = ({ stompWebSocketHook }) => {
         fetchOtherPlayers();
     }, []);
 
+    // websocket subscription
     useEffect(() => {
-        if (stompWebSocketHook.connected === true) {
+        if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
         }
 
         return () => {
-            if (stompWebSocketHook.connected === true) {
+            if (stompWebSocketHook.connected.current === true) {
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbyCode}/game`
                 );
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected]);
+    }, [stompWebSocketHook.connected.current]);
 
+    // websocket message interpretation
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (
-            messagesLength > 0 &&
-            stompWebSocketHook.messages[messagesLength - 1] !== undefined
-        ) {
-            const newObject = stompWebSocketHook.messages[messagesLength - 1];
-            if (newObject.instruction && newObject.instruction === "stop") {
-                navigate("/result/");
-            }
+        if (messagesLength > 0) {
+            const messagesList = stompWebSocketHook.messages;
+            messagesList.forEach((message) => {
+                if (message.instruction === "stop") {
+                    navigate("/result/");
+                }
 
-            if (newObject.time) {
-                renderPopupMessage(popupMessages[newObject.time]);
-            }
+                if (message.instruction === "update_timer") {
+                    renderPopupMessage(popupMessages[message.data.time]);
+                }
 
-            if (newObject.instruction === "kick") {
-                console.log("kicked because: ", newObject.reason) // replace with showing message
-                kick();
-            }
+                if (message.instruction === "kick") {
+                    console.log("kicked because: ", message.reason) // replace with showing message
+                    kick();
+                }
 
-            if (newObject.instruction === "update") {
-                fetchOtherPlayers();
-            }
+                if (message.instruction === "update_players") {
+                    let foundOtherPlayers = message.data.map((p) => new Player(p));
+                    foundOtherPlayers.sort((a, b) => b.points - a.points);
+                    setOtherPlayers(foundOtherPlayers);
+                }
+            });
         }
     }, [stompWebSocketHook.messages]);
 
@@ -211,7 +214,7 @@ Game.propTypes = {
         sendMessage: PropTypes.func.isRequired,
         messages: PropTypes.array.isRequired,
         resetMessagesList: PropTypes.func.isRequired,
-        connected: PropTypes.bool.isRequired,
+        connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
     }).isRequired,
 };

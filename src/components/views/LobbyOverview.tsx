@@ -43,9 +43,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         const fetchLobbies = async () => {
             try {
                 const response = await api.get("/lobbies");
-                const lobbyData = response.data.map(
-                    (lobby: any) => new Lobby(lobby)
-                );
+                const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
                 setLobbies(lobbyData);
             } catch (error) {
                 handleError(error, navigate);
@@ -54,36 +52,38 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         fetchLobbies();
     }, []);
 
+    // websocket subscription
     useEffect(() => {
-        if (stompWebSocketHook.connected === true) {
+        if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe("/topic/lobbies");
         }
 
         return () => {
-            if (stompWebSocketHook.connected === true) {
+            if (stompWebSocketHook.connected.current === true) {
                 stompWebSocketHook.unsubscribe("/topic/lobbies");
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected]);
+    }, [stompWebSocketHook.connected.current]);
 
+    // websocket message interpretation
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (
-            messagesLength > 0 &&
-            stompWebSocketHook.messages[messagesLength - 1] !== undefined
-        ) {
-            const lobbyDataRAW =
-                stompWebSocketHook.messages[messagesLength - 1];
-            if (Array.isArray(lobbyDataRAW))
-                setLobbies(lobbyDataRAW.map((lobby: any) => new Lobby(lobby)));
+        if (messagesLength > 0) {
+            const messagesList = stompWebSocketHook.messages;
+            messagesList.forEach((message) => {
+                console.log("processing...")
+                if (message.instruction === "update_lobby_list")
+                    setLobbies(message.data.map((lobby: any) => new Lobby(lobby)));
+            });
+            stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
 
     // Allows selection / deselection
     const selectLobby = (lobby: Lobby) => {
         setSelectedLobby((prevSelectedLobby) =>
-            prevSelectedLobby === lobby ? null : lobby
+            prevSelectedLobby === lobby ? null : lobby,
         );
         if (lobby === selectedLobby) {
             setLobbyCode("");
@@ -111,11 +111,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 const requestBody = {};
                 const config = { headers: { userToken: userToken } };
-                const response = await api.post(
-                    "/lobbies/" + lobbyCode + "/players",
-                    requestBody,
-                    config
-                );
+                const response = await api.post("/lobbies/" + lobbyCode + "/players", requestBody, config);
                 localStorage.setItem("playerToken", response.data.playerToken);
                 localStorage.setItem("playerId", response.data.playerId);
                 localStorage.setItem("lobbyCode", lobbyCode);
@@ -130,7 +126,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         if (!checkLogin()) {
             setCreateWithoutAccount(true);
             setTimeout(() => setCreateWithoutAccount(false), 2000);
-            
+
             return;
         }
         try {
@@ -236,7 +232,7 @@ LobbyOverview.propTypes = {
         sendMessage: PropTypes.func.isRequired,
         messages: PropTypes.array.isRequired,
         resetMessagesList: PropTypes.func.isRequired,
-        connected: PropTypes.bool.isRequired,
+        connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
     }).isRequired,
 };

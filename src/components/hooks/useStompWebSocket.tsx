@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
 const useStompWebSocket = (client) => {
-    const [connected, setConnected] = useState(false);
+    const connected = useRef(false);
     const [messages, setMessages] = useState([]);
     const subscriptionsRef = useRef({});
 
     useEffect(() => {
 
         client.current.onConnect = function(frame) {
-            setConnected(true);
+            connected.current = true;
             console.log("Connected: ", frame);
         };
 
         client.current.onWebSocketClose = function(e) {
-            setConnected(false);
+            connected.current = false;
             subscriptionsRef.current = {};
             console.log("Socket closed: ", e);
         };
@@ -40,7 +40,11 @@ const useStompWebSocket = (client) => {
                 try {
                     const receivedMessage = JSON.parse(message.body);
                     console.log("new message received:", receivedMessage);
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    if (receivedMessage.instruction !== null) {
+                        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    } else {
+                        console.error("received message does not contain an instruction");
+                    }
                 } catch (e) {
                     console.error("error when parsing the message: ", message.body);
                 }

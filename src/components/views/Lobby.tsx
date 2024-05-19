@@ -145,14 +145,15 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         if (lobby.publicAccess) setPublicA(lobby.publicAccess);
     }, [lobby]);
 
+    // websocket subscription
     useEffect(() => {
-        if (stompWebSocketHook.connected === true) {
+        if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}`);
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}/game`);
         }
 
         return () => {
-            if (stompWebSocketHook.connected === true) {
+            if (stompWebSocketHook.connected.current === true) {
                 stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbycode}/game`
@@ -160,24 +161,25 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected]);
+    }, [stompWebSocketHook.connected.current]);
 
+    // websocket message interpretation
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (
-            messagesLength > 0 &&
-            stompWebSocketHook.messages[messagesLength - 1] !== undefined
-        ) {
-            const newObject = stompWebSocketHook.messages[messagesLength - 1];
-            const newLobbyData = new Lobby(newObject);
-            if (newLobbyData.code !== null) setLobby(newLobbyData);
-            if (newObject.instruction === "start") {
-                navigate("/lobby/game");
-            }
-            if (newObject.instruction === "kick") {
-                console.log("kicked because: ", newObject.reason); // replace with showing message
-                kick();
-            }
+        if (messagesLength > 0) {
+            const messagesList = stompWebSocketHook.messages;
+            messagesList.forEach((message) => {
+                if (message.instruction === "update_lobby") {
+                    setLobby(new Lobby(message.data));
+                }
+                if (message.instruction === "start") {
+                    navigate("/lobby/game");
+                }
+                if (message.instruction === "kick") {
+                    console.log("kicked because: ", message.reason); // replace with showing message
+                    kick();
+                }
+            });
         }
     }, [stompWebSocketHook.messages]);
 
@@ -421,7 +423,7 @@ LobbyPage.propTypes = {
         sendMessage: PropTypes.func.isRequired,
         messages: PropTypes.array.isRequired,
         resetMessagesList: PropTypes.func.isRequired,
-        connected: PropTypes.bool.isRequired,
+        connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
     }).isRequired,
 };
