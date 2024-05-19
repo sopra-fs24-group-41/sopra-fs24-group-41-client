@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getDomain } from "./getDomain";
 import ErrorPopup from "../components/popup-ui/ErrorPopup";
-import React, { createContext, useContext, useState } from "react";
+import React, {createContext, useContext, useMemo, useState} from "react";
 import PropTypes from "prop-types";
 
 export const api = axios.create({
@@ -54,8 +54,10 @@ export const ErrorProvider = ({ children }) => {
 
     const resetError = () => setErrorInfo(null);
 
+    const error = useMemo(() => ({ handleError, resetError }), []);
+
     return (
-        <ErrorContext.Provider value={{ handleError, resetError }}>
+        <ErrorContext.Provider value={error}>
             {children}
             {errorInfo && <ErrorPopup ErrorInfo={errorInfo} resetError={resetError} />}
         </ErrorContext.Provider>
