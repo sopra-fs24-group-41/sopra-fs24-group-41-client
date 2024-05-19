@@ -72,7 +72,6 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         if (messagesLength > 0) {
             const messagesList = stompWebSocketHook.messages;
             messagesList.forEach((message) => {
-                console.log("processing...")
                 if (message.instruction === "update_lobby_list")
                     setLobbies(message.data.map((lobby: any) => new Lobby(lobby)));
             });
