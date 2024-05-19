@@ -16,76 +16,70 @@
     padding-right: 2em;
     padding-left: 2em;
     padding-bottom: 2em;
-    max-height: 640px;
+    max-height: 640px;;
+
   }
 
 
   &.list {
-    padding: 0;
-    margin: 0;;
-    overflow-y: auto;
-    width: auto;
-    list-style: none;
+    padding-top: 1.5em;
+    display: flex;
     flex-direction: column;
-    @include center;
+    align-items: center;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
   }
 }
 
 .achievement {
+  padding: 0;
   margin-bottom: 0.5em;
   background: lighten($background, 20);
   float: left;
-  padding: 2.5em;
   border-radius: $borderRadius;
   display: flex;
-  flex-direction: row; // Changed from column to row
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: row;
   margin-left: 20px;
   margin-right: 20px;
-  max-width: 450px; // Set a maximum width
-  flex-wrap: wrap; // allow
+  max-width: 450px;
+  flex-wrap: nowrap;
 
-
-  p{
-    color: rgb(44, 45, 46);
-    text-align: left;
-    padding: 0;
+  &.details{
+    flex: 1;
     margin: 0;
-    flex: 1 1 auto;
+    padding: 0;
+    flex-direction: column;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 350px;
   }
+
 
   &.title {
     color: rgb(44, 45, 46);
     padding: 0;
-    min-width: 300px;
 
   }
   &.description {
     color: $textColor;
     padding: 0;
-    flex: 1 1 auto;
-
   }
 
   &.unlocked {
     color: gold;
     padding: 8px;
-    text-align: left;
-    word-wrap: break-word;
-
-
-
   }
  
   &.locked {
     filter: grayscale(100%);
     opacity: 50%;
     padding: 8px;
-    word-wrap: break-word;
-    text-align: left;
-    display: flex;
     color: transparent;
     text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
     img {
@@ -96,8 +90,6 @@
   }
   
   &.icon {
-    position: relative;
-    flex: 0 0 auto;
     max-width: 80px;
     max-height: 80px;
     margin: 0;

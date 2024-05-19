@@ -22,7 +22,6 @@ const Profile = () => {
     const [editError, setEditError] = useState(false);
     const [editErrorMsg, setEditErrorMsg] = useState(" ");
 
-
     useEffect(() => {
         const fetchData = async () => {
             try {
