@@ -3,7 +3,7 @@ import "styles/views/Result.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import IMAGES from "../../assets/images/index1.js";
 import { useNavigate } from "react-router-dom";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import Player from "../../models/Player.js";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
@@ -23,6 +23,7 @@ const Result = ({ stompWebSocketHook }) => {
     const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
     const [resultStatus, setResultStatus] = useState<boolean>(false);
     const [pID, setPID] = useState();
+    const { handleError } = useError();
 
     useEffect(() => {
         const fetchPlayer = async () => {

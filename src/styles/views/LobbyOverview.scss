@@ -8,6 +8,7 @@
  */
 
 .lobbyoverview {
+    margin-top: 0;
     &.container {
         z-index: 1;
         background: $background;
@@ -36,9 +37,14 @@
         justify-content: center;
     }
 
-    & p,
-    h2 {
+    & p {
         margin: 0.5em 0;
+        text-align: center;
+    }
+
+    & h2 {
+        margin: 0.5em 0;
+        font-size:30px;
     }
 
     @media only screen and (max-width: 768px) {
@@ -109,6 +115,14 @@
 
         }
     }
+}
+
+.error-message-lobby-ingame {
+    min-height: 20px;
+    color:rgb(151, 0, 0);
+    right: 30px;
+    margin-top: -10px;
+    text-align: center;
 }
 
 .container-wrapper {

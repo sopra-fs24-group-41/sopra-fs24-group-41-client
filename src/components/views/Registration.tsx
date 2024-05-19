@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import User from "models/User";
 import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
@@ -66,7 +66,6 @@ const Registration = () => {
         } catch (error) {
             setRegisterErrorMsg(error.response.data.message);
             setRegisterError(true);
-            handleError(error);
         }
     };
 

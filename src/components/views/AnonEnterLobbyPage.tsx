@@ -3,9 +3,10 @@ import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import "styles/views/AnonEnterLobby.scss";
 import Lobby from "../../models/Lobby.js";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
+
 
 const FormField = (props) => {
     return (
@@ -35,6 +36,7 @@ const AnonEnterLobbyPage = () => {
     const lobbyCode = params.lobbycode;
     const [lobby, setLobby] = useState<Lobby[]>([]);
     const [playerName, setPlayerName] = useState<String>("");
+    const { handleError } = useError();
 
     useEffect(() => {
         const fetchLobby = async () => {
@@ -101,7 +103,7 @@ const AnonEnterLobbyPage = () => {
 
     return (
         <div className="container-wrapper">
-            <BaseContainer className="lobbyoverview container">
+            <BaseContainer className="base container">
                 <h2>Currently joining {lobby.name} as an anonymous user</h2>
                 <div className="player input-container">
                     Enter a playername you want to be represented as:

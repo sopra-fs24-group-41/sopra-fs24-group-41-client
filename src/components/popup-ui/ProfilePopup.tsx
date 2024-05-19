@@ -3,10 +3,11 @@ import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 
 const ProfilePopup = () => {
     const navigate = useNavigate();
+    const { handleError } = useError();
 
     const doLogout = async () => {
         try {
@@ -22,6 +23,7 @@ const ProfilePopup = () => {
                 alert(`Something went wrong during the logout: \n${handleError(error, navigate)}`);
             }
             localStorage.removeItem("userToken");
+            localStorage.removeItem("userId")
             window.location.reload();
         }
     };

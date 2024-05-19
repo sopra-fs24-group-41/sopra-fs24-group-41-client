@@ -4,7 +4,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
 import WordBoard from "./WordBoard";
 import PlayerList from "./PlayerList";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
@@ -33,6 +33,7 @@ const Game = ({ stompWebSocketHook }) => {
     const [quitPopup, setQuitPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
     const [isLoading, setIsLoading] = useState(false);
+    const { handleError } = useError();
 
 
     const popupMessages = {

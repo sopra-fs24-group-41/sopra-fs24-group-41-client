@@ -4,13 +4,14 @@ import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/QuitPopup.scss";
 import { LobbyContext } from "../views/Lobby";
 import { GameContext } from "components/views/GameBoard/Game";
-import { api, handleError } from "../../helpers/api.js";
-import { useNavigate, useParams } from "react-router-dom";
+import { api, useError } from "../../helpers/api.js";
+import { useNavigate } from "react-router-dom";
 
 
 const QuitPopup = () => {
 
     const navigate = useNavigate();
+    const { handleError } = useError();
 
 
     const Quit = async () => {
@@ -26,6 +27,7 @@ const QuitPopup = () => {
         } catch (error) {
             handleError(error, navigate);
             alert("Something went wrong on the server side, please try again");
+            navigate("/lobbyoverview")
         }
     };
     

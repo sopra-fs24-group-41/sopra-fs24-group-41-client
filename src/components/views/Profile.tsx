@@ -4,9 +4,9 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import "styles/views/Profile.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 import ProfileIcon from "components/ui/ProfileIcon";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import User from "models/User";
 
 const Profile = () => {
@@ -21,6 +21,7 @@ const Profile = () => {
     });
     const [editError, setEditError] = useState(false);
     const [editErrorMsg, setEditErrorMsg] = useState(" ");
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,7 +71,6 @@ const Profile = () => {
 
             return true;
         } catch (error) {
-            handleError(error, navigate);
             setEditError(true);
             setEditErrorMsg(error.response.data.message);
 

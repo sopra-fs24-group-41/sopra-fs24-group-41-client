@@ -7,14 +7,10 @@ import Lobby from "../../models/Lobby.js";
 import Icon from "../ui/Icon";
 import LoginRegister from "components/popup-ui/LoginRegister";
 import ProfilePopup from "components/popup-ui/ProfilePopup";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 
-const LobbyItem = ({
-    lobby,
-    onSelect,
-    isSelected,
-}: {
+const LobbyItem = ({lobby, onSelect, isSelected}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
@@ -38,6 +34,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const [lobbyCode, setLobbyCode] = useState<string>(null);
     const userToken = localStorage.getItem("userToken");
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
+    const { handleError, resetError } = useError();
+    const [lobbyIngameErrorMsg, setlobbyIngameErrorMsg] = useState("");
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -103,6 +101,13 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const joinLobby = async () => {
         if (!checkLogin()) {
             try {
+                const lobby = await api.get("/lobbies/" + lobbyCode);
+                if (lobby.data.status !== "PREGAME") {
+                    setlobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
+                    setTimeout(() => setlobbyIngameErrorMsg(""), 3000)
+
+                    return
+                }
                 navigate("/lobby/" + lobbyCode + "/anonymous");
             } catch (error) {
                 handleError(error, navigate);
@@ -130,7 +135,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         if (!checkLogin()) {
             setCreateWithoutAccount(true);
             setTimeout(() => setCreateWithoutAccount(false), 2000);
-            
+
             return;
         }
         try {
@@ -154,6 +159,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         content = (
             <div className="lobbyoverview">
                 <ul className="lobbyoverview lobby-list">
+
                     {lobbies.map((lobby: Lobby) => (
                         <li key={lobby.code}>
                             <LobbyItem
@@ -164,6 +170,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                         </li>
                     ))}
                 </ul>
+                <p className="error-message-lobby-ingame">
+                    {lobbyIngameErrorMsg}
+                </p>
                 <div>
                     <p> Or enter a lobby code: </p>
                     <form>
@@ -176,6 +185,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                             onChange={(lobbyCode) => {
                                 setLobbyCode(lobbyCode.target.value);
                                 setSelectedLobby(null);
+                                resetError();
                             }}
                             onSubmit={joinLobby}
                         />
@@ -218,11 +228,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 </BaseContainer>
 
                 {loginRegisterPopup &&
-                    localStorage.getItem("userToken") === null && (
-                    <LoginRegister />)}
+                    localStorage.getItem("userToken") === null && (<LoginRegister />)}
                 {loginRegisterPopup &&
-                    localStorage.getItem("userToken") !== null && (
-                    <ProfilePopup />)}
+                    localStorage.getItem("userToken") !== null && (<ProfilePopup />)}
             </div>
             <Icon onClick={iconClick} wiggle={createWithoutAccount} />
         </div>

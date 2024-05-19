@@ -9,7 +9,7 @@ import CopyButton from "../ui/CopyButton";
 import Player from "../../models/Player.js";
 import Lobby from "../../models/Lobby.js";
 import Gamemode from "../../models/GameMode.js";
-import { api, handleError } from "../../helpers/api.js";
+import { api, useError } from "../../helpers/api.js";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
@@ -107,11 +107,15 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [ownerMode, setOwnerMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
+    const [originalLobbyname, setOriginalLobbyname] = useState("");
     const [publicA, setPublicA] = useState();
     const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
+    const { handleError } = useError();
     const navigate = useNavigate();
     const params = useParams();
     const lobbycode = params.lobbycode;
+    const [editError, setEditError] = useState(false);
+    const { resetError } = useError();
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -202,8 +206,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         };
         try {
             await api.put(`/lobbies/${lobbycode}`, body, config);
-        } catch (e) {
-            handleError(e);
+
+            return true;
+        } catch (error) {
+            handleError(error);
+            setEditError(true);
+            
+            return false;
         }
     };
 
@@ -290,10 +299,18 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         </div>
     );
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (isEditing) {
-            updateLobby(lobbyname, null, null, null);
-            setIsEditing(false);
+            const updateSuccessful = await updateLobby(
+                lobbyname,
+                null,
+                null,
+                null
+            );
+            if (updateSuccessful) {
+                setOriginalLobbyname(lobbyname);
+                setIsEditing(false);
+            }
         } else {
             setIsEditing(true);
         }
@@ -303,10 +320,12 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         if (isEditing) {
             return (
                 <input
-                    className="input-css"
+                    className={`input-css ${editError ? "error" : ""}`}
                     value={lobbyname}
                     onChange={(e) => {
                         setLobbyname(e.target.value);
+                        setEditError(false);
+                        resetError();
                     }}
                 />
             );
