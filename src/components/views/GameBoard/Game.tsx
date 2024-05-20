@@ -126,6 +126,7 @@ const Game = ({ stompWebSocketHook }) => {
                     setOtherPlayers(foundOtherPlayers);
                 }
             });
+            stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
 

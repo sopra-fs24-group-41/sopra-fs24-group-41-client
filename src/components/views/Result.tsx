@@ -120,6 +120,7 @@ const Result = ({ stompWebSocketHook }) => {
                     kick();
                 }
             });
+            stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
 

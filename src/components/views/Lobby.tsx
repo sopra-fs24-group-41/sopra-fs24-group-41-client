@@ -184,6 +184,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     kick();
                 }
             });
+            stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
 
