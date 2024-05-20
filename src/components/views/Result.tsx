@@ -88,14 +88,15 @@ const Result = ({ stompWebSocketHook }) => {
         navigate("/lobbyoverview");
     };
 
+    // websocket subscription
     useEffect(() => {
-        if (stompWebSocketHook.connected === true) {
+        if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}`);
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
         }
 
         return () => {
-            if (stompWebSocketHook.connected === true) {
+            if (stompWebSocketHook.connected.current === true) {
                 stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}`);
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbyCode}/game`
@@ -103,22 +104,22 @@ const Result = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected]);
+    }, [stompWebSocketHook.connected.current]);
 
+    // websocket message interpretation
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
-        if (
-            messagesLength > 0 &&
-            stompWebSocketHook.messages[messagesLength - 1] !== undefined
-        ) {
-            const newObject = stompWebSocketHook.messages[messagesLength - 1];
-            if (newObject.instruction === "start") {
-                navigate("/lobby/game");
-            }
+        if (messagesLength > 0) {
+            const messagesList = stompWebSocketHook.messages;
+            messagesList.forEach((message) => {
+                if (message.instruction === "start") {
+                    navigate("/lobby/game");
+                }
 
-            if (newObject.instruction === "kick") {
-                kick();
-            }
+                if (message.instruction === "kick") {
+                    kick();
+                }
+            });
         }
     }, [stompWebSocketHook.messages]);
 
@@ -177,7 +178,7 @@ Result.propTypes = {
         sendMessage: PropTypes.func.isRequired,
         messages: PropTypes.array.isRequired,
         resetMessagesList: PropTypes.func.isRequired,
-        connected: PropTypes.bool.isRequired,
+        connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
     }).isRequired,
 };
