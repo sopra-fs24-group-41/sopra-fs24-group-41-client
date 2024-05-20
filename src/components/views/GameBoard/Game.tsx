@@ -82,6 +82,7 @@ const Game = ({ stompWebSocketHook }) => {
     useEffect(() => {
         fetchPlayer();
         fetchOtherPlayers();
+        lobbyOwner();
     }, []);
 
     // websocket subscription
@@ -182,7 +183,6 @@ const Game = ({ stompWebSocketHook }) => {
     }
 
     const lobbyOwner = async () => {
-
         try {
             const config = {
                 headers: { userToken: localStorage.getItem("userToken") },
