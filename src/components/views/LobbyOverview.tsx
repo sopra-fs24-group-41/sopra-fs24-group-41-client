@@ -62,7 +62,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected.current]);
+    }, [stompWebSocketHook.connectedTrigger]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -241,6 +241,7 @@ LobbyOverview.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
+        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 

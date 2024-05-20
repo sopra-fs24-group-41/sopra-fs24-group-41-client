@@ -146,7 +146,7 @@ const Game = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected.current]);
+    }, [stompWebSocketHook.connectedTrigger]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -273,6 +273,7 @@ Game.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
+        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 
