@@ -143,6 +143,23 @@ const Game = ({ stompWebSocketHook }) => {
         navigate("/lobbyoverview");
     };
 
+
+    useEffect(() => {
+
+        const handleTabClose = async () => {
+            const config = {
+                headers: {playerToken: playerToken},
+            };
+            try {
+                await api.delete("/lobbies/" + lobbyCode + "/games", config);
+            } catch (error) {
+                handleError(error);
+                navigate("/lobbies/" + lobbyCode);
+            }
+        }
+        window.addEventListener("beforeunload", handleTabClose);
+    }, []);
+
     const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
         let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
         try {

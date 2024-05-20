@@ -113,7 +113,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const { handleError } = useError();
     const navigate = useNavigate();
     const params = useParams();
-    const lobbycode = params.lobbycode;
+    const lobbyCode = params.lobbycode;
     const [editError, setEditError] = useState(false);
     const { resetError } = useError();
 
@@ -121,7 +121,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         // Fetch lobby and players data
         const fetchLobbyAndPlayers = async () => {
             try {
-                const response = await api.get("/lobbies/" + lobbycode);
+                const response = await api.get("/lobbies/" + lobbyCode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
                 if (
@@ -152,15 +152,15 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     // websocket subscription
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}`);
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}/game`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
         }
 
         return () => {
             if (stompWebSocketHook.connected.current === true) {
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}`);
                 stompWebSocketHook.unsubscribe(
-                    `/topic/lobbies/${lobbycode}/game`
+                    `/topic/lobbies/${lobbyCode}/game`
                 );
             }
             stompWebSocketHook.resetMessagesList();
@@ -208,13 +208,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             gameTime: gameTime,
         };
         try {
-            await api.put(`/lobbies/${lobbycode}`, body, config);
+            await api.put(`/lobbies/${lobbyCode}`, body, config);
 
             return true;
         } catch (error) {
             handleError(error);
             setEditError(true);
-            
+
             return false;
         }
     };
@@ -243,7 +243,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             },
         };
         try {
-            await api.post(`/lobbies/${lobbycode}/games`, {}, config);
+            await api.post(`/lobbies/${lobbyCode}/games`, {}, config);
         } catch (error) {
             handleError(error, navigate);
         }
