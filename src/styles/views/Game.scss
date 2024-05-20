@@ -235,9 +235,10 @@
 
   }
 
-.spinner-pos {
+.spinner-css {
   position: absolute;
   padding: 0.5em;
-  top: 0;
-  left: 0;
+  margin-left: 20px;
+  margin-top: 130px;
+  scale: 0.8;
 }

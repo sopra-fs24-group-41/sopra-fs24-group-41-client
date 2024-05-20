@@ -231,15 +231,13 @@ const Game = ({ stompWebSocketHook }) => {
             )}
             <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
-                {isLoading ? (
-                    <div className="spinner-pos">
-                        <RotateSpinner />
-                    </div>
-                ) : null}
+
+
                 <playerContext.Provider value={playerValue}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
                             <TargetWord />
+                            {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
                                 <GameContext.Provider value={quitPopupValue}>
