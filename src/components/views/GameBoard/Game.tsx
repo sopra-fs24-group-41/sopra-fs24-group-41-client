@@ -151,7 +151,8 @@ const Game = ({ stompWebSocketHook }) => {
                 headers: {playerToken: playerToken},
             };
             try {
-                await api.delete("/lobbies/" + lobbyCode + "/games", config);
+                if (isLobbyOwner()) { await api.delete("/lobbies/" + lobbyCode + "/games", config); }
+                else { await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config); }
             } catch (error) {
                 handleError(error);
                 navigate("/lobbies/" + lobbyCode);
@@ -181,6 +182,7 @@ const Game = ({ stompWebSocketHook }) => {
             return resultPlayerWord;
         } catch (error) {
             handleError(error, navigate);
+            kick();
         } finally {
             clearTimeout(loadingTimeoutId);
             setIsLoading(false);

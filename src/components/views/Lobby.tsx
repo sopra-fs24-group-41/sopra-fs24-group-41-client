@@ -188,6 +188,27 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    useEffect(() => {
+        const playerId = localStorage.getItem("playerId");
+        const playerToken = localStorage.getItem("playerToken");
+        const handleTabClose = async () => {
+            const config = {
+                headers: {playerToken: playerToken},
+            };
+            try {
+                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
+            } catch (error) {
+                handleError(error);
+                navigate("/lobbies/" + lobbyCode);
+            }
+        }
+        window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
+    }, []);
+
     const updateLobby = async (
         name: string,
         publicAccess: boolean,
