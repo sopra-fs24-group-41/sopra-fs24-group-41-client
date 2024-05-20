@@ -9,7 +9,7 @@ import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import { Button } from "../../ui/Button";
+import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
 import { RotateSpinner } from "components/ui/RotateSpinner";
@@ -222,6 +222,33 @@ const Game = ({ stompWebSocketHook }) => {
         setQuitPopup((prevState) => !prevState);
     };
 
+    const handlePrematureEnd = async () => {
+        // Ending a game prematurely, has to return all users back to lobby and set the lobby status back to Pregame
+        // all users are navigated back to lobby / gamecode
+        // statistics are not updated
+        const config = {
+            headers: { playerToken: playerToken },
+        };
+        try {
+            const response = await api.delete("/lobbies/" + lobbyCode + "/games", config);
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
+    const lobbyOwner = async () => {
+
+        try {
+            console.log("logging get request to lobby")
+            const response = await api.get("/lobbies/" + lobbyCode);
+            console.log(response)
+            console.log("above is response")
+        } catch (error) {
+            handleError(error);
+        }
+
+    }
+
     return (
         <div>
             {achievementPopup && (
@@ -238,6 +265,11 @@ const Game = ({ stompWebSocketHook }) => {
                         <BaseContainer className="game horizontal-container">
                             <TargetWord />
                             {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
+                          <Button
+                            className="game-end-button"
+                            onClick={() => handlePrematureEnd()}
+                            disabled={!lobbyOwner()}
+                          >End Game</Button>
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
                                 <GameContext.Provider value={quitPopupValue}>

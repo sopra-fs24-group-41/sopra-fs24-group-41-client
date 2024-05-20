@@ -20,6 +20,9 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
         onClick={() => onSelect(lobby)}
     >
         <label className="lobby lobby-name">{lobby.name}</label>
+        <div>
+            {lobby.status === "PREGAME" ? "" : "❌"}
+        </div>
     </button>
 );
 LobbyItem.propTypes = {
