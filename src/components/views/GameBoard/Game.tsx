@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useMemo, useRef } from "react";
+import React, { useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
@@ -13,7 +13,6 @@ import { Button } from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
 import { RotateSpinner } from "components/ui/RotateSpinner";
-import specialQueue from "../../../helpers/specialQueue";
 import Achievement from "models/Achievement";
 
 export const playerContext = createContext(new Player());
@@ -35,12 +34,20 @@ const Game = ({ stompWebSocketHook }) => {
     const [achievementPopup, setAchievementPopup] = useState(false);
     const [achievementMsg, setAchievementMsg] = useState(null);
     const [popupClass, setPopupClass] = useState("");
-    const playerValue = useMemo(() => ({ player, setPlayer }), [player, setPlayer]);
-    const quitPopupValue = useMemo(() => ({ quitPopup, setQuitPopup }), [quitPopup, setQuitPopup]);
-    const otherPlayersValue = useMemo(() => ({ otherPlayers, setOtherPlayers }), [otherPlayers, setOtherPlayers]);
+    const playerValue = useMemo(
+        () => ({ player, setPlayer }),
+        [player, setPlayer]
+    );
+    const quitPopupValue = useMemo(
+        () => ({ quitPopup, setQuitPopup }),
+        [quitPopup, setQuitPopup]
+    );
+    const otherPlayersValue = useMemo(
+        () => ({ otherPlayers, setOtherPlayers }),
+        [otherPlayers, setOtherPlayers]
+    );
 
     const { handleError } = useError();
-
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
@@ -85,38 +92,34 @@ const Game = ({ stompWebSocketHook }) => {
         }
     };
 
-    const achievementQueue = useRef(new specialQueue());
+    const [achievementQueue, setAchievementQueue] = useState([]);
     const [processingAchievement, setProcessingAchievement] = useState(false);
 
     const enqueueAchievement = (name) => {
-        achievementQueue.current.enqueue(name);
-        processQueue();  // Process queue immediately after enqueuing
+        setAchievementQueue((prevQueue) => [...prevQueue, name]);
     };
 
     const processQueue = () => {
-        if (!achievementQueue.current.isEmpty() && !processingAchievement) {
-            setProcessingAchievement(true);
-            const achievement = achievementQueue.current.dequeue();
-            setAchievementMsg(achievement);
-            setAchievementPopup(true);
-            setPopupClass("show");
-
+        setProcessingAchievement(true);
+        const achievement = achievementQueue[0];
+        setAchievementQueue((prevQueue) => prevQueue.slice(1));
+        setAchievementMsg(achievement);
+        setAchievementPopup(true);
+        setPopupClass("show");
+        setTimeout(() => {
+            setPopupClass("hide");
             setTimeout(() => {
-                setPopupClass("hide");
-                setTimeout(() => {
-                    setAchievementPopup(false);
-                    setProcessingAchievement(false);
-                }, 1000); // Wait for hide animation to complete
-            }, 3000); // Display message for 3 seconds
-        }
+                setAchievementPopup(false);
+                setProcessingAchievement(false);
+            }, 1000); // Wait for hide animation to complete
+        }, 3000); // Display message for 3 seconds
     };
 
     useEffect(() => {
-        if (!processingAchievement && !achievementQueue.current.isEmpty()) {
+        if (achievementQueue.length !== 0 && processingAchievement === false) {
             processQueue();
         }
-    }, [processingAchievement]);
-
+    }, [achievementQueue, processingAchievement]);
 
     useEffect(() => {
         fetchPlayer();
@@ -127,7 +130,9 @@ const Game = ({ stompWebSocketHook }) => {
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
-            stompWebSocketHook.subscribe(`/topic/achievements/${localStorage.getItem("userId")}`);
+            stompWebSocketHook.subscribe(
+                `/topic/achievements/${localStorage.getItem("userId")}`
+            );
         }
 
         return () => {
@@ -157,18 +162,20 @@ const Game = ({ stompWebSocketHook }) => {
                     renderPopupMessage(popupMessages[message.data.time]);
                 }
 
-                if(message.instruction === "achievement") {
+                if (message.instruction === "achievement") {
                     let receivedAchievement = new Achievement(message.data);
                     enqueueAchievement(receivedAchievement.title);
                 }
 
                 if (message.instruction === "kick") {
-                    console.log("kicked because: ", message.reason) // replace with showing message
+                    console.log("kicked because: ", message.reason); // replace with showing message
                     kick();
                 }
 
                 if (message.instruction === "update_players") {
-                    let foundOtherPlayers = message.data.map((p) => new Player(p));
+                    let foundOtherPlayers = message.data.map(
+                        (p) => new Player(p)
+                    );
                     foundOtherPlayers.sort((a, b) => b.points - a.points);
                     setOtherPlayers(foundOtherPlayers);
                 }
@@ -246,7 +253,9 @@ const Game = ({ stompWebSocketHook }) => {
                             <WordBoard playFunction={play} />
                         </BaseContainer>
                         <BaseContainer className="player-list container">
-                            <otherPlayersContext.Provider value={otherPlayersValue}>
+                            <otherPlayersContext.Provider
+                                value={otherPlayersValue}
+                            >
                                 <PlayerList />
                             </otherPlayersContext.Provider>
                         </BaseContainer>
