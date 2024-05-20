@@ -14,6 +14,7 @@ import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
 import { RotateSpinner } from "components/ui/RotateSpinner";
 import specialQueue from "../../../helpers/specialQueue";
+import Achievement from "models/Achievement";
 
 export const playerContext = createContext(new Player());
 
@@ -154,6 +155,11 @@ const Game = ({ stompWebSocketHook }) => {
 
                 if (message.instruction === "update_timer") {
                     renderPopupMessage(popupMessages[message.data.time]);
+                }
+
+                if(message.instruction === "achievement") {
+                    let receivedAchievement = new Achievement(message.data);
+                    enqueueAchievement(receivedAchievement.title);
                 }
 
                 if (message.instruction === "kick") {
