@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
+import AbortGamePopup from "../../popup-ui/AbortGamePopup";
 import Typewriter from "../../popup-ui/Typewriter";
 import {RotateSpinner} from "components/ui/RotateSpinner";
 
@@ -30,6 +31,7 @@ const Game = ({ stompWebSocketHook }) => {
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
     const [quitPopup, setQuitPopup] = useState(false);
+    const [abortGamePopup, setAbortGamePopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
     const [isLoading, setIsLoading] = useState(false);
     const { handleError } = useError();
@@ -111,6 +113,10 @@ const Game = ({ stompWebSocketHook }) => {
                     navigate("/result/");
                 }
 
+                if (message.instruction === "abort_game") {
+                    navigate("/lobbies/" + lobbyCode);
+                }
+
                 if (message.instruction === "update_timer") {
                     renderPopupMessage(popupMessages[message.data.time]);
                 }
@@ -168,18 +174,8 @@ const Game = ({ stompWebSocketHook }) => {
         setQuitPopup((prevState) => !prevState);
     };
 
-    const handlePrematureEnd = async () => {
-        // Ending a game prematurely, has to return all users back to lobby and set the lobby status back to Pregame
-        // all users are navigated back to lobby / gamecode
-        // statistics are not updated
-        const config = {
-            headers: { playerToken: playerToken },
-        };
-        try {
-            await api.delete("/lobbies/" + lobbyCode + "/games", config);
-        } catch (error) {
-            handleError(error);
-        }
+    const handleAbort = () => {
+        setAbortGamePopup((prevState) => !prevState);
     }
 
     const lobbyOwner = async () => {
@@ -210,9 +206,16 @@ const Game = ({ stompWebSocketHook }) => {
                             <TargetWord></TargetWord>
                             <Button
                                 className="game-end-button"
-                                onClick={() => handlePrematureEnd()}
+                                onClick={() => handleAbort()}
                                 disabled={!isLobbyOwner}
                             >End Game</Button>
+                            {abortGamePopup && (
+                                <GameContext.Provider
+                                    value={{ abortGamePopup, setAbortGamePopup }}
+                                >
+                                    <AbortGamePopup />
+                                </GameContext.Provider>
+                            )}
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
                                 <GameContext.Provider
