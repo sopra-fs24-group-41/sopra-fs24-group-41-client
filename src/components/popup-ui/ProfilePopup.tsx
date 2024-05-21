@@ -35,6 +35,7 @@ const ProfilePopup = () => {
             <div className="profilepopup profile-button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
                 <Button onClick={() => navigate("/achievements")}>Achievements</Button>{" "}
+                <Button onClick={() => navigate("/leaderboard")}>Leaderboard</Button>{" "}
                 <Button onClick={() => doLogout()}>Logout</Button>
             </div>
         </BaseContainer>

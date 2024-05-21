@@ -73,6 +73,12 @@ const gamemodes = [
         serverName: "STANDARD",
         active: true,
     },
+    {
+        name: "Daily Challenge",
+        description: "A new challenge every day.",
+        serverName: "DAILYCHALLENGE",
+        active: false,
+    },
 ];
 
 const longerdesc: { [key: string]: string } = {
@@ -82,7 +88,7 @@ const longerdesc: { [key: string]: string } = {
         "All players will get a different set of target words, the one that gets all their target words first, wins.",
     "Finite Fusion":
         "You have only a limited number of words to get the target word.",
-    Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
+    "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?",
 };
 
 export const LobbyContext = createContext();

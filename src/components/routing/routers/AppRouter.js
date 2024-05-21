@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import ServerDownPage from "../../views/ServerDownPage";
 import AnonEnterLobbyPage from "../../views/AnonEnterLobbyPage";
 import Achievements from "../../views/Achievements";
+import Leaderboard from "../../views/Leaderboard";
 
 /**
  * Main router of your application.
@@ -34,6 +35,8 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 <Route path="/profile" element={<Profile />} />
 
                 <Route path="/achievements" element={<Achievements />} />
+
+                <Route path="/leaderboard" element={<Leaderboard />} />
 
                 <Route path="/registration" element={<Registration />} />
 
