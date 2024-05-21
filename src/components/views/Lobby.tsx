@@ -19,33 +19,37 @@ const GamemodeItem = ({
     onSelect,
     isSelected,
     ownerMode,
-}: {
-    gamemode: Gamemode;
-    onSelect: (gamemode: Gamemode) => void;
-    isSelected: boolean;
-    ownerMode: boolean;
-}) => (
+  }) => (
     <div
-        className={`gamemode container${isSelected ? " selected" : ""}${
-            gamemode.active && ownerMode ? "" : " inactive"
-        }`}
-        onClick={
-            gamemode.active && ownerMode ? () => onSelect(gamemode) : undefined
-        }
+      className={`gamemode container${isSelected ? " selected" : ""}${
+        gamemode.active === true && ownerMode ? "" : " inactive"
+      }`}
+      onClick={
+        gamemode.active === true && ownerMode ? () => onSelect(gamemode) : undefined
+      }
     >
-        <div className="gamemode name">{gamemode.name}</div>
-        {isSelected ? (
-            <div className="gamemode description">
-                {longerdesc[gamemode.name]}
-            </div>
-        ) : (
-            <div className="gamemode description">{gamemode.description}</div>
-        )}
+      <div className="gamemode name">{gamemode.name}</div>
+      {isSelected ? (
+        <div className="gamemode description">
+          {longerdesc[gamemode.name]}
+        </div>
+      ) : (
+        <div className="gamemode description">
+          {gamemode.active === true
+            ? gamemode.description
+            : gamemode.active === false
+            ? "Locked"
+            : "Completed for Today"}
+        </div>
+      )}
     </div>
-);
+  );
 
 GamemodeItem.propTypes = {
     gamemode: PropTypes.object,
+    onSelect: PropTypes.func,
+    isSelected: PropTypes.bool,
+    ownerMode: PropTypes.bool,
 };
 
 const gamemodes = [
@@ -77,7 +81,7 @@ const gamemodes = [
         name: "Daily Challenge",
         description: "A new challenge every day.",
         serverName: "DAILYCHALLENGE",
-        active: false,
+        active: null,
     },
 ];
 

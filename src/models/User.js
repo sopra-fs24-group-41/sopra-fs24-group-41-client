@@ -17,10 +17,18 @@ class User {
         this.rarestWordFound = null;
         this.fastestWin = null;
         this.achievements = null;
+        this.dailyChallengeRecord = null; 
+        this.numberOfCombinations = null; 
+        this.profilePicture = null;
+
         Object.assign(this, data);
 
         if (Array.isArray(data.achievements)) {
             this.achievements = data.achievements;
+        }
+
+        if(this.dailyChallengeRecord && this.dailyChallengeRecord.numberOfCombinations){
+            this.numberOfCombinations = this.dailyChallengeRecord.numberOfCombinations;
         }
     }
 }

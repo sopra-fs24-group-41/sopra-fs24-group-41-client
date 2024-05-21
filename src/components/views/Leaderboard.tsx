@@ -1,85 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
 import "styles/views/Login.scss";
 import "styles/views/Profile.scss";
 import BaseContainer from "../ui/BaseContainer";
-import { api, useError } from "../../helpers/api";
 import User from "../../models/User";
 import PropTypes from "prop-types";
-import Achievement from "../../models/Achievement";
-import "styles/views/Achievements.scss";
+import "styles/views/Leaderboard.scss";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 
-const AchievementItem = ({ achievement }) => (
-    <div className="achievement">
-        <div className="achievement icon">
+const DummyUsers = [
+    { id: 1, username: "b001", numberOfCombinations: 20, profilePicture: "b001" },
+    { id: 2, username: "Primagen", numberOfCombinations: 60, profilePicture: "primeagen" },
+    { id: 3, username: "NeetCode", numberOfCombinations: 80, profilePicture: "neetcode" },
+    { id: 4, username: "CodeAestetic", numberOfCombinations: 69, profilePicture: "codeaesthetic" },
+    { id: 5, username: "Hyperplexed", numberOfCombinations: 42, profilePicture: "hyperplexed" },
+];
+
+const UserItem = ({ user, curr }) => (
+    <div className={user.username === curr ? "leaderboard-entry highlighted" : "leaderboard-entry"}>
+        <div className="leaderboard-entry icon">
             <img
                 src={
-                    IMAGES[achievement.profilePicture] ||
-                    ICONS[achievement.profilePicture]
+                    IMAGES[user.profilePicture] ||
+                    ICONS[user.profilePicture]
                 }
-                alt="achievement icon"
+                alt="icon"
             />
         </div>
-        <div className="achievement details">
-            <div className="achievement title">{achievement.title}</div>
-            <div className="achievement description">
-                {achievement.description}
+        <div className="leaderboard-entry details">
+            <div className="leaderboard-entry username">{user.username}</div>
+            <div className="leaderboard-entry numberOfCombinations">
+                {"Number of Combinations: " + user.numberOfCombinations}
             </div>
         </div>
     </div>
 );
 
-AchievementItem.propTypes = {
-    achievement: PropTypes.object,
+UserItem.propTypes = {
+    user: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        username: PropTypes.string.isRequired,
+        numberOfCombinations: PropTypes.number.isRequired,
+        profilePicture: PropTypes.string.isRequired,
+    }).isRequired,
+    curr: PropTypes.string.isRequired,
 };
 
-const Achievements = () => {
+const Leaderboard = () => {
     const navigate = useNavigate();
-    const [achievements, setAchievements] = useState([]);
-    const [userAchievements, setUserAchievements] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userId = localStorage.getItem("userId");
-                let response = await api.get("/users/" + userId);
-                const user = new User(response.data);
-                let responseAchievement = await api.get("/users/achievments");
-                setAchievements(responseAchievement.data);
-                setUserAchievements(user.achievements);
-            } catch (error) {
-                useError(error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const achievementFormat = (achievementX) => {
-        if (
-            userAchievements.some(
-                (achievement) => achievement.name === achievementX.name
-            )
-        ) {
-            return "achievement unlocked";
-        } else {
-            return "achievement locked";
-        }
-    };
+    const [users, setUsers] = useState(DummyUsers);
+    const [curr, setCurr] = useState("Primagen");
 
     return (
         <BaseContainer>
-            <div className="achievements container">
-                <h2>Achievements</h2>
-                <ul className="achievements list">
-                    {achievements.map((achievement: Achievement) => (
-                        <li
-                            key={achievement.id}
-                            className={achievementFormat(achievement)}
-                        >
-                            <AchievementItem achievement={achievement} />
+            <div className="leaderboard container">
+                <h2>Leaderboard</h2>
+                <ul className="leaderboard list">
+                    {users.map((user) => (
+                        <li key={user.id}>
+                            <UserItem user={user} curr={curr} />
                         </li>
                     ))}
                 </ul>
@@ -96,4 +77,4 @@ const Achievements = () => {
     );
 };
 
-export default Achievements;
+export default Leaderboard;
