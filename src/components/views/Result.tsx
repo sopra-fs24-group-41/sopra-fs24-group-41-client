@@ -127,7 +127,7 @@ const Result = ({ stompWebSocketHook }) => {
             <ul className="res-list">
                 {players.map((player: Player) => (
                     <li
-                        key={player.wordCount}
+                        key={player.id}
                         onMouseEnter={() => setSelectedPlayer(player)}
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >

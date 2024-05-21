@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
@@ -13,8 +13,8 @@ import {Button} from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import AbortGamePopup from "../../popup-ui/AbortGamePopup";
 import Typewriter from "../../popup-ui/Typewriter";
-import {RotateSpinner} from "components/ui/RotateSpinner";
-
+import { RotateSpinner } from "components/ui/RotateSpinner";
+import Achievement from "models/Achievement";
 
 export const playerContext = createContext(new Player());
 
@@ -26,7 +26,7 @@ const Game = ({ stompWebSocketHook }) => {
     const [player, setPlayer] = useState<Player>(new Player());
     const [otherPlayers, setOtherPlayers] = useState<Player[]>([]);
     const [isLobbyOwner, setIsLobbyOwner] = useState<boolean>(false);
-    const playerId = localStorage.getItem("playerId");
+    const playerId = Number(localStorage.getItem("playerId"));
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
     const navigate = useNavigate();
@@ -34,23 +34,28 @@ const Game = ({ stompWebSocketHook }) => {
     const [abortGamePopup, setAbortGamePopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
     const [isLoading, setIsLoading] = useState(false);
-    const { handleError } = useError();
+    const [achievementPopup, setAchievementPopup] = useState(false);
+    const [achievementMsg, setAchievementMsg] = useState(null);
+    const [popupClass, setPopupClass] = useState("");
+    const playerValue = useMemo(() => ({player, setPlayer}), [player, setPlayer]);
+    const quitPopupValue = useMemo(() => ({quitPopup, setQuitPopup}), [quitPopup, setQuitPopup]);
+    const otherPlayersValue = useMemo(() => ({otherPlayers, setOtherPlayers}), [otherPlayers, setOtherPlayers]);
 
+    const {handleError} = useError();
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
-        "10": "You have 10 seconds  left!",
+        "10": "You have 10 seconds left!",
         "60": "You have 1 minute left!",
         "180": "You have 3 minutes left!",
         "300": "You have 5 minutes left!",
     };
 
-
     const fetchPlayer = async () => {
         try {
             let response = await api.get(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
-                { headers: { playerToken: playerToken } }
+                {headers: {playerToken: playerToken}}
             );
             let foundPlayer = new Player(response.data);
             foundPlayer.id = playerId;
@@ -81,6 +86,35 @@ const Game = ({ stompWebSocketHook }) => {
         }
     };
 
+    const [achievementQueue, setAchievementQueue] = useState([]);
+    const [processingAchievement, setProcessingAchievement] = useState(false);
+
+    const enqueueAchievement = (name) => {
+        setAchievementQueue((prevQueue) => [...prevQueue, name]);
+    };
+
+    const processQueue = () => {
+        setProcessingAchievement(true);
+        const achievement = achievementQueue[0];
+        setAchievementQueue((prevQueue) => prevQueue.slice(1));
+        setAchievementMsg(achievement);
+        setAchievementPopup(true);
+        setPopupClass("show");
+        setTimeout(() => {
+            setPopupClass("hide");
+            setTimeout(() => {
+                setAchievementPopup(false);
+                setProcessingAchievement(false);
+            }, 1000); // Wait for hide animation to complete
+        }, 3000); // Display message for 3 seconds
+    };
+
+    useEffect(() => {
+        if (achievementQueue.length !== 0 && processingAchievement === false) {
+            processQueue();
+        }
+    }, [achievementQueue, processingAchievement]);
+
     useEffect(() => {
         fetchPlayer();
         fetchOtherPlayers();
@@ -91,6 +125,9 @@ const Game = ({ stompWebSocketHook }) => {
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
+            stompWebSocketHook.subscribe(
+                `/topic/achievements/${localStorage.getItem("userId")}`
+            );
         }
 
         return () => {
@@ -98,10 +135,13 @@ const Game = ({ stompWebSocketHook }) => {
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbyCode}/game`
                 );
+                stompWebSocketHook.unsubscribe(
+                    `/topic/achievements/${localStorage.getItem("userId")}`
+                );
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected.current]);
+    }, [stompWebSocketHook.connectedTrigger]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -121,13 +161,20 @@ const Game = ({ stompWebSocketHook }) => {
                     renderPopupMessage(popupMessages[message.data.time]);
                 }
 
+                if (message.instruction === "achievement") {
+                    let receivedAchievement = new Achievement(message.data);
+                    enqueueAchievement(receivedAchievement.title);
+                }
+
                 if (message.instruction === "kick") {
-                    console.log("kicked because: ", message.reason) // replace with showing message
+                    console.log("kicked because: ", message.reason); // replace with showing message
                     kick();
                 }
 
                 if (message.instruction === "update_players") {
-                    let foundOtherPlayers = message.data.map((p) => new Player(p));
+                    let foundOtherPlayers = message.data.map(
+                        (p) => new Player(p)
+                    );
                     foundOtherPlayers.sort((a, b) => b.points - a.points);
                     setOtherPlayers(foundOtherPlayers);
                 }
@@ -143,31 +190,57 @@ const Game = ({ stompWebSocketHook }) => {
         navigate("/lobbyoverview");
     };
 
+    const lobbyOwner = async () => {
+        try {
+            const config = {
+                headers: { userToken: localStorage.getItem("userToken") },
+            };
+            const userId = localStorage.getItem("userId")
+            if (userId === null) {return setIsLobbyOwner(false)}
+            const lobby = await api.get("/users/" + userId + "/lobby", config);
+            setIsLobbyOwner(lobby.data.owner.id === playerId);
+            console.log(isLobbyOwner)
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
 
     useEffect(() => {
 
-        const handleTabClose = async () => {
+        const handleTabClose = async (event) => {
+
             const config = {
                 headers: {playerToken: playerToken},
             };
+            event.preventDefault();
+
             try {
-                if (isLobbyOwner()) { await api.delete("/lobbies/" + lobbyCode + "/games", config); }
-                else { await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config); }
+                if (isLobbyOwner) {
+                    await api.delete("/lobbies/" + lobbyCode + "/games", config);
+                    kick();
+                } else {
+                    localStorage.clear();
+                    await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
+                }
             } catch (error) {
                 handleError(error);
-                navigate("/lobbies/" + lobbyCode);
             }
         }
         window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
     }, []);
 
-    const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+    const play = async (playerWord1, playerWord2) => {
         let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
         try {
             let response = await api.put(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
                 [playerWord1.word, playerWord2.word],
-                { headers: { playerToken: playerToken } }
+                {headers: {playerToken: playerToken}}
             );
             let responsePlayer = new Player(player);
             responsePlayer.points = response.data.points;
@@ -193,37 +266,41 @@ const Game = ({ stompWebSocketHook }) => {
         setQuitPopup((prevState) => !prevState);
     };
 
+    useEffect(() => {
+        if (achievementPopup) {
+            setPopupClass("show");
+            const timer = setTimeout(() => {
+                setPopupClass("hide");
+            }, 4 * 1000); // Change 5000 (5 seconds) to the delay you want
+
+            return () => clearTimeout(timer); // This will clear the timeout if the component unmounts before the timeout is reached
+        } else {
+            setPopupClass("");
+        }
+    }, [achievementPopup]);
+
     const handleAbort = () => {
         setAbortGamePopup((prevState) => !prevState);
     }
 
-    const lobbyOwner = async () => {
-        try {
-            const config = {
-                headers: { userToken: localStorage.getItem("userToken") },
-            };
-            const userId = localStorage.getItem("userId")
-            if (userId === null) {return setIsLobbyOwner(false)}
-            const lobby = await api.get("/users/" + userId + "/lobby", config);
-            setIsLobbyOwner(lobby.data.owner.id === Number(playerId));
-        } catch (error) {
-            handleError(error);
-        }
-    }
-
     return (
         <div>
-            <Typewriter text={remainingTime} />
+            {achievementPopup && (
+                <p className={`achievement-popup ${popupClass}`}>
+                    {achievementMsg}
+                </p>
+            )}
+            <Typewriter text={remainingTime}/>
             <BaseContainer className="game vertical-container">
                 {isLoading ? (
                     <div className="spinner-pos">
-                        <RotateSpinner />
+                        <RotateSpinner/>
                     </div>
                 ) : null}
-                <playerContext.Provider value={{ player, setPlayer }}>
+                <playerContext.Provider value={playerValue}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
-                            <TargetWord></TargetWord>
+                            <TargetWord/>
                             <Button
                                 className="game-end-button"
                                 onClick={() => handleAbort()}
@@ -231,30 +308,26 @@ const Game = ({ stompWebSocketHook }) => {
                             >End Game</Button>
                             {abortGamePopup && (
                                 <GameContext.Provider
-                                    value={{ abortGamePopup, setAbortGamePopup }}
+                                    value={{abortGamePopup, setAbortGamePopup}}
                                 >
-                                    <AbortGamePopup />
+                                    <AbortGamePopup/>
                                 </GameContext.Provider>
                             )}
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
-                                <GameContext.Provider
-                                    value={{ quitPopup, setQuitPopup }}
-                                >
-                                    <QuitPopup />
+                                <GameContext.Provider value={quitPopupValue}>
+                                    <QuitPopup/>
                                 </GameContext.Provider>
                             )}
                         </BaseContainer>
                     </BaseContainer>
                     <BaseContainer className="game horizontal-container">
                         <BaseContainer className="game container">
-                            <WordBoard playFunction={play}></WordBoard>
+                            <WordBoard playFunction={play}/>
                         </BaseContainer>
                         <BaseContainer className="player-list container">
-                            <otherPlayersContext.Provider
-                                value={{ otherPlayers, setOtherPlayers }}
-                            >
-                                <PlayerList></PlayerList>
+                            <otherPlayersContext.Provider value={otherPlayersValue}>
+                                <PlayerList/>
                             </otherPlayersContext.Provider>
                         </BaseContainer>
                     </BaseContainer>
@@ -273,6 +346,7 @@ Game.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
+        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 

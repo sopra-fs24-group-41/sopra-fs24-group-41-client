@@ -168,9 +168,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                         </li>
                     ))}
                 </ul>
-                <p className="error-message-lobby-ingame">
+                <div className="error-message-lobby-ingame">
                     {lobbyIngameErrorMsg}
-                </p>
+                </div>
                 <div>
                     <p> Or enter a lobby code: </p>
                     <form>

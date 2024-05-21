@@ -196,10 +196,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 headers: {playerToken: playerToken},
             };
             try {
+                localStorage.clear();
                 await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
             } catch (error) {
                 handleError(error);
-                navigate("/lobbies/" + lobbyCode);
             }
         }
         window.addEventListener("beforeunload", handleTabClose);
