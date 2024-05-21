@@ -203,6 +203,7 @@ const Game = ({ stompWebSocketHook }) => {
                 headers: { userToken: localStorage.getItem("userToken") },
             };
             const userId = localStorage.getItem("userId")
+            if (userId === null) {return setIsLobbyOwner(false)}
             const lobby = await api.get("/users/" + userId + "/lobby", config);
             setIsLobbyOwner(lobby.data.owner.id === Number(playerId));
         } catch (error) {
