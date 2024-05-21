@@ -22,7 +22,6 @@ const Profile = () => {
     const [editError, setEditError] = useState(false);
     const [editErrorMsg, setEditErrorMsg] = useState(" ");
 
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -32,6 +31,7 @@ const Profile = () => {
                     response.data.creationDate
                 );
                 const userdata = new User(response.data);
+                console.log(userdata);
                 setUserData(userdata);
                 setUsername(userdata.username);
                 let fav =
@@ -68,6 +68,7 @@ const Profile = () => {
             );
 
             setFavourite(favourite);
+            console.log(userData);
 
             return true;
         } catch (error) {
@@ -111,6 +112,12 @@ const Profile = () => {
 
         return null;
     };
+
+    useEffect(() => {
+        if(userData){
+            console.log(userData);
+            console.log(userData.achievements)
+        } }, [userData]);
 
     const tableData = [
         {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
@@ -9,13 +9,11 @@ import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import {Button} from "../../ui/Button";
+import { Button } from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import Typewriter from "../../popup-ui/Typewriter";
-import { Spinner } from "components/ui/Spinner";
-import { GrowSpinner } from "components/ui/GrowSpinner";
-import {RotateSpinner} from "components/ui/RotateSpinner";
-
+import { RotateSpinner } from "components/ui/RotateSpinner";
+import Achievement from "models/Achievement";
 
 export const playerContext = createContext(new Player());
 
@@ -24,8 +22,8 @@ export const otherPlayersContext = createContext([]);
 export const GameContext = createContext();
 
 const Game = ({ stompWebSocketHook }) => {
-    const [player, setPlayer] = useState<Player>(new Player());
-    const [otherPlayers, setOtherPlayers] = useState<Player[]>([]);
+    const [player, setPlayer] = useState(new Player());
+    const [otherPlayers, setOtherPlayers] = useState([]);
     const playerId = localStorage.getItem("playerId");
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
@@ -33,17 +31,31 @@ const Game = ({ stompWebSocketHook }) => {
     const [quitPopup, setQuitPopup] = useState(false);
     const [remainingTime, setRemainingTime] = useState(" ");
     const [isLoading, setIsLoading] = useState(false);
-    const { handleError } = useError();
+    const [achievementPopup, setAchievementPopup] = useState(false);
+    const [achievementMsg, setAchievementMsg] = useState(null);
+    const [popupClass, setPopupClass] = useState("");
+    const playerValue = useMemo(
+        () => ({ player, setPlayer }),
+        [player, setPlayer]
+    );
+    const quitPopupValue = useMemo(
+        () => ({ quitPopup, setQuitPopup }),
+        [quitPopup, setQuitPopup]
+    );
+    const otherPlayersValue = useMemo(
+        () => ({ otherPlayers, setOtherPlayers }),
+        [otherPlayers, setOtherPlayers]
+    );
 
+    const { handleError } = useError();
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
-        "10": "You have 10 seconds  left!",
+        "10": "You have 10 seconds left!",
         "60": "You have 1 minute left!",
         "180": "You have 3 minutes left!",
         "300": "You have 5 minutes left!",
     };
-
 
     const fetchPlayer = async () => {
         try {
@@ -80,6 +92,35 @@ const Game = ({ stompWebSocketHook }) => {
         }
     };
 
+    const [achievementQueue, setAchievementQueue] = useState([]);
+    const [processingAchievement, setProcessingAchievement] = useState(false);
+
+    const enqueueAchievement = (name) => {
+        setAchievementQueue((prevQueue) => [...prevQueue, name]);
+    };
+
+    const processQueue = () => {
+        setProcessingAchievement(true);
+        const achievement = achievementQueue[0];
+        setAchievementQueue((prevQueue) => prevQueue.slice(1));
+        setAchievementMsg(achievement);
+        setAchievementPopup(true);
+        setPopupClass("show");
+        setTimeout(() => {
+            setPopupClass("hide");
+            setTimeout(() => {
+                setAchievementPopup(false);
+                setProcessingAchievement(false);
+            }, 1000); // Wait for hide animation to complete
+        }, 3000); // Display message for 3 seconds
+    };
+
+    useEffect(() => {
+        if (achievementQueue.length !== 0 && processingAchievement === false) {
+            processQueue();
+        }
+    }, [achievementQueue, processingAchievement]);
+
     useEffect(() => {
         fetchPlayer();
         fetchOtherPlayers();
@@ -89,6 +130,9 @@ const Game = ({ stompWebSocketHook }) => {
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
             stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
+            stompWebSocketHook.subscribe(
+                `/topic/achievements/${localStorage.getItem("userId")}`
+            );
         }
 
         return () => {
@@ -96,10 +140,13 @@ const Game = ({ stompWebSocketHook }) => {
                 stompWebSocketHook.unsubscribe(
                     `/topic/lobbies/${lobbyCode}/game`
                 );
+                stompWebSocketHook.unsubscribe(
+                    `/topic/achievements/${localStorage.getItem("userId")}`
+                );
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected.current]);
+    }, [stompWebSocketHook.connectedTrigger]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -115,13 +162,20 @@ const Game = ({ stompWebSocketHook }) => {
                     renderPopupMessage(popupMessages[message.data.time]);
                 }
 
+                if (message.instruction === "achievement") {
+                    let receivedAchievement = new Achievement(message.data);
+                    enqueueAchievement(receivedAchievement.title);
+                }
+
                 if (message.instruction === "kick") {
-                    console.log("kicked because: ", message.reason) // replace with showing message
+                    console.log("kicked because: ", message.reason); // replace with showing message
                     kick();
                 }
 
                 if (message.instruction === "update_players") {
-                    let foundOtherPlayers = message.data.map((p) => new Player(p));
+                    let foundOtherPlayers = message.data.map(
+                        (p) => new Player(p)
+                    );
                     foundOtherPlayers.sort((a, b) => b.points - a.points);
                     setOtherPlayers(foundOtherPlayers);
                 }
@@ -137,7 +191,7 @@ const Game = ({ stompWebSocketHook }) => {
         navigate("/lobbyoverview");
     };
 
-    const play = async (playerWord1: PlayerWord, playerWord2: PlayerWord) => {
+    const play = async (playerWord1, playerWord2) => {
         let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
         try {
             let response = await api.put(
@@ -170,22 +224,23 @@ const Game = ({ stompWebSocketHook }) => {
 
     return (
         <div>
+            {achievementPopup && (
+                <p className={`achievement-popup ${popupClass}`}>
+                    {achievementMsg}
+                </p>
+            )}
             <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
-                {isLoading ? (
-                    <div className="spinner-pos">
-                        <RotateSpinner />
-                    </div>
-                ) : null}
-                <playerContext.Provider value={{ player, setPlayer }}>
+
+
+                <playerContext.Provider value={playerValue}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
-                            <TargetWord></TargetWord>
+                            <TargetWord />
+                            {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
-                                <GameContext.Provider
-                                    value={{ quitPopup, setQuitPopup }}
-                                >
+                                <GameContext.Provider value={quitPopupValue}>
                                     <QuitPopup />
                                 </GameContext.Provider>
                             )}
@@ -193,13 +248,13 @@ const Game = ({ stompWebSocketHook }) => {
                     </BaseContainer>
                     <BaseContainer className="game horizontal-container">
                         <BaseContainer className="game container">
-                            <WordBoard playFunction={play}></WordBoard>
+                            <WordBoard playFunction={play} />
                         </BaseContainer>
                         <BaseContainer className="player-list container">
                             <otherPlayersContext.Provider
-                                value={{ otherPlayers, setOtherPlayers }}
+                                value={otherPlayersValue}
                             >
-                                <PlayerList></PlayerList>
+                                <PlayerList />
                             </otherPlayersContext.Provider>
                         </BaseContainer>
                     </BaseContainer>
@@ -218,6 +273,7 @@ Game.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
+        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 

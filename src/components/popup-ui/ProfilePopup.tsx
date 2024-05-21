@@ -5,6 +5,7 @@ import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
 import { api, useError } from "helpers/api";
 
+
 const ProfilePopup = () => {
     const navigate = useNavigate();
     const { handleError } = useError();
@@ -32,6 +33,7 @@ const ProfilePopup = () => {
         <BaseContainer className="profilepopup container">
             <div className="profilepopup profile-button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
+                <Button onClick={() => navigate("/achievements")}>Achievements</Button>{" "}
                 <Button onClick={() => doLogout()}>Logout</Button>
             </div>
         </BaseContainer>

@@ -16,7 +16,12 @@ class User {
         this.discoveredWords = null;
         this.rarestWordFound = null;
         this.fastestWin = null;
+        this.achievements = null;
         Object.assign(this, data);
+
+        if (Array.isArray(data.achievements)) {
+            this.achievements = data.achievements;
+        }
     }
 }
 

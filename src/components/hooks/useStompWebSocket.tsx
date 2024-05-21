@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const useStompWebSocket = (client) => {
     const connected = useRef(false);
+    const [connectedTrigger, setConnectedTrigger] = useState(false);
     const [messages, setMessages] = useState([]);
     const subscriptionsRef = useRef({});
 
@@ -9,11 +10,13 @@ const useStompWebSocket = (client) => {
 
         client.current.onConnect = function(frame) {
             connected.current = true;
+            setConnectedTrigger(true);
             console.log("Connected: ", frame);
         };
 
         client.current.onWebSocketClose = function(e) {
             connected.current = false;
+            setConnectedTrigger(false);
             subscriptionsRef.current = {};
             console.log("Socket closed: ", e);
         };
@@ -39,6 +42,7 @@ const useStompWebSocket = (client) => {
             subscriptionsRef.current[destination] = client.current.subscribe(destination, (message) => {
                 try {
                     const receivedMessage = JSON.parse(message.body);
+                    receivedMessage.subscription = destination.split("/")[2]; 
                     console.log("new message received:", receivedMessage);
                     if (receivedMessage.instruction !== null) {
                         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
@@ -81,7 +85,7 @@ const useStompWebSocket = (client) => {
         setMessages([]);
     };
 
-    return { messages, subscribe, unsubscribe, sendMessage, subscriptionsRef, connected, resetMessagesList };
+    return { messages, subscribe, unsubscribe, sendMessage, subscriptionsRef, connected, connectedTrigger, resetMessagesList };
 };
 
 export default useStompWebSocket;

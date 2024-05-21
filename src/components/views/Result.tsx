@@ -33,7 +33,6 @@ const Result = ({ stompWebSocketHook }) => {
                 foundPlayer.id = playerId;
                 foundPlayer.token = playerToken;
                 foundPlayer.lobbyCode = lobbyCode;
-                console.log(foundPlayer);
                 setPlayer(foundPlayer);
                 setPID(foundPlayer.id);
             } catch (error) {
@@ -46,7 +45,6 @@ const Result = ({ stompWebSocketHook }) => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
-                console.log(response.data);
             } catch (error) {
                 handleError(error, navigate);
             }
@@ -104,7 +102,7 @@ const Result = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connected.current]);
+    }, [stompWebSocketHook.connectedTrigger]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -181,6 +179,7 @@ Result.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
+        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 

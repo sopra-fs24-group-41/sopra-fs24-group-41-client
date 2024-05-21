@@ -1,0 +1,172 @@
+@import "../theme";
+
+.achievements {
+  &.container {
+    border: 2px solid $accentDark;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    padding-top: 1.5em;
+    background: $background;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;;
+
+  }
+
+
+  &.list {
+    padding-top: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+  }
+}
+
+.achievement {
+  padding: 0;
+  margin-bottom: 0.5em;
+  background: lighten($background, 20);
+  float: left;
+  border-radius: $borderRadius;
+  display: flex;
+  flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: 450px;
+  flex-wrap: nowrap;
+
+  &.details{
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 350px;
+  }
+
+
+  &.title {
+    color: rgb(44, 45, 46);
+    padding: 0;
+
+  }
+  &.description {
+    color: $textColor;
+    padding: 0;
+  }
+
+  &.unlocked {
+    color: gold;
+    padding: 8px;
+  }
+ 
+  &.locked {
+    filter: grayscale(100%);
+    opacity: 50%;
+    padding: 8px;
+    color: transparent;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    img {
+      filter: grayscale(100%) blur(3px);
+      opacity: 50%;
+    
+    }
+  }
+  
+  &.icon {
+    max-width: 80px;
+    max-height: 80px;
+    margin: 0;
+    padding: 0;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 25%;
+      border: 5px solid rgb(26, 26, 26)
+    }
+  }
+}
+
+.achievement-button-container {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1em;
+  margin-top: 2em;
+  width: 100%;
+}
+
+
+.achievement-popup::before {
+  content: "Achievement Unlocked: ";
+  color: black;
+}
+
+
+.achievement-popup{
+  position: absolute;
+  margin: 8px;
+  background-color: $background;
+  padding: 1em;
+  border-radius: $borderRadius;
+  color: $textColor;
+  font-size: 20px;
+  text-transform: uppercase;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $dropShadow;
+  max-width: 400px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+  &.show {
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  &.hide {
+    animation: slideOut 0.5s ease forwards;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translate(-100%, -50%); //translate(x-cordinate, y-cordinate)
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, -50%);
+    opacity: 0;
+  }
+}
