@@ -51,7 +51,6 @@ const Achievements = () => {
                 setAchievements(responseAchievement.data);
                 setUserAchievements(user.achievements);
             } catch (error) {
-                console.log(error);
                 useError(error);
             }
         };
