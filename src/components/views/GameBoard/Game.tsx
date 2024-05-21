@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useMemo, useRef } from "react";
+import React, { useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import TargetWord from "./TargetWord";
@@ -58,9 +58,6 @@ const Game = ({ stompWebSocketHook }) => {
                 {headers: {playerToken: playerToken}}
             );
             let foundPlayer = new Player(response.data);
-            foundPlayer.id = playerId;
-            foundPlayer.token = playerToken;
-            foundPlayer.lobbyCode = lobbyCode;
             foundPlayer.sortPlayerWords();
             setPlayer(foundPlayer);
         } catch (error) {
@@ -199,7 +196,6 @@ const Game = ({ stompWebSocketHook }) => {
             if (userId === null) {return setIsLobbyOwner(false)}
             const lobby = await api.get("/users/" + userId + "/lobby", config);
             setIsLobbyOwner(lobby.data.owner.id === playerId);
-            console.log(isLobbyOwner)
         } catch (error) {
             handleError(error);
         }
@@ -213,15 +209,14 @@ const Game = ({ stompWebSocketHook }) => {
             const config = {
                 headers: {playerToken: playerToken},
             };
-            event.preventDefault();
 
             try {
                 if (isLobbyOwner) {
                     await api.delete("/lobbies/" + lobbyCode + "/games", config);
                     kick();
                 } else {
-                    localStorage.clear();
                     await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
+                    kick();
                 }
             } catch (error) {
                 handleError(error);
@@ -292,15 +287,11 @@ const Game = ({ stompWebSocketHook }) => {
             )}
             <Typewriter text={remainingTime}/>
             <BaseContainer className="game vertical-container">
-                {isLoading ? (
-                    <div className="spinner-pos">
-                        <RotateSpinner/>
-                    </div>
-                ) : null}
                 <playerContext.Provider value={playerValue}>
                     <BaseContainer className="game container">
                         <BaseContainer className="game horizontal-container">
-                            <TargetWord/>
+                            <TargetWord />
+                            {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
                             <Button
                                 className="game-end-button"
                                 onClick={() => handleAbort()}
@@ -316,7 +307,7 @@ const Game = ({ stompWebSocketHook }) => {
                             <Button onClick={() => handleQuit()}>Quit</Button>
                             {quitPopup && (
                                 <GameContext.Provider value={quitPopupValue}>
-                                    <QuitPopup/>
+                                    <QuitPopup />
                                 </GameContext.Provider>
                             )}
                         </BaseContainer>

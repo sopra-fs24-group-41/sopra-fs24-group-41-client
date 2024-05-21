@@ -107,7 +107,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [ownerMode, setOwnerMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
-    const [originalLobbyname, setOriginalLobbyname] = useState("");
     const [publicA, setPublicA] = useState();
     const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
     const { handleError } = useError();
@@ -129,12 +128,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     parseInt(localStorage.getItem("playerId"))
                 )
                     setOwnerMode(true);
+                if (lobby.status === "INGAME") { navigate("/lobby" + lobbyCode);}
             } catch (error) {
                 handleError(error, navigate);
-                localStorage.removeItem("playerId");
-                localStorage.removeItem("playerToken");
-                localStorage.removeItem("lobbyCode");
-                navigate("/lobbyoverview");
+                kick();
             }
         };
         fetchLobbyAndPlayers();
@@ -196,10 +193,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 headers: {playerToken: playerToken},
             };
             try {
-                localStorage.clear();
                 await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
+                kick();
             } catch (error) {
                 handleError(error);
+                kick();
             }
         }
         window.addEventListener("beforeunload", handleTabClose);
@@ -332,7 +330,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 null
             );
             if (updateSuccessful) {
-                setOriginalLobbyname(lobbyname);
                 setIsEditing(false);
             }
         } else {

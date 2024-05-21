@@ -38,7 +38,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const userToken = localStorage.getItem("userToken");
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
     const { handleError, resetError } = useError();
-    const [lobbyIngameErrorMsg, setlobbyIngameErrorMsg] = useState("");
+    const [lobbyIngameErrorMsg, setLobbyIngameErrorMsg] = useState("");
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -105,8 +105,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
             try {
                 const lobby = await api.get("/lobbies/" + lobbyCode);
                 if (lobby.data.status !== "PREGAME") {
-                    setlobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
-                    setTimeout(() => setlobbyIngameErrorMsg(""), 3000)
+                    setLobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
+                    setTimeout(() => setLobbyIngameErrorMsg(""), 3000)
 
                     return
                 }

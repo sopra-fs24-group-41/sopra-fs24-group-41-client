@@ -120,6 +120,25 @@ const Result = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    useEffect(() => {
+        const handleTabClose = async () => {
+            const config = {
+                headers: {playerToken: playerToken},
+            }
+            try {
+                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
+                kick()
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
+    }, []);
+
     const userContent = (
         <div className="res">
             <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
