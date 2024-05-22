@@ -204,7 +204,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     useEffect(() => {
 
-        const handleTabClose = async (event) => {
+        const handleTabClose = async () => {
 
             const config = {
                 headers: {playerToken: playerToken},

@@ -193,8 +193,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 headers: {playerToken: playerToken},
             };
             try {
-                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
                 kick();
+                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
             } catch (error) {
                 handleError(error);
                 kick();
