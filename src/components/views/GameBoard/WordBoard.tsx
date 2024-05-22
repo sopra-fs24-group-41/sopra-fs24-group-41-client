@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
@@ -17,28 +17,26 @@ const WordBoard = ({ playFunction }) => {
     const [nextWordIndex, setNextWordIndex] = useState<number>(0);
     const [searchWord, setSearchWord] = useState<string>("");
     const { player } = useContext(playerContext);
-    const prevWordListRef = useRef();
     const [WordList, setWordList] = useState([]);
 
-    // add words to word list if there are new ones
+    // add words to word list if there are new ones but don't add them if not in search
     useEffect(() => {
         setWordList(prevState => {
+            const filteredWords = prevState.filter((playerWord) =>
+                playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase()));
             const newWords = player.playerWords.filter((playerWord) =>
                 !prevState.some((word) => word.word.name.toLowerCase() === playerWord.word.name.toLowerCase())
                 && playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase()));
 
-            return [...prevState, ...newWords];
+            return [...filteredWords, ...newWords];
         });
     }, [player.playerWords]);
 
     // filter word list based on search input
     useEffect(() => {
-        if (searchWord === "") {
-            setWordList(player.playerWords);
-        } else {
-            setWordList(prevState => [...prevState.filter((playerWord) =>
-                playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase()))]);
-        }
+        stopAnimations();
+        setWordList(player.playerWords.filter((playerWord) =>
+            playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase())));
     }, [searchWord]);
 
     const addWordToMerge = async (playerWord: PlayerWord) => {
@@ -97,7 +95,6 @@ const WordBoard = ({ playFunction }) => {
         return false
     }
 
-
     const removeWord = () => {
         if (nextWordIndex !== 1) {
             return;
@@ -114,8 +111,8 @@ const WordBoard = ({ playFunction }) => {
     // animation
     const startAnimation = (element) => {
         const keyframes = [
-            { boxShadow: "0 0 7px 1px rgba(88, 80, 133, 0.4)", offset: 0 },
-            { boxShadow: "0 0 7px 3px rgba(88, 80, 133, 1)", offset: 1 },
+            { boxShadow: "0 0 7px 1px rgba(88, 80, 133, 0.6)", offset: 0 },
+            { boxShadow: "0 0 10px 1px rgba(88, 80, 133, 0.8)", offset: 1 },
         ];
 
         const options = {
@@ -125,27 +122,39 @@ const WordBoard = ({ playFunction }) => {
             easing: "ease-in-out",
         };
 
-        const previousAnimation = document.getAnimations()[0];
+        let previousAnimation = null;
+        for (let animation of document.getAnimations()) {
+            if (animation.id === "word-glow-animation" &&
+                animation.startTime !== null
+            ) {
+                previousAnimation = animation;
+                break;
+            }
+        }
         const animatedElement = element.animate(keyframes, options);
-        if (previousAnimation) {
+        animatedElement.id = "word-glow-animation";
+        if (previousAnimation !== null && previousAnimation.startTime !== null) {
             animatedElement.startTime = previousAnimation.startTime;
         }
     };
 
+    const stopAnimations = () => {
+        for (let animation of document.getAnimations()) {
+            if (animation.id === "word-glow-animation") {
+                animation.cancel();
+            }
+        }
+    }
+
     const wordButtonRefs = WordList.map(() => React.createRef());
     // starts animation when the word button is rendered for the first time
     useEffect(() => {
-        console.log(wordButtonRefs)
-        wordButtonRefs.forEach((ref, index) => {
-            if (!prevWordListRef.current || WordList[index] !== prevWordListRef.current[index]) {
-                const element = ref.current;
-                if (element && element.className === "primary-button word glow-board") {
-                    console.log(element.className)
-                    startAnimation(element);
-                }
+        wordButtonRefs.forEach((ref) => {
+            const element = ref.current;
+            if (element && element.className === "primary-button word glow-board") {
+                startAnimation(element);
             }
         });
-        prevWordListRef.current = WordList;
     }, [WordList]);
 
     return (
@@ -173,7 +182,7 @@ const WordBoard = ({ playFunction }) => {
                             onClick={() => {
                                 addWordToMerge(playerWord);
                             }}
-                            className={isNew(player.playerWords[index]) ? "glow-board" : ""}
+                            className={isNew(playerWord) ? "glow-board" : ""}
                             disabled={!wordAvailable(playerWord)}
                         >
                             {formatWord(playerWord)}
