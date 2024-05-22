@@ -22,7 +22,6 @@ const Result = ({ stompWebSocketHook }) => {
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
     const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
     const [resultStatus, setResultStatus] = useState<boolean>(false);
-    const [pID, setPID] = useState();
     const { handleError } = useError();
 
     useEffect(() => {
@@ -30,8 +29,9 @@ const Result = ({ stompWebSocketHook }) => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
                 let foundPlayer = new Player(response.data);
+                foundPlayer.token = playerToken;
+                foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
-                setPID(foundPlayer.id);
             } catch (error) {
                 handleError(error, navigate);
             }
@@ -56,18 +56,18 @@ const Result = ({ stompWebSocketHook }) => {
     }, [players]);
 
     useEffect(() => {
-        setResultStatus(winner?.id === playerId);
+        setResultStatus(winner?.id === player.id);
     }, [winner]);
 
     const renderPlayer = (ID) => {
         if (winner && ID === winner.id)return "player-container winner";
-        else if (ID  === pID)return "player-container loser";
+        else if (ID  === player.id)return "player-container loser";
         else return "player-container";
     };
     
-    const renderIcon = (playerId) => {
-        if (winner && playerId === winner.id) return "winner";
-        if (playerId === player.id) return "loser";
+    const renderIcon = (ID) => {
+        if (winner && ID === winner.id) return "winner";
+        if (ID === player.id) return "loser";
         else return "player-icon-result";
     };
 
