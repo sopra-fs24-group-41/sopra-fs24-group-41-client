@@ -1,0 +1,34 @@
+@import "../theme";
+
+.info {
+  &.container {
+    border: 2px solid $accentDark;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    padding-top: 1.5em;
+    background: $background;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;
+    overflow-y: auto;
+    word-wrap: break-word;
+  }
+
+  &.button-container{
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1em;
+        margin-top: 2em;
+        width: 100%;
+      }
+}
+

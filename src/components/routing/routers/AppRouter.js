@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import ServerDownPage from "../../views/ServerDownPage";
 import AnonEnterLobbyPage from "../../views/AnonEnterLobbyPage";
 import Achievements from "../../views/Achievements";
+import Info from "../../views/Info";
 import Leaderboard from "../../views/Leaderboard";
 
 /**
@@ -37,6 +38,8 @@ const AppRouter = ({ stompWebSocketHook }) => {
                 <Route path="/achievements" element={<Achievements />} />
 
                 <Route path="/leaderboard" element={<Leaderboard />} />
+
+                <Route path="/info" element={<Info />} />
 
                 <Route path="/registration" element={<Registration />} />
 
