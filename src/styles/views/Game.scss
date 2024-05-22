@@ -137,8 +137,9 @@
     background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
-    max-height: 400px; 
-    overflow: hidden;
+    min-height: 130px;
+    max-height: calc(100vh - 405px);
+    overflow: auto;
   }
 }
 
@@ -151,12 +152,12 @@
   box-shadow: $dropShadow;
 }
 
-.glow {
-  animation: glow 1.5s infinite alternate;
+.glow-bar {
+  animation: glow-bar 1s infinite alternate;
   z-index: 3;
 }
 
-@keyframes glow {
+@keyframes glow-bar {
   0% {
     box-shadow: 0 0 10px 0 rgba($textColor, 0.4);
   }

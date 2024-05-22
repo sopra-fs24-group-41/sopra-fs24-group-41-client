@@ -31,7 +31,7 @@ const WordMergeBar = ({ removeWordFunction }) => {
             <div className="word-merge-bar symbol">+</div>
             <WordButton key={2}>{formatPlayerWord(mergeWordList[1], "-")}</WordButton>
             <div className="word-merge-bar symbol">=</div>
-            <WordButton key={3} className={isNew(mergeWordList[2]) ? "glow" : ""}>{formatPlayerWord(mergeWordList[2], "?")}</WordButton>
+            <WordButton key={3} className={isNew(mergeWordList[2]) ? "glow-bar" : ""}>{formatPlayerWord(mergeWordList[2], "?")}</WordButton>
             {isNew(mergeWordList[2]) && <span className="small-text">New discovery!</span>}
         </BaseContainer>
     );
