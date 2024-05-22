@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
 import "styles/views/Login.scss";
@@ -52,14 +52,46 @@ const Leaderboard = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState(DummyUsers);
     const [curr, setCurr] = useState("Primagen");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredUsers = users.filter(user =>
+        user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+        const userRefs = users.reduce((acc, user) => {
+            acc[user.id] = useRef();
+            return acc;
+        }, {});
+    
+        const handleSearch = (e) => {
+            const term = e.target.value;
+            setSearchTerm(term);
+    
+            const user = users.find(user => user.username.toLowerCase().includes(term.toLowerCase()));
+    
+            if (user && userRefs[user.id].current) {
+                userRefs[user.id].current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }
+        };
+
 
     return (
         <BaseContainer>
             <div className="leaderboard container">
                 <h2>Leaderboard</h2>
+                <p>Who performed the best today?</p>
+                <input className="search-input-css-leaderboard"
+                    type="text"
+                    placeholder="Search users"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
                 <ul className="leaderboard list">
                     {users.map((user) => (
-                        <li key={user.id}>
+                        <li key={user.id} ref={userRefs[user.id]}>
                             <UserItem user={user} curr={curr} />
                         </li>
                     ))}
