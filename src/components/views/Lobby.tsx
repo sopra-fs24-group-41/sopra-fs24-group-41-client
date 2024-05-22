@@ -35,11 +35,9 @@ const GamemodeItem = ({
         </div>
       ) : (
         <div className="gamemode description">
-          {gamemode.active === true
-            ? gamemode.description
-            : gamemode.active === false
-            ? "Locked"
-            : "Completed for Today"}
+          {gamemode.active
+            ? gamemode.description :
+            "LOCKED: Please Register OR Have only one player in the lobby."}
         </div>
       )}
     </div>
