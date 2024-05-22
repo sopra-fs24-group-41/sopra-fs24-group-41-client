@@ -14,17 +14,44 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
-}) => (
-    <button
-        className={`lobby container${isSelected ? "-selected" : ""}`}
-        onClick={() => onSelect(lobby)}
-    >
-        <label className="lobby lobby-name">{lobby.name}</label>
-        <div>
-            {lobby.status === "PREGAME" ? "" : "❌"}
-        </div>
-    </button>
-);
+}) => {
+    const navigate = useNavigate();
+    const { handleError } = useError();
+
+    const reJoinLobby = async (code) => {
+        try {
+            const requestBody = {};
+            const config = { headers: { userToken: localStorage.getItem("userToken") } };
+            const response = await api.post("/lobbies/" + code + "/players", {}, config);
+            localStorage.setItem("playerToken", response.data.playerToken);
+            localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", code);
+            navigate("/lobby/" + code);
+        } catch (error) {
+            handleError(error);
+        }
+    };
+
+    return (
+        <button
+            className={`lobby container${isSelected ? "-selected" : ""}`}
+            onClick={() => onSelect(lobby)}
+        >
+            <label className="lobby lobby-name">{lobby.name}</label>
+            <div>
+                {lobby.status === "PREGAME" ? "" : "❌"}
+            </div>
+            {lobby.owner.user.id === Number(localStorage.getItem("userId")) ? <Button
+                width="20%"
+                onClick={() => reJoinLobby(lobby.code)}
+            >
+                Rejoin
+            </Button> : null}
+        </button>
+    );
+};
+
+
 LobbyItem.propTypes = {
     lobby: PropTypes.object,
 };
@@ -99,6 +126,8 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const iconClick = () => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
+
+
 
     const joinLobby = async () => {
         if (!checkLogin()) {
