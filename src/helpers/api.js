@@ -40,7 +40,7 @@ export const ErrorProvider = ({ children }) => {
         } else {
             if (error.message.match(/Network Error/i)) {
                 localStorage.clear();
-                alert("The server cannot be reached.\nDid you start it?");
+                console.log("The server seems to be down, did you start it?")
                 navigate("/server-down/");
 
                 return error.message;
