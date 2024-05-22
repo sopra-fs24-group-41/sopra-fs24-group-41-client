@@ -86,6 +86,9 @@
       opacity: 50%;
     
     }
+    &.hidden{
+      filter: grayscale(100%) blur(3px);
+    }
   }
   
   &.icon {
