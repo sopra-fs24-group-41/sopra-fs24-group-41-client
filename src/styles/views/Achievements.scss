@@ -81,9 +81,18 @@
     padding: 8px;
     color: transparent;
     text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
     img {
       filter: grayscale(100%) blur(3px);
       opacity: 50%;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      user-select: none;
+      pointer-events: none;
     
     }
     &.hidden{

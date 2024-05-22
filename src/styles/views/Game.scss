@@ -125,7 +125,7 @@
     font-size: 5em;
     text-align: center;
     display: flex;
-    color: $buttonCol
+    color: aliceblue;
   }
 }
 
@@ -227,14 +227,14 @@
   color: inherit;
 }
 
-.word-table {
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  max-height: 285px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  .word-table {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
 }
 
