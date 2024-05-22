@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
@@ -64,7 +64,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const navigate = useNavigate();
     const [lobbies, setLobbies] = useState<Lobby[]>([]);
     const [selectedLobby, setSelectedLobby] = useState<Lobby | null>(null);
-    const [loginRegisterPopup, setLoginRegisterPopup] = useState(false);
+    const [loginRegisterPopup, setLoginRegisterPopup] = useState(true);
     const [lobbyCode, setLobbyCode] = useState<string>(null);
     const userToken = localStorage.getItem("userToken");
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
