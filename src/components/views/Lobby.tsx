@@ -128,7 +128,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     Number(localStorage.getItem("playerId"))
                 )
                     setOwnerMode(true);
-                if (lobby.status === "INGAME") {
+                if (lobbyData.status === "INGAME") {
                     navigate("/lobby/game"); }
             } catch (error) {
                 handleError(error, navigate);
