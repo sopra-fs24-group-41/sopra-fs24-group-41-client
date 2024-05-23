@@ -27,7 +27,7 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
             localStorage.setItem("lobbyCode", code);
             navigate("/lobby/" + code);
         } catch (error) {
-            handleError(error);
+            handleError(error, navigate);
         }
     };
 
@@ -78,7 +78,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
                 setLobbies(lobbyData);
             } catch (error) {
-                handleError(error);
+                handleError(error, navigate);
             }
         };
         fetchLobbies();
@@ -131,10 +131,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
         setLoginRegisterPopup((prevState) => !prevState);
     };
 
-
-
     const joinLobby = async () => {
-
         try {
             const lobby = await api.get("/lobbies/" + lobbyCode);
             if (lobby.data.status !== "PREGAME") {
@@ -144,7 +141,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 return
             }
         } catch (error) {
-            handleError(error);
+            handleError(error, navigate);
         }
         if (!checkLogin()) {
             navigate("/lobby/" + lobbyCode + "/anonymous");
@@ -158,7 +155,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 localStorage.setItem("lobbyCode", lobbyCode);
                 navigate("/lobby/" + lobbyCode);
             } catch (error) {
-                handleError(error);
+                handleError(error, navigate);
             }
         }
     };
