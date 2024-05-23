@@ -40,6 +40,7 @@ const Achievements = () => {
     const navigate = useNavigate();
     const [achievements, setAchievements] = useState([]);
     const [userAchievements, setUserAchievements] = useState([]);
+    const { handleError } = useError();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,7 +52,7 @@ const Achievements = () => {
                 setAchievements(responseAchievement.data);
                 setUserAchievements(user.achievements);
             } catch (error) {
-                useError(error);
+                handleError(error, navigate);
             }
         };
         fetchData();
