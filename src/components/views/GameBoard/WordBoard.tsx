@@ -13,20 +13,26 @@ export const mergeWordListContext = createContext([]);
 export const nextWordIndexContext = createContext(0);
 
 const WordBoard = ({ playFunction }) => {
-    const [mergeWordList, setMergeWordList] = useState<String[]>([]);
+    const [mergeWordList, setMergeWordList] = useState<string[]>([]);
     const [nextWordIndex, setNextWordIndex] = useState<number>(0);
     const [searchWord, setSearchWord] = useState<string>("");
     const { player } = useContext(playerContext);
-    const [WordList, setWordList] = useState([]);
+    const [wordList, setWordList] = useState([]);
+
+    const filterWords = (words, searchTerm) =>
+        words.filter(word => word.word.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const findNewWords = (currentWords, playerWords, searchTerm) =>
+        playerWords.filter(playerWord =>
+            !currentWords.some(word => word.word.name.toLowerCase() === playerWord.word.name.toLowerCase())
+            && playerWord.word.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
     // add words to word list if there are new ones but don't add them if not in search
     useEffect(() => {
         setWordList(prevState => {
-            const filteredWords = prevState.filter((playerWord) =>
-                playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase()));
-            const newWords = player.playerWords.filter((playerWord) =>
-                !prevState.some((word) => word.word.name.toLowerCase() === playerWord.word.name.toLowerCase())
-                && playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase()));
+            const filteredWords = filterWords(prevState, searchWord);
+            const newWords = findNewWords(filteredWords, player.playerWords, searchWord);
 
             return [...filteredWords, ...newWords];
         });
@@ -34,7 +40,6 @@ const WordBoard = ({ playFunction }) => {
 
     // filter word list based on search input
     useEffect(() => {
-        stopAnimations();
         setWordList(player.playerWords.filter((playerWord) =>
             playerWord.word.name.toLowerCase().includes(searchWord.toLowerCase())));
     }, [searchWord]);
@@ -111,8 +116,8 @@ const WordBoard = ({ playFunction }) => {
     // animation
     const startAnimation = (element) => {
         const keyframes = [
-            { boxShadow: "0 0 7px 1px rgba(88, 80, 133, 0.6)", offset: 0 },
-            { boxShadow: "0 0 10px 1px rgba(88, 80, 133, 0.8)", offset: 1 },
+            { boxShadow: "0 0 8px 4px rgba(88, 80, 133, 0.8)", offset: 0 },
+            { boxShadow: "0 0 10px 4px rgba(88, 80, 133, 1)", offset: 1 },
         ];
 
         const options = {
@@ -138,15 +143,7 @@ const WordBoard = ({ playFunction }) => {
         }
     };
 
-    const stopAnimations = () => {
-        for (let animation of document.getAnimations()) {
-            if (animation.id === "word-glow-animation") {
-                animation.cancel();
-            }
-        }
-    }
-
-    const wordButtonRefs = WordList.map(() => React.createRef());
+    const wordButtonRefs = wordList.map(() => React.createRef());
     // starts animation when the word button is rendered for the first time
     useEffect(() => {
         wordButtonRefs.forEach((ref) => {
@@ -155,7 +152,7 @@ const WordBoard = ({ playFunction }) => {
                 startAnimation(element);
             }
         });
-    }, [WordList]);
+    }, [wordList]);
 
     return (
         <BaseContainer className="game vertical-container">
@@ -175,9 +172,9 @@ const WordBoard = ({ playFunction }) => {
                     <Button onClick={() => setSearchWord("")}>✖️</Button>
                 </div>
                 <div className="word-table">
-                    {WordList.map((playerWord, index) => (
+                    {wordList.map((playerWord, index) => (
                         <WordButton
-                            key={index}
+                            key={playerWord.word.name}
                             ref={wordButtonRefs[index]}
                             onClick={() => {
                                 addWordToMerge(playerWord);
