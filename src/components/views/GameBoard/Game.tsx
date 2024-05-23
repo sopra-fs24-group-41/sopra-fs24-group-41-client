@@ -52,6 +52,7 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const fetchPlayer = async () => {
+        if (!lobbyCode) {navigate("/lobbyoverview")}
         try {
             let response = await api.get(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
@@ -209,13 +210,8 @@ const Game = ({ stompWebSocketHook }) => {
             const config = {
                 headers: {playerToken: playerToken},
             };
-
             try {
-                if (isLobbyOwner) {
-                    kick();
-                    await api.delete("/lobbies/" + lobbyCode + "/games", config);
-                } else {
-                    kick();
+                if (!isLobbyOwner) {
                     await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
                 }
             } catch (error) {
