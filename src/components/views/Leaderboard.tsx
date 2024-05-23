@@ -53,12 +53,12 @@ const Leaderboard = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [fetchedRecords, setFetchedRecords] = useState([]);
     const { handleError } = useError();
-    const targetWord = "Zaddy";
+    const [targetWord, setTargetWord] = useState("");
 
     useEffect(() => {
         const fetchChallengeData = async () => {
             try {
-                let response = await api.get("/users/challenges");
+                const response = await api.get("/users/challenges/records");
                 const challenges = response.data.map(
                     (data) => new DailyChallenge(data)
                 );
@@ -69,6 +69,21 @@ const Leaderboard = () => {
             }
         };
         fetchChallengeData();
+    }, []);
+
+    useEffect(() => {
+        const fetchChallengeWord = async () => {
+            try {
+                const response = await api.get("/users/challenges/");
+                const targetWord = response.data.targetWord.name;
+                setTargetWord(targetWord);
+
+            } catch (error) {
+                handleError(error, navigate);
+
+            }
+        };
+        fetchChallengeWord();
     }, []);
 
     useEffect(() => {
