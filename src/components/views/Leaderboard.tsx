@@ -75,15 +75,14 @@ const Leaderboard = () => {
         }
     });
 
-    const filteredUsers = fetchedRecords.filter((user) =>
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const userRefs = useRef({});
 
-    const userRefs = fetchedRecords.reduce((acc, user) => {
-        acc[user.id] = useRef();
-
-        return acc;
-    }, {});
+    useEffect(() => {
+        userRefs.current = fetchedRecords.reduce((acc, user) => {
+            acc[user.username] = React.createRef();
+            return acc;
+        }, {});
+    }, [fetchedRecords]);
 
     const handleSearch = (e) => {
         const term = e.target.value;
@@ -93,8 +92,8 @@ const Leaderboard = () => {
             user.username.toLowerCase().includes(term.toLowerCase())
         );
 
-        if (user && userRefs[user.id].current) {
-            userRefs[user.id].current.scrollIntoView({
+        if (user && userRefs.current[user.username]) {
+            userRefs.current[user.username].scrollIntoView({
                 behavior: "smooth",
                 block: "start",
             });
@@ -118,8 +117,12 @@ const Leaderboard = () => {
                         fetchedRecords.map((item) => (
                             <li
                                 key={`${item.numberOfCombinations}-${item.username}`}
+                                ref={(selectedItem) => (userRefs.current[item.username] = selectedItem)}
                             >
-                                <UserItem user={item} curr={curr} />
+                                <UserItem
+                                    user={item}
+                                    curr={curr}
+                                />
                             </li>
                         ))
                     ) : (
