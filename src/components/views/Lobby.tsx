@@ -14,34 +14,31 @@ import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
 
-const GamemodeItem = ({
-    gamemode,
-    onSelect,
-    isSelected,
-    ownerMode,
-  }) => (
+const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }) => (
     <div
-      className={`gamemode container${isSelected ? " selected" : ""}${
-        gamemode.active === true && ownerMode ? "" : " inactive"
-      }`}
-      onClick={
-        gamemode.active === true && ownerMode ? () => onSelect(gamemode) : undefined
-      }
+        className={`gamemode container${isSelected ? " selected" : ""}${
+            gamemode.active === true && ownerMode ? "" : " inactive"
+        }`}
+        onClick={
+            gamemode.active === true && ownerMode
+                ? () => onSelect(gamemode)
+                : undefined
+        }
     >
-      <div className="gamemode name">{gamemode.name}</div>
-      {isSelected ? (
-        <div className="gamemode description">
-          {longerdesc[gamemode.name]}
-        </div>
-      ) : (
-        <div className="gamemode description">
-          {gamemode.active
-            ? gamemode.description :
-            "LOCKED: Please Register OR Have only one player in the lobby."}
-        </div>
-      )}
+        <div className="gamemode name">{gamemode.name}</div>
+        {isSelected ? (
+            <div className="gamemode description">
+                {longerdesc[gamemode.name]}
+            </div>
+        ) : (
+            <div className="gamemode description">
+                {gamemode.active
+                    ? gamemode.description
+                    : "LOCKED: Please Register OR Have only one player in the lobby."}
+            </div>
+        )}
     </div>
-  );
+);
 
 GamemodeItem.propTypes = {
     gamemode: PropTypes.object,
@@ -79,7 +76,7 @@ const gamemodes = [
         name: "Daily Challenge",
         description: "A new challenge every day.",
         serverName: "DAILYCHALLENGE",
-        active: null,
+        active: true,
     },
 ];
 
@@ -91,6 +88,7 @@ const longerdesc: { [key: string]: string } = {
     "Finite Fusion":
         "You have only a limited number of words to get the target word.",
     "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?",
+    "Daily Challenge": "You get a challenge target word every day, try to get it as fast as possible and rise the ranks of the leaderboard to assert your dominance.",
 };
 
 export const LobbyContext = createContext();
