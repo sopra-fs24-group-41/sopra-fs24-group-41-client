@@ -47,7 +47,7 @@ const Achievements = () => {
                 const userId = localStorage.getItem("userId");
                 let response = await api.get("/users/" + userId);
                 const user = new User(response.data);
-                let responseAchievement = await api.get("/users/achievments");
+                let responseAchievement = await api.get("users/achievements");
                 setAchievements(responseAchievement.data);
                 setUserAchievements(user.achievements);
             } catch (error) {
