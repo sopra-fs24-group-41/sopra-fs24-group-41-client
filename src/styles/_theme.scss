@@ -10,9 +10,9 @@
 
 $accent: #000000;
 $accentDark: #000000;
-$textColor: rgb(88, 80, 133);
+$textColor: rgb(73, 65, 112);
 $background: #9b9b9b;
-$buttonCol: #b3b3b3;
+$buttonCol: #e9e9e9;
 $buttonColDark: #2e2e2e;
 
 /* some constants */
@@ -51,3 +51,11 @@ $borderRadius: 0.75em;
   align-items: center;
   justify-content: center;
 }
+
+@font-face {
+  font-family: 'Cascadia';
+  font-size: medium;
+  src: url('fonts/CascadiaMono.ttf'); // Change font here!
+}
+
+$fontFancy : 'Cascadia', monospace;

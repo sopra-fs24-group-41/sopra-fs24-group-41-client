@@ -107,6 +107,7 @@ const Profile = () => {
 
     const formatWord = (word) => {
         if (word) {
+
             return word.name[0].toUpperCase() + word.name.slice(1);
         }
 
@@ -115,8 +116,6 @@ const Profile = () => {
 
     useEffect(() => {
         if(userData){
-            console.log(userData);
-            console.log(userData.achievements)
         } }, [userData]);
 
     const tableData = [

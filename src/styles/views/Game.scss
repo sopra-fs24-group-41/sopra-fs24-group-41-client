@@ -46,6 +46,7 @@
     font-size: 3em;
     text-align: center;
     display: flex;
+    overflow: hidden;
   }
 
   &.word {
@@ -124,6 +125,7 @@
     font-size: 5em;
     text-align: center;
     display: flex;
+    color: $buttonCol
   }
 }
 

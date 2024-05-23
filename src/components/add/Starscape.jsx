@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types"; 
 import gsap from "gsap";
+//Code was adapted from: https://css-tricks.com/an-interactive-starry-backdrop-for-content/
+//Pretend this was imported from a library
 
 const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scaleLimit = 2}) => {
     const canvasRef = useRef(null);

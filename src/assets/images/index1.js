@@ -19,6 +19,11 @@ import Puppy from "../../assets/images/Puppy.jpg"
 import Platypus from "../../assets/images/Platypus.jpg"
 import Wizard from "../../assets/images/Wizard.jpg"
 import Zaddy from "../../assets/images/Zaddy.jpg"
+import Primeagen from "../../assets/images/Primeagen.jpg"
+import NeetCode from "../../assets/images/NeetCode.jpg"
+import Hyperplexed from "../../assets/images/Hyperplexed.jpg"
+import CodeAesthetic from "../../assets/images/CodeAesthetic.jpg"
+import b001 from "../../assets/images/b001.jpg"
 
 
 const convertLowercase = (obj) => {
@@ -50,7 +55,12 @@ let IMAGES = {
     Puppy : Puppy,
     Platypus : Platypus,
     Wizard : Wizard,
-    Zaddy : Zaddy
+    Zaddy : Zaddy,
+    Primeagen : Primeagen,
+    NeetCode : NeetCode,
+    Hyperplexed : Hyperplexed,
+    CodeAesthetic : CodeAesthetic,
+    b001 : b001
 }
 
 IMAGES = convertLowercase(IMAGES)

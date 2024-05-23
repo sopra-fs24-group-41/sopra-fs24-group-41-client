@@ -1,0 +1,126 @@
+@import "../theme";
+
+.leaderboard {
+  &.container {
+    border: 2px solid $accentDark;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    padding-top: 1.5em;
+    background: $background;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;;
+
+  }
+
+  p{
+    padding: 0;
+    margin: 0;
+  }
+
+
+  &.list {
+    padding-top: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-bottom: 2em;
+    max-height: 640px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style: none;
+
+  }
+}
+
+.leaderboard-entry {
+  padding: 8px;
+  margin-bottom: 0.5em;
+  background: lighten($background, 20%);
+  float: left;
+  border-radius: $borderRadius;
+  display: flex;
+  flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: 450px;
+  flex-wrap: nowrap;
+
+  &.highlighted {
+    color: rgb(184, 149, 255);
+    border: 2px solid rgb(186, 149, 255);
+    box-shadow: 0 0 10px rgb(84, 55, 119);
+    transition: background 0.3s ease, color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease; 
+  }
+
+  &.details{
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 350px;
+  }
+
+
+  &.username {
+    color: rgb(44, 45, 46);
+    padding: 0;
+
+  }
+  &.numberOfCombinations {
+    color: $textColor;
+    padding: 0;
+  }
+
+  &.icon {
+    max-width: 80px;
+    max-height: 80px;
+    margin: 0;
+    padding: 0;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 25%;
+      border: 5px solid rgb(26, 26, 26)
+    }
+  }
+}
+
+.leaderboard-button-container {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1em;
+  margin-top: 2em;
+  width: 100%;
+}
+
+.search-input-css-leaderboard{
+  margin-top: 20px;
+  border: none;
+  border-radius: $borderRadius;
+  padding: 5px;
+  background: lighten($background, 15);
+  color: inherit;
+}
+
+.challenge-word {
+  font-weight: bold;
+  font-size: 20px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  color: black;
+  /* Add any other styles you want */
+}
