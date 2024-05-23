@@ -51,3 +51,11 @@ $borderRadius: 0.75em;
   align-items: center;
   justify-content: center;
 }
+
+@font-face {
+  font-family: 'Cascadia';
+  font-size: medium;
+  src: url('fonts/CascadiaMono.ttf'); // Change font here!
+}
+
+$fontFancy : 'Cascadia', monospace;

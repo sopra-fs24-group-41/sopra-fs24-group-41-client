@@ -109,9 +109,17 @@
 }
 
 .search-input-css-leaderboard{
+  margin-top: 20px;
   border: none;
   border-radius: $borderRadius;
   padding: 5px;
   background: lighten($background, 15);
   color: inherit;
+}
+
+.target-word {
+  font-weight: bold;
+  font-size: 20px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  /* Add any other styles you want */
 }

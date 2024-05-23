@@ -28,7 +28,11 @@ const UserItem = ({ user, curr }) => (
         <div className="leaderboard-entry details">
             <div className="leaderboard-entry username">{user.username}</div>
             <div className="leaderboard-entry numberOfCombinations">
-                {"Number of Combinations: " + user.numberOfCombinations}
+                {"Reached target word with " +
+                    user.numberOfCombinations +
+                    (user.numberOfCombinations === 1
+                        ? " combination"
+                        : " combinations")}
             </div>
         </div>
     </div>
@@ -48,6 +52,7 @@ const Leaderboard = () => {
     const [curr, setCurr] = useState("Primagen");
     const [searchTerm, setSearchTerm] = useState("");
     const [fetchedRecords, setFetchedRecords] = useState([]);
+    const targetWord = "Zaddy";
 
     useEffect(() => {
         const fetchChallengeData = async () => {
@@ -80,6 +85,7 @@ const Leaderboard = () => {
     useEffect(() => {
         userRefs.current = fetchedRecords.reduce((acc, user) => {
             acc[user.username] = React.createRef();
+
             return acc;
         }, {});
     }, [fetchedRecords]);
@@ -103,8 +109,11 @@ const Leaderboard = () => {
     return (
         <BaseContainer>
             <div className="leaderboard container">
-                <h2>Leaderboard</h2>
-                <p>Who performed the best today?</p>
+                <h2>Daily Challenge Leaderboard</h2>
+                <p>
+                    {"Today's target word was: "}
+                    <span className="target-word">{targetWord}</span>
+                </p>
                 <input
                     className="search-input-css-leaderboard"
                     type="text"
@@ -117,12 +126,12 @@ const Leaderboard = () => {
                         fetchedRecords.map((item) => (
                             <li
                                 key={`${item.numberOfCombinations}-${item.username}`}
-                                ref={(selectedItem) => (userRefs.current[item.username] = selectedItem)}
+                                ref={(selectedItem) =>
+                                    (userRefs.current[item.username] =
+                                        selectedItem)
+                                }
                             >
-                                <UserItem
-                                    user={item}
-                                    curr={curr}
-                                />
+                                <UserItem user={item} curr={curr} />
                             </li>
                         ))
                     ) : (
