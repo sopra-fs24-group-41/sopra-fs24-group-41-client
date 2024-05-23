@@ -1,65 +1,58 @@
-# SoPra FS24 - Client Template with build pack
+# WOMBO COMBO
 
-## Getting started
+One Paragraph of project description goes here, Introduction and motivation
 
-Read and go through these Tutorials. It will make your life easier:)
+### Technologies used
 
-- Read the React [Docs](https://react.dev/learn)
-- Do this React [Getting Started](https://react.dev/learn/tutorial-tic-tac-toe) Tutorial (it doesn't assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+What things you need to install the software and how to install them
 
-Next, there are two other technologies that you should look at:
+```
+Give examples
+```
 
-* [react-router-dom](https://reactrouter.com/en/main/start/concepts) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
+### Structure and Components
 
-## Prerequisites and Installation
-For your local development environment, you will need Node.js.\
-We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
-If you are confused about which download to choose, feel free to use these direct links:
+Identify your project’s 3-5 main components. What is their role?
+How are they correlated? Reference the main class, file, or function in the README text
+with a link.
 
-- **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
-- **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
-- **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
-- **Linux:** [node-v20.11.0.tar.xz](https://nodejs.org/dist/v20.11.0/node-v20.11.0.tar.xz) (use this [installation guide](https://medium.com/@tgmarinho/how-to-install-node-js-via-binary-archive-on-linux-ab9bbe1dd0c2) if you are new to Linux)
+## Launch & Deployment
 
-If you happen to have a package manager the following commands can be used:
+A step by step series of examples that tell you how to get a development env running
 
-- **Homebrew:** `brew install node@20.11.0`
-- **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
+Say what the step will be
 
-After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
-You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
-Before you start your application for the first time, run this command to install all other dependencies, including React:
+```
+Give the example
+```
 
-```npm install```
+And repeat
 
-Next, you can start the app with:
+```
+until finished
+```
 
-```npm run dev```
+## Illustrations
 
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
-The client will send HTTP requests to the server which can be found [here](https://github.com/HASEL-UZH/sopra-fs24-template-server).\
-In order for these requests to work, you need to install and start the server as well.
+In your client repository, briefly describe and illustrate the main user flow(s)
+of your interface. How does it work (without going into too much detail)? Feel free to
+include a few screenshots of your application.
 
-### Testing
-Testing is optional, and you can run the tests with `npm run test`\
-This launches the test runner in an interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Roadmap
 
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+## Authors
 
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance:\
-The build is minified, and the filenames include hashes.<br>
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
-## Learn More
+## License
 
-To learn React, check out the [React documentation](https://react.dev/).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
+## Acknowledgments
 
-> Thanks to Lucas Pelloni Kyrill Hux and Marco Leder for working on the template.
+* Hat tip to anyone whose code was used
+* Inspiration
+* etc
+
