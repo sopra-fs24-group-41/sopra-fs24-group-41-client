@@ -9,6 +9,7 @@ import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
+import Lobby from "../../models/Lobby.js";
 
 
 const Result = ({ stompWebSocketHook }) => {
@@ -20,9 +21,11 @@ const Result = ({ stompWebSocketHook }) => {
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-    const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
+    const resultMessage = { WIN: "You Won!", LOSS: "You Lost...", DAILY: "Daily Challenge Completed!"};
     const [resultStatus, setResultStatus] = useState<boolean>(false);
     const { handleError } = useError();
+    const [lobby, setLobby] = useState<Lobby>({ players: [] });
+
 
     useEffect(() => {
         const fetchPlayer = async () => {
@@ -36,7 +39,6 @@ const Result = ({ stompWebSocketHook }) => {
                 handleError(error, navigate);
             }
         };
-        
 
         const fetchOtherPlayers = async () => {
             try {
@@ -49,6 +51,22 @@ const Result = ({ stompWebSocketHook }) => {
         fetchPlayer();
         fetchOtherPlayers();
     }, []);
+
+
+    useEffect(() => {
+        // Fetch lobby and players data
+        const fetchLobby = async () => {
+            try {
+                const response = await api.get("/lobbies/" + lobbyCode);
+                let lobbyData = new Lobby(response.data);
+                setLobby(lobbyData);
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        };
+        fetchLobby();
+    }, []);
+    
 
     useEffect(() => {
         players.sort((a, b) => b.points - a.points);
@@ -138,9 +156,16 @@ const Result = ({ stompWebSocketHook }) => {
         };
     }, []);
 
+
+    const renderResMSG = () => {
+        if(lobby.mode === "DAILYCHALLENGE") return resultMessage.DAILY;
+        else if(resultStatus) return resultMessage.WIN;
+        else return resultMessage.LOSS;
+    }
+
     const userContent = (
         <div className="res">
-            <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
+            <h2>{renderResMSG()}</h2>
             <p>Results</p>
             <ul className="res-list">
                 {players.map((player: Player) => (

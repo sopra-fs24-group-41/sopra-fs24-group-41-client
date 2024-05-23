@@ -1,47 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
 import "styles/views/Login.scss";
 import "styles/views/Profile.scss";
 import BaseContainer from "../ui/BaseContainer";
-import User from "../../models/User";
+import DailyChallenge from "../../models/DailyChallenge";
 import PropTypes from "prop-types";
 import "styles/views/Leaderboard.scss";
 import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
-
-const DummyUsers = [
-    {
-        id: 1,
-        username: "b001",
-        numberOfCombinations: 20,
-        profilePicture: "b001",
-    },
-    {
-        id: 2,
-        username: "Primagen",
-        numberOfCombinations: 60,
-        profilePicture: "primeagen",
-    },
-    {
-        id: 3,
-        username: "NeetCode",
-        numberOfCombinations: 80,
-        profilePicture: "neetcode",
-    },
-    {
-        id: 4,
-        username: "CodeAestetic",
-        numberOfCombinations: 69,
-        profilePicture: "codeaesthetic",
-    },
-    {
-        id: 5,
-        username: "Hyperplexed",
-        numberOfCombinations: 42,
-        profilePicture: "hyperplexed",
-    },
-];
+import { api, useError } from "../../helpers/api";
 
 const UserItem = ({ user, curr }) => (
     <div
@@ -68,7 +36,6 @@ const UserItem = ({ user, curr }) => (
 
 UserItem.propTypes = {
     user: PropTypes.shape({
-        id: PropTypes.number.isRequired,
         username: PropTypes.string.isRequired,
         numberOfCombinations: PropTypes.number.isRequired,
         profilePicture: PropTypes.string.isRequired,
@@ -78,17 +45,43 @@ UserItem.propTypes = {
 
 const Leaderboard = () => {
     const navigate = useNavigate();
-    const [users, setUsers] = useState(DummyUsers);
     const [curr, setCurr] = useState("Primagen");
     const [searchTerm, setSearchTerm] = useState("");
+    const [fetchedRecords, setFetchedRecords] = useState([]);
 
-    const filteredUsers = users.filter((user) =>
+    useEffect(() => {
+        const fetchChallengeData = async () => {
+            try {
+                let response = await api.get("/users/challenges");
+                const challenges = response.data.map(
+                    (data) => new DailyChallenge(data)
+                );
+                setFetchedRecords(challenges);
+            } catch (error) {
+                useError(error);
+            }
+        };
+        fetchChallengeData();
+    }, []);
+
+    useEffect(() => {
+        // Find the username associated with the userID
+        const userID = localStorage.getItem("userId");
+        const currChallenger = fetchedRecords.find(
+            (challenge) => challenge.id.toString() === userID
+        );
+        if (currChallenger && currChallenger.username) {
+            setCurr(currChallenger.username);
+        }
+    });
+
+    const filteredUsers = fetchedRecords.filter((user) =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const userRefs = users.reduce((acc, user) => {
+    const userRefs = fetchedRecords.reduce((acc, user) => {
         acc[user.id] = useRef();
-        
+
         return acc;
     }, {});
 
@@ -96,7 +89,7 @@ const Leaderboard = () => {
         const term = e.target.value;
         setSearchTerm(term);
 
-        const user = users.find((user) =>
+        const user = fetchedRecords.find((user) =>
             user.username.toLowerCase().includes(term.toLowerCase())
         );
 
@@ -121,13 +114,22 @@ const Leaderboard = () => {
                     onChange={handleSearch}
                 />
                 <ul className="leaderboard list">
-                    {users.map((user) => (
-                        <li key={user.id} ref={userRefs[user.id]}>
-                            <UserItem user={user} curr={curr} />
-                        </li>
-                    ))}
+                    {fetchedRecords.length > 0 ? (
+                        fetchedRecords.map((item) => (
+                            <li
+                                key={`${item.numberOfCombinations}-${item.username}`}
+                            >
+                                <UserItem user={item} curr={curr} />
+                            </li>
+                        ))
+                    ) : (
+                        <h3>
+                            No one has completed their daily challenge yet, be
+                            the first to do so!
+                        </h3>
+                    )}
                 </ul>
-                <div className="achievement-button-container">
+                <div className="leaderboard-button-container">
                     <Button
                         width="100%"
                         onClick={() => navigate("/lobbyoverview")}

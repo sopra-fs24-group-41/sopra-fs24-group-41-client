@@ -47,7 +47,7 @@ GamemodeItem.propTypes = {
     ownerMode: PropTypes.bool,
 };
 
-const gamemodes = [
+let gamemodes = [
     {
         name: "Fusion Frenzy",
         description: "How fast are you?",
@@ -88,7 +88,7 @@ const longerdesc: { [key: string]: string } = {
     "Finite Fusion":
         "You have only a limited number of words to get the target word.",
     "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?",
-    "Daily Challenge": "You get a challenge target word every day, try to get it as fast as possible and rise the ranks of the leaderboard to assert your dominance.",
+    "Daily Challenge": "You get a challenge target word every day, try to get it with the least combinations possible and rise the ranks of the leaderboard to assert your dominance.",
 };
 
 export const LobbyContext = createContext();
@@ -121,6 +121,37 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const lobbyCode = params.lobbycode;
     const [editError, setEditError] = useState(false);
     const { resetError } = useError();
+    const [gamemodes, setGamemodes] = useState([    {
+        name: "Fusion Frenzy",
+        description: "How fast are you?",
+        serverName: "FUSIONFRENZY",
+        active: true,
+    },
+    {
+        name: "Wombo Combo",
+        description: "Make some bomb combos!",
+        serverName: "WOMBOCOMBO",
+        active: true,
+    },
+    {
+        name: "Finite Fusion",
+        description: "Use your resources wisely.",
+        serverName: "FINITEFUSION",
+        active: true,
+    },
+    {
+        name: "Sandbox",
+        description: "Explore infinite combinations.",
+        serverName: "STANDARD",
+        active: true,
+    },
+    {
+        name: "Daily Challenge",
+        description: "A new challenge every day.",
+        serverName: "DAILYCHALLENGE",
+        active: true,
+    },]);
+
 
     useEffect(() => {
         // Fetch lobby and players data
@@ -129,6 +160,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 const response = await api.get("/lobbies/" + lobbyCode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
+                console.log(lobbyData);
                 if (
                     lobbyData.owner.id ===
                     Number(localStorage.getItem("playerId"))
@@ -171,6 +203,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
         };
     }, [stompWebSocketHook.connectedTrigger]);
 
+
     // websocket message interpretation
     useEffect(() => {
         let messagesLength = stompWebSocketHook.messages.length;
@@ -179,6 +212,11 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             messagesList.forEach((message) => {
                 if (message.instruction === "update_lobby") {
                     setLobby(new Lobby(message.data));
+                    if(lobby.players.length === 1){
+                        gamemodes[4].active = true;
+                    }
+                    setGamemodes(gamemodes);       
+            
                 }
                 if (message.instruction === "start") {
                     navigate("/lobby/game");
@@ -191,6 +229,25 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
+
+
+    useEffect(() => {
+        const updatedGamemodes = [...gamemodes]; // create a copy of the gamemodes array
+        if(lobby.players.length === 1){
+            updatedGamemodes[1].active = true;
+        }
+        setGamemodes(updatedGamemodes); // update the state
+    }, [lobby.players, gamemodes]);
+
+    useEffect(() => {
+        const updatedGamemodes = [...gamemodes]; // create a copy of the gamemodes array
+        if(lobby.players.length > 1){
+            updatedGamemodes[4].active = false;
+            if(selectedGamemode === updatedGamemodes[4]) {setSelectedGamemode(updatedGamemodes[0]);} 
+        }
+
+        setGamemodes(updatedGamemodes); // update the state
+    }, [lobby.players, selectedGamemode]);
 
     const updateLobby = async (
         name: string,
