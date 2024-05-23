@@ -54,7 +54,7 @@ const longerdesc: { [key: string]: string } = {
         "All players will get a different set of target words, the one that gets all their target words first, wins.",
     "Finite Fusion":
         "You have only a limited number of words to get the target word.",
-    "Sandbox": "We didn't just clone Neal's Infinite Craft, did we...?",
+    Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
     "Daily Challenge":
         "You get a challenge target word every day, try to get it with the least combinations possible and rise the ranks of the leaderboard to assert your dominance.",
 };
@@ -198,23 +198,28 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     }, [stompWebSocketHook.messages]);
 
     useEffect(() => {
-        const updatedGamemodes = [...gamemodes]; // create a copy of the gamemodes array
-        if (lobby.players.length === 1) {
-            updatedGamemodes[1].active = true;
-        }
-        setGamemodes(updatedGamemodes); // update the state
-    }, [lobby.players, gamemodes]);
+        setGamemodes((prevGamemodes) => {
+            const updatedGamemodes = [...prevGamemodes]; // create a copy of the gamemodes array
+            if (lobby.players.length === 1) {
+                updatedGamemodes[1].active = true;
+            }
+            
+            return updatedGamemodes; // update the state
+        });
+    }, [lobby.players, selectedGamemode]);
 
     useEffect(() => {
-        const updatedGamemodes = [...gamemodes]; // create a copy of the gamemodes array
-        if (lobby.players.length > 1) {
-            updatedGamemodes[4].active = false;
-            if (selectedGamemode === updatedGamemodes[4]) {
-                setSelectedGamemode(updatedGamemodes[0]);
+        setGamemodes((prevGamemodes) => {
+            const updatedGamemodes = [...prevGamemodes]; // create a copy of the gamemodes array
+            if (lobby.players.length > 1) {
+                updatedGamemodes[4].active = false;
+                if (selectedGamemode === updatedGamemodes[4]) {
+                    setSelectedGamemode(updatedGamemodes[0]);
+                }
             }
-        }
 
-        setGamemodes(updatedGamemodes); // update the state
+            return updatedGamemodes; // update the state
+        });
     }, [lobby.players, selectedGamemode]);
 
     const updateLobby = async (

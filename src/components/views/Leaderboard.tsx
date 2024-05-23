@@ -128,7 +128,7 @@ const Leaderboard = () => {
             <div className="leaderboard container">
                 <h2>Daily Challenge Leaderboard</h2>
                 <p>
-                    {"Today's target word was: "}
+                    {"Today's target word is: "}
                     <span className="target-word">{targetWord}</span>
                 </p>
                 <input
