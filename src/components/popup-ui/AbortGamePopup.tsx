@@ -19,6 +19,7 @@ const AbortGamePopup = () => {
         };
         try {
             await api.delete("/lobbies/" + lobbyCode + "/games", config);
+            navigate("/lobbies/" + lobbyCode)
         } catch (error) {
             handleError(error);
             navigate("/lobbies/" + lobbyCode)

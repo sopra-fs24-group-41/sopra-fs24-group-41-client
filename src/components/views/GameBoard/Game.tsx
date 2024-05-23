@@ -67,6 +67,7 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const fetchOtherPlayers = async () => {
+        if (!lobbyCode) {navigate("/lobbyoverview")}
         try {
             let response = await api.get(`/lobbies/${lobbyCode}/players`);
             let foundOtherPlayers = response.data.map((p) => new Player(p));
@@ -202,28 +203,6 @@ const Game = ({ stompWebSocketHook }) => {
         }
     }
 
-
-    useEffect(() => {
-
-        const handleTabClose = async () => {
-
-            const config = {
-                headers: {playerToken: playerToken},
-            };
-            try {
-                if (!isLobbyOwner) {
-                    await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
-                }
-            } catch (error) {
-                handleError(error);
-            }
-        }
-        window.addEventListener("beforeunload", handleTabClose);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleTabClose);
-        };
-    }, []);
 
     const play = async (playerWord1, playerWord2) => {
         let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);

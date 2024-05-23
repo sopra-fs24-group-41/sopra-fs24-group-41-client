@@ -51,9 +51,9 @@ const Login = () => {
             if (error.response === undefined) {
                 navigate("/server-down")
             } else {
-            setLoginErrorMsg(error.response.data.message);
-            setLoginError(true);
-        }}
+                setLoginErrorMsg(error.response.data.message);
+                setLoginError(true);
+            }}
     };
 
     return (

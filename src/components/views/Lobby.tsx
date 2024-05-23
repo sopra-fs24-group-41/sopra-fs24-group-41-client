@@ -128,7 +128,8 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     Number(localStorage.getItem("playerId"))
                 )
                     setOwnerMode(true);
-                if (lobbyData.status === "INGAME") { navigate("/lobby/game"); }
+                if (lobby.status === "INGAME") {
+                    navigate("/lobby/game"); }
             } catch (error) {
                 handleError(error, navigate);
                 kick();
@@ -184,28 +185,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
-
-    useEffect(() => {
-        const playerId = localStorage.getItem("playerId");
-        const playerToken = localStorage.getItem("playerToken");
-        const handleTabClose = async () => {
-            const config = {
-                headers: {playerToken: playerToken},
-            };
-            try {
-                kick();
-                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
-            } catch (error) {
-                handleError(error);
-                kick();
-            }
-        }
-        window.addEventListener("beforeunload", handleTabClose);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleTabClose);
-        };
-    }, []);
 
     const updateLobby = async (
         name: string,

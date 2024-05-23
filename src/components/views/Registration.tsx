@@ -64,9 +64,9 @@ const Registration = () => {
             if (error.response === undefined) {
                 navigate("/server-down")
             } else {
-            setRegisterErrorMsg(error.response.data.message);
-            setRegisterError(true);
-        }}
+                setRegisterErrorMsg(error.response.data.message);
+                setRegisterError(true);
+            }}
     };
 
     return (
