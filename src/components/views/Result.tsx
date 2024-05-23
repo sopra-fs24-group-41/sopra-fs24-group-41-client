@@ -42,7 +42,6 @@ const Result = ({ stompWebSocketHook }) => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
-                console.log(response.data);
             } catch (error) {
                 handleError(error, navigate);
             }

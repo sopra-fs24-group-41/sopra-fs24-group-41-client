@@ -39,13 +39,10 @@ export const ErrorProvider = ({ children }) => {
             return info;
         } else {
             if (error.message.match(/Network Error/i)) {
-                localStorage.clear();
-                console.log("The server seems to be down, did you start it?")
                 navigate("/server-down/");
 
                 return error.message;
             }
-
             console.log("Something else happened.", error);
 
             return error.message;

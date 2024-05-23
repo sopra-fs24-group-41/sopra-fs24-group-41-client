@@ -20,7 +20,6 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
 
     const reJoinLobby = async (code) => {
         try {
-            const requestBody = {};
             const config = { headers: { userToken: localStorage.getItem("userToken") } };
             const response = await api.post("/lobbies/" + code + "/players", {}, config);
             localStorage.setItem("playerToken", response.data.playerToken);
@@ -32,6 +31,10 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
         }
     };
 
+    const lobbyOwnerCheck  = () => {
+        return lobby.owner.user.id === Number(localStorage.getItem("userId"));
+    }
+
     return (
         <button
             className={`lobby container${isSelected ? "-selected" : ""}`}
@@ -39,14 +42,15 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
         >
             <label className="lobby lobby-name">{lobby.name}</label>
             <div>
-                {lobby.status === "PREGAME" ? "" : "❌"}
+                {lobby.status === "PREGAME" || lobbyOwnerCheck()  ? "" : "❌"}
             </div>
-            {lobby.owner.user.id === Number(localStorage.getItem("userId")) ? <Button
-                width="20%"
-                onClick={() => reJoinLobby(lobby.code)}
-            >
-                Rejoin
-            </Button> : null}
+            {lobbyOwnerCheck() ?
+                <Button
+                    width="20%"
+                    onClick={() => reJoinLobby(lobby.code)}
+                >
+                    Rejoin
+                </Button> : null}
         </button>
     );
 };
@@ -74,7 +78,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 const lobbyData = response.data.map((lobby: any) => new Lobby(lobby));
                 setLobbies(lobbyData);
             } catch (error) {
-                handleError(error, navigate);
+                handleError(error);
             }
         };
         fetchLobbies();
@@ -130,19 +134,20 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
 
 
     const joinLobby = async () => {
-        if (!checkLogin()) {
-            try {
-                const lobby = await api.get("/lobbies/" + lobbyCode);
-                if (lobby.data.status !== "PREGAME") {
-                    setLobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
-                    setTimeout(() => setLobbyIngameErrorMsg(""), 3000)
 
-                    return
-                }
-                navigate("/lobby/" + lobbyCode + "/anonymous");
-            } catch (error) {
-                handleError(error, navigate);
+        try {
+            const lobby = await api.get("/lobbies/" + lobbyCode);
+            if (lobby.data.status !== "PREGAME") {
+                setLobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
+                setTimeout(() => setLobbyIngameErrorMsg(""), 3000)
+
+                return
             }
+        } catch (error) {
+            handleError(error);
+        }
+        if (!checkLogin()) {
+            navigate("/lobby/" + lobbyCode + "/anonymous");
         } else {
             try {
                 const requestBody = {};
@@ -153,7 +158,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                 localStorage.setItem("lobbyCode", lobbyCode);
                 navigate("/lobby/" + lobbyCode);
             } catch (error) {
-                handleError(error, navigate);
+                handleError(error);
             }
         }
     };

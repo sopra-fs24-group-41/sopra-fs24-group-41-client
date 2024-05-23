@@ -212,11 +212,11 @@ const Game = ({ stompWebSocketHook }) => {
 
             try {
                 if (isLobbyOwner) {
+                    kick();
                     await api.delete("/lobbies/" + lobbyCode + "/games", config);
-                    kick();
                 } else {
-                    await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
                     kick();
+                    await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId, config);
                 }
             } catch (error) {
                 handleError(error);
