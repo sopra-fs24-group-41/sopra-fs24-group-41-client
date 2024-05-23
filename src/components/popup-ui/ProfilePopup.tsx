@@ -16,6 +16,7 @@ const ProfilePopup = () => {
             const requestBody = JSON.stringify({ token });
             await api.post("/logouts", requestBody);
             localStorage.removeItem("userToken");
+            localStorage.removeItem("userId");
             navigate("/login");
         } catch (error) {
             if (error.response && error.response.status === 404) {
