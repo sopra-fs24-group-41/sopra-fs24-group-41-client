@@ -137,8 +137,9 @@
     background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
-    max-height: 400px;
-    overflow: hidden;
+    min-height: 130px;
+    max-height: calc(100vh - 405px);
+    overflow: auto;
   }
 }
 
