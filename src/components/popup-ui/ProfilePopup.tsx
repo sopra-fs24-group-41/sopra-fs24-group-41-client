@@ -16,12 +16,13 @@ const ProfilePopup = () => {
             const requestBody = JSON.stringify({ token });
             await api.post("/logouts", requestBody);
             localStorage.removeItem("userToken");
+            localStorage.removeItem("userId");
             navigate("/login");
         } catch (error) {
             if (error.response && error.response.status === 404) {
                 alert("Logout endpoint not found, the server was restarted");
             } else {
-                alert(`Something went wrong during the logout: \n${handleError(error, navigate)}`);
+                alert(`Something went wrong during the logout, refreshing the page\n${handleError(error, navigate)}`);
             }
             localStorage.removeItem("userToken");
             localStorage.removeItem("userId")

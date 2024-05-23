@@ -16,7 +16,7 @@ const Result = ({ stompWebSocketHook }) => {
     const [player, setPlayer] = useState<Player>(new Player);
     const [winner, setWinner] = useState();
     const [players, setPlayers] = useState<Player[]>([]);
-    const playerId = localStorage.getItem("playerId");
+    const playerId = Number(localStorage.getItem("playerId"));
     const playerToken = localStorage.getItem("playerToken");
     const lobbyCode = localStorage.getItem("lobbyCode");
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -30,9 +30,6 @@ const Result = ({ stompWebSocketHook }) => {
             try {
                 let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
                 let foundPlayer = new Player(response.data);
-                foundPlayer.id = playerId;
-                foundPlayer.token = playerToken;
-                foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
                 setPID(foundPlayer.id);
             } catch (error) {
@@ -59,12 +56,12 @@ const Result = ({ stompWebSocketHook }) => {
     }, [players]);
 
     useEffect(() => {
-        setResultStatus(winner?.id.toString() === playerId.toString());
+        setResultStatus(winner?.id === playerId);
     }, [winner]);
 
     const renderPlayer = (ID) => {
         if (winner && ID === winner.id)return "player-container winner";
-        else if (ID.toString()  === pID)return "player-container loser";
+        else if (ID  === pID)return "player-container loser";
         else return "player-container";
     };
     
@@ -102,7 +99,7 @@ const Result = ({ stompWebSocketHook }) => {
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connectedTrigger]);
+    }, [stompWebSocketHook.connected.current]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -122,6 +119,25 @@ const Result = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    useEffect(() => {
+        const handleTabClose = async () => {
+            const config = {
+                headers: {playerToken: playerToken},
+            }
+            try {
+                await api.delete("/lobbies/" + lobbyCode + "/players/" + playerId , config);
+                kick()
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
+    }, []);
+
     const userContent = (
         <div className="res">
             <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
@@ -129,7 +145,7 @@ const Result = ({ stompWebSocketHook }) => {
             <ul className="res-list">
                 {players.map((player: Player) => (
                     <li
-                        key={player.wordCount}
+                        key={player.id}
                         onMouseEnter={() => setSelectedPlayer(player)}
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
@@ -179,7 +195,6 @@ Result.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
-        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 
