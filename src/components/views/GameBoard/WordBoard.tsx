@@ -32,6 +32,16 @@ const WordBoard = ({ playFunction }) => {
     useEffect(() => {
         setWordList(prevState => {
             const filteredWords = filterWords(prevState, searchWord);
+            for (let word of filteredWords) {
+                if (word.uses !== null && word.uses !== undefined && !isNaN(word.uses)) {
+                    for (let playerWord of player.playerWords) {
+                        if (playerWord.uses !== null && playerWord.uses !== undefined && !isNaN(playerWord.uses) && playerWord.word.name === word.word.name && playerWord.uses !== word.uses) {
+                            word.uses = playerWord.uses;
+                            break;
+                        }
+                    }
+                }
+            }
             const newWords = findNewWords(filteredWords, player.playerWords, searchWord);
 
             return [...filteredWords, ...newWords];
@@ -100,13 +110,26 @@ const WordBoard = ({ playFunction }) => {
         return false
     }
 
+    const updateWordListUses = (toUpdatePlayerWord, uses) => {
+        setWordList(prevState => {
+            for (let word of prevState) {
+                if (word.word.name === toUpdatePlayerWord.word.name) {
+                    word.uses = uses;
+                    break;
+                }
+            }
+
+            return prevState;
+        });
+    };
+
     const removeWord = () => {
         if (nextWordIndex !== 1) {
             return;
         }
 
-        if (mergeWordList[0].uses !== null && mergeWordList[0].uses !== undefined && !isNaN(mergeWordList[0])) {
-            mergeWordList[0].uses += 1;
+        if (mergeWordList[0].uses !== null && mergeWordList[0].uses !== undefined && !isNaN(mergeWordList[0].uses)) {
+            updateWordListUses(mergeWordList[0], mergeWordList[0].uses + 1);
         }
 
         setNextWordIndex(0);
