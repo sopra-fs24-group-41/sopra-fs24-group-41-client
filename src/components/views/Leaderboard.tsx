@@ -52,6 +52,7 @@ const Leaderboard = () => {
     const [curr, setCurr] = useState("Primagen");
     const [searchTerm, setSearchTerm] = useState("");
     const [fetchedRecords, setFetchedRecords] = useState([]);
+    const { handleError } = useError();
     const targetWord = "Zaddy";
 
     useEffect(() => {
@@ -63,7 +64,8 @@ const Leaderboard = () => {
                 );
                 setFetchedRecords(challenges);
             } catch (error) {
-                useError(error);
+                handleError(error, navigate);
+
             }
         };
         fetchChallengeData();
