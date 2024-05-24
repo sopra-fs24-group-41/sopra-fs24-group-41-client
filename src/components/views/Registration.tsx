@@ -68,14 +68,14 @@ const Registration = () => {
                 setRegisterError(true);
             }}
     };
-
+    
     return (
         <BaseContainer>
             <div className="login container">
                 <form
                     className="login form"
                     onSubmit={(e) => {
-                        e.preventDefault(), doRegistration();
+                        e.preventDefault(); doRegistration();
                     }}
                 >
                     <h2>Registration</h2>

@@ -50,6 +50,11 @@ const Game = ({ stompWebSocketHook }) => {
         [otherPlayers, setOtherPlayers]
     );
 
+    const abortGameValue = useMemo(
+        () => ({ abortGamePopup, setAbortGamePopup }),
+        [abortGamePopup, setAbortGamePopup]
+    );
+
     const { handleError } = useError();
 
     const popupMessages = {
@@ -295,11 +300,7 @@ const Game = ({ stompWebSocketHook }) => {
                             </Button>
                             {abortGamePopup && (
                                 <GameContext.Provider
-                                    value={{
-                                        abortGamePopup,
-                                        setAbortGamePopup,
-                                    }}
-                                >
+                                    value={abortGameValue}>
                                     <AbortGamePopup />
                                 </GameContext.Provider>
                             )}
