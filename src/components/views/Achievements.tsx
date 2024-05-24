@@ -66,7 +66,7 @@ const Achievements = () => {
         ) {
             return "achievement unlocked";
         } else {
-            return "achievement unlocked";
+            return "achievement locked";
         }
     };
 
