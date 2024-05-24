@@ -148,11 +148,13 @@
     font-size: 1.5em;
     text-align: left;
     display: flex;
-    color: transparent;
-    text-shadow:
-            0 0 10px $textColor,
-            0 0 8px $textColor;
-  }
+    color: $textColor;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
+    filter: blur(6px); // Adjust the pixel value to control the amount of blur
+}
 }
 
 .word-merge-bar {
