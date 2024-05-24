@@ -46,7 +46,7 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
             </div>
             {lobbyOwnerCheck() ?
                 <Button
-                    width="20%"
+                    width="25%"
                     onClick={() => reJoinLobby(lobby.code)}
                 >
                     Rejoin
