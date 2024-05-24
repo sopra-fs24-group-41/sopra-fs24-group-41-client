@@ -22,7 +22,8 @@ const Info = () => {
                     No Account yet? Click the Sign up button to create one.
                     Once you are logged in click on &quot;create lobby&quot; in the overview page.
                     You will get redirected to the lobby page where you can choose the game mode and wait until your friends or other opponents joined.
-                    (But you can also play alone)
+                    (But you can also play alone). Invite your friends by copying the lobby code and send it to them. They can join right in.
+                    Tell them to register before clicking the link to ensure that they can unlock achievements.
                 </p>
                 <h2>
                     How to join a lobby
