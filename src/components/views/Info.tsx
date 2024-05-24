@@ -28,7 +28,7 @@ const Info = () => {
                     How to join a lobby
                 </h2>
                 <p>
-                    You don&apos;t need an account to join an existing lobby. But you can only get achievements and
+                    You don&apos;t need an account to join an existing lobby. But you can only get achievements and track statistics if you are a registered user.
                     Choose an open lobby from the overview page.
                     The &quot;❌&quot; means that this lobby currently has an ongoing game and you have to wait until it is finished before you can join.
                     Try again later when the cross disappeared.
@@ -37,7 +37,7 @@ const Info = () => {
                     How to start a game
                 </h2>
                 <p>
-                    You have to be in a lobby and the lobby owner to start a game.
+                    You have to be in a lobby and you must be the lobby owner to start a game.
                     There are different game modes from which you can choose from:
                     <ul>
                         <li>
@@ -69,13 +69,13 @@ const Info = () => {
                     The leaderboard displays all users that participated in the daily challenge today.
                     Start a lobby and select the game mode &quot;Daily Challenge&quot;.
                     You can only start a game with the daily challenge game mode when you are alone in the lobby.
-                    Get to the target word and check the leaderboard again. You can find the leaderboard in the same place as you find your profile.
+                    Get to the target word and check the leaderboard again. You can find the leaderboard in the same pop-up where you go to your profile.
                 </p>
                 <h2>
                     How are the combinations generated?
                 </h2>
                 <p>
-                    No we did not create all the combinations by hand. Every time you ask us to combine two words,
+                    No, we did not create all the combinations by hand. Every time you ask us to combine two words,
                     we check if some other player did the same combination before. If yes, we return the result that the other player already unlocked.
                     If we don&apos;t know the result word to your combination yet,
                     we ask an LLM (Large Language Model) what it thinks the combination of the two words you provided are.
