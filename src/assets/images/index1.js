@@ -1,5 +1,5 @@
 import PixelShiba from "../../assets/images/PixelShiba.jpg";
-import Architect from "../../assets/images/Architect.jpg";
+import architect from "../../assets/images/architect.jpg";
 import Cat from "../../assets/images/Cat.jpg";
 import wombo_combo_one_hundred from "../../assets/images/wombo_combo_one_hundred.jpg";
 import NeetCode from "../../assets/images/NeetCode.jpg";
@@ -13,7 +13,7 @@ import Puppy from "../../assets/images/Puppy.jpg";
 import Primeagen from "../../assets/images/Primeagen.jpg";
 import MudMon from "../../assets/images/MudMon.jpg";
 import gandalf from "../../assets/images/gandalf.jpg";
-import MaryPoppins from "../../assets/images/MaryPoppins.jpg";
+import mary_poppins from "../../assets/images/mary_poppins.jpg";
 import mud from "../../assets/images/mud.jpeg";
 import get_over_it from "../../assets/images/get_over_it.jpg";
 import CoolPenguin from "../../assets/images/CoolPenguin.jpg";
@@ -34,14 +34,14 @@ import crowned_sad_face from "../../assets/images/crowned_sad_face.jpeg";
 import Wizard from "../../assets/images/Wizard.jpg";
 import SpaceDude from "../../assets/images/SpaceDude.jpg";
 import sandcastle_v2 from "../../assets/images/sandcastle_v2.jpeg";
-import SunglassesGorilla from "../../assets/images/SunglassesGorilla.jpg";
+import sunglasses_gorilla from "../../assets/images/sunglasses_gorilla.jpg";
 import octopus from "../../assets/images/octopus.jpg";
 import pikachu from "../../assets/images/pikachu.jpg";
 import Catsy from "../../assets/images/Catsy.jpg";
 
 const IMAGES = {
     PixelShiba,
-    Architect,
+    architect,
     Cat,
     wombo_combo_one_hundred,
     NeetCode,
@@ -55,7 +55,7 @@ const IMAGES = {
     Primeagen,
     MudMon,
     gandalf,
-    MaryPoppins,
+    mary_poppins,
     mud,
     get_over_it,
     CoolPenguin,
@@ -76,7 +76,7 @@ const IMAGES = {
     Wizard,
     SpaceDude,
     sandcastle_v2,
-    SunglassesGorilla,
+    sunglasses_gorilla,
     octopus,
     pikachu,
     Catsy,
