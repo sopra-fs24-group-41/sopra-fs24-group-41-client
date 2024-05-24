@@ -9,7 +9,7 @@ import Player from "models/Player";
 import PlayerWord from "models/PlayerWord";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import {Button} from "../../ui/Button";
+import { Button } from "../../ui/Button";
 import QuitPopup from "../../popup-ui/QuitPopup";
 import AbortGamePopup from "../../popup-ui/AbortGamePopup";
 import Typewriter from "../../popup-ui/Typewriter";
@@ -37,11 +37,25 @@ const Game = ({ stompWebSocketHook }) => {
     const [achievementPopup, setAchievementPopup] = useState(false);
     const [achievementMsg, setAchievementMsg] = useState(null);
     const [popupClass, setPopupClass] = useState("");
-    const playerValue = useMemo(() => ({player, setPlayer}), [player, setPlayer]);
-    const quitPopupValue = useMemo(() => ({quitPopup, setQuitPopup}), [quitPopup, setQuitPopup]);
-    const otherPlayersValue = useMemo(() => ({otherPlayers, setOtherPlayers}), [otherPlayers, setOtherPlayers]);
+    const playerValue = useMemo(
+        () => ({ player, setPlayer }),
+        [player, setPlayer]
+    );
+    const quitPopupValue = useMemo(
+        () => ({ quitPopup, setQuitPopup }),
+        [quitPopup, setQuitPopup]
+    );
+    const otherPlayersValue = useMemo(
+        () => ({ otherPlayers, setOtherPlayers }),
+        [otherPlayers, setOtherPlayers]
+    );
 
-    const {handleError} = useError();
+    const abortGameValue = useMemo(
+        () => ({ abortGamePopup, setAbortGamePopup }),
+        [abortGamePopup, setAbortGamePopup]
+    );
+
+    const { handleError } = useError();
 
     const popupMessages = {
         "30": "You have 30 seconds left!",
@@ -52,11 +66,13 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const fetchPlayer = async () => {
-        if (!lobbyCode) {navigate("/lobbyoverview")}
+        if (!lobbyCode) {
+            navigate("/lobbyoverview");
+        }
         try {
             let response = await api.get(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
-                {headers: {playerToken: playerToken}}
+                { headers: { playerToken: playerToken } }
             );
             let foundPlayer = new Player(response.data);
             foundPlayer.sortPlayerWords();
@@ -67,7 +83,9 @@ const Game = ({ stompWebSocketHook }) => {
     };
 
     const fetchOtherPlayers = async () => {
-        if (!lobbyCode) {navigate("/lobbyoverview")}
+        if (!lobbyCode) {
+            navigate("/lobbyoverview");
+        }
         try {
             let response = await api.get(`/lobbies/${lobbyCode}/players`);
             let foundOtherPlayers = response.data.map((p) => new Player(p));
@@ -194,15 +212,16 @@ const Game = ({ stompWebSocketHook }) => {
             const config = {
                 headers: { userToken: localStorage.getItem("userToken") },
             };
-            const userId = localStorage.getItem("userId")
-            if (userId === null) {return setIsLobbyOwner(false)}
+            const userId = localStorage.getItem("userId");
+            if (userId === null) {
+                return setIsLobbyOwner(false);
+            }
             const lobby = await api.get("/users/" + userId + "/lobby", config);
             setIsLobbyOwner(lobby.data.owner.id === playerId);
         } catch (error) {
             handleError(error);
         }
-    }
-
+    };
 
     const play = async (playerWord1, playerWord2) => {
         let loadingTimeoutId = setTimeout(() => setIsLoading(true), 750);
@@ -210,7 +229,7 @@ const Game = ({ stompWebSocketHook }) => {
             let response = await api.put(
                 `/lobbies/${lobbyCode}/players/${playerId}`,
                 [playerWord1.word, playerWord2.word],
-                {headers: {playerToken: playerToken}}
+                { headers: { playerToken: playerToken } }
             );
             let responsePlayer = new Player(player);
             responsePlayer.points = response.data.points;
@@ -251,7 +270,7 @@ const Game = ({ stompWebSocketHook }) => {
 
     const handleAbort = () => {
         setAbortGamePopup((prevState) => !prevState);
-    }
+    };
 
     return (
         <div>
@@ -260,23 +279,29 @@ const Game = ({ stompWebSocketHook }) => {
                     {achievementMsg}
                 </p>
             )}
-            <Typewriter text={remainingTime}/>
+            <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={playerValue}>
-                    <BaseContainer className="game container">
+                    <BaseContainer className="game container halved-top">
                         <BaseContainer className="game horizontal-container">
                             <TargetWord />
-                            {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
+                            {isLoading ? (
+                                <div className="spinner-css">
+                                    {" "}
+                                    <RotateSpinner />{" "}
+                                </div>
+                            ) : null}
                             <Button
                                 className="game-end-button"
                                 onClick={() => handleAbort()}
                                 disabled={!isLobbyOwner}
-                            >End Game</Button>
+                            >
+                                End Game
+                            </Button>
                             {abortGamePopup && (
                                 <GameContext.Provider
-                                    value={{abortGamePopup, setAbortGamePopup}}
-                                >
-                                    <AbortGamePopup/>
+                                    value={abortGameValue}>
+                                    <AbortGamePopup />
                                 </GameContext.Provider>
                             )}
                             <Button onClick={() => handleQuit()}>Quit</Button>
@@ -287,13 +312,16 @@ const Game = ({ stompWebSocketHook }) => {
                             )}
                         </BaseContainer>
                     </BaseContainer>
-                    <BaseContainer className="game horizontal-container">
-                        <BaseContainer className="game container">
-                            <WordBoard playFunction={play}/>
+
+                    <BaseContainer className="game flex-container">
+                        <BaseContainer className="game container halved-one">
+                            <WordBoard playFunction={play} />
                         </BaseContainer>
-                        <BaseContainer className="player-list container">
-                            <otherPlayersContext.Provider value={otherPlayersValue}>
-                                <PlayerList/>
+                        <BaseContainer className="game container halved-two">
+                            <otherPlayersContext.Provider
+                                value={otherPlayersValue}
+                            >
+                                <PlayerList />
                             </otherPlayersContext.Provider>
                         </BaseContainer>
                     </BaseContainer>

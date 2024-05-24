@@ -8,6 +8,7 @@ class Achievement {
         this.title = null;
         this.description = null;
         this.profilePicture = null;
+        this.hidden = null;
         Object.assign(this, data);
     }
 }

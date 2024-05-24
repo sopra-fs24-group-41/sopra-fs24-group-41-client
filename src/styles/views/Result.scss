@@ -25,6 +25,7 @@
     }
 
     h2 {
+      font-family: $fontFancy;
       text-align: center;
       margin: 0.5em;
     }
@@ -96,12 +97,13 @@
       height: max-content;
       z-index: 10;
       transition: all 0.3s ease;
-      transform: scale(1.1);
+      word-wrap: break-word;
     }
 
     .player-details{
       text-align: left;
       align-items: flex-start;
+      word-wrap: break-word;
     }
 
     .player-name {

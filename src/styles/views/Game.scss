@@ -7,7 +7,13 @@
   for more information visit https://sass-lang.com/guide
  */
 
-.game {
+ .game {
+  &.flex-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   &.container {
     margin: 1em;
     border-radius: $borderRadius;
@@ -17,7 +23,30 @@
     width: 100%;
     overflow: hidden;
     @include center;
+
+    &.halved-top {
+      margin-left: 0;
+      margin-top: 0;
+      margin-bottom: 1em;
+      margin-right: 0;
+      padding: 0;
+      width: calc(100% - 2em); /* Adjust for the margin of the parent container */
+    }
+
+    &.halved-one {
+      width: 76%;
+      padding: 0;
+      margin: 0; /* Ensure no margin */
+    }
+
+    &.halved-two {
+      width: 24%;
+      padding: 0;
+      margin: 0; /* Ensure no margin */
+      margin-left: 1em;
+    }
   }
+
 
   &.vertical-container {
     padding: 0;
@@ -27,7 +56,40 @@
     height: 100%;
     overflow: hidden;
     @include center;
+    &.gameboard{
+      width: 800px;
+    }
+
+
+    &.player-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: fit-content;
+      height: 100%;
+  
+      h1 {
+        font-size: large;
+        word-wrap: break-word;
+      }
+
+      ul{
+        list-style: none;
+        padding: 0;
+      }
+
+      li{
+        display: flex;
+        align-items: center;
+      }
+  
+       word-wrap: break-word;
+      @include center;
+
+
+    }
   }
+
 
   &.horizontal-container {
     padding-top: 0;
@@ -36,13 +98,18 @@
     width: 100%;
     height: 100%;
     overflow:hidden;
+    margin-left: 15px;
+    margin-right: 15px;
     @include center;
   }
 }
+
 .target-word {
   margin: 0;
-  padding: 0;
+  padding-top: 30px;
+  padding-bottom: 30px;
   &.text {
+    font-family: $fontFancy;
     font-size: 3em;
     text-align: center;
     display: flex;
@@ -54,27 +121,6 @@
     border-radius: calc(#{$borderRadius}/4);
     font-size: 2em;
     height: 100%;
-  }
-}
-
-.player-list {
-  &.container {
-    margin: 1em;
-    border-radius: $borderRadius;
-    background-color: $background;
-    box-shadow: $dropShadow;
-    height: 100%;
-    flex-direction: column;
-    overflow: hidden;
-    @include center;
-  }
-  &.list {
-    list-style: none;
-    padding: 0;
-  }
-  &.player {
-    display: flex;
-    align-items: center;
   }
 }
 
@@ -125,7 +171,7 @@
     font-size: 5em;
     text-align: center;
     display: flex;
-    color: $buttonCol
+    color: aliceblue;
   }
 }
 
@@ -196,13 +242,10 @@
 }
 
 .player-icon {
-  position: relative;
-  left: 12.5%;
-  width: 200px;
   max-height: 80px;
   display: flex;
   align-items: center;
-  margin-right: 10px;
+  word-wrap: break-word;
 
   img {
     width: 40px;
@@ -227,20 +270,25 @@
   color: inherit;
 }
 
-.word-table {
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  max-height: 285px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  .word-table {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
 }
 
 .game-end-button {
-  margin: 0.5em;
+  margin-right: 0.5em;
   width: 10%;
+  height: auto;
+  padding: 7px;
+  max-height: fit-content;
+  white-space: normal;
+  text-overflow: ellipsis;
 
 }
 

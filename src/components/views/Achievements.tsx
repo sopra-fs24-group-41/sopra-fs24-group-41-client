@@ -66,7 +66,7 @@ const Achievements = () => {
         ) {
             return "achievement unlocked";
         } else {
-            return "achievement locked";
+            return (achievementX.hidden ? "achievement locked hidden" : "achievement locked");
         }
     };
 

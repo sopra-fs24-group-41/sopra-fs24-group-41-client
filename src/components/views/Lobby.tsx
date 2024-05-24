@@ -183,7 +183,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                     if (lobby.players.length === 1) {
                         gamemodes[4].active = true;
                     }
-                    setGamemodes(gamemodes);
+                    setGamemodes([...gamemodes]); // Fix: Pass a new array to the setter instead of the existing state variable
                 }
                 if (message.instruction === "start") {
                     navigate("/lobby/game");
