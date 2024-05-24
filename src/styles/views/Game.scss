@@ -282,8 +282,13 @@
 }
 
 .game-end-button {
-  margin: 0.5em;
+  margin-right: 0.5em;
   width: 10%;
+  height: auto;
+  padding: 7px;
+  max-height: fit-content;
+  white-space: normal;
+  text-overflow: ellipsis;
 
 }
 
