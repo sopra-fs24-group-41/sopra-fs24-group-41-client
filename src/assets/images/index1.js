@@ -38,6 +38,7 @@ import sunglasses_gorilla from "../../assets/images/sunglasses_gorilla.jpg";
 import octopus from "../../assets/images/octopus.jpg";
 import pikachu from "../../assets/images/pikachu.jpg";
 import Catsy from "../../assets/images/Catsy.jpg";
+import goldblum from "../../assets/images/goldblum.jpg";
 
 const IMAGES = {
     PixelShiba,
@@ -80,6 +81,7 @@ const IMAGES = {
     octopus,
     pikachu,
     Catsy,
+    goldblum,
 };
 
 export default IMAGES;
