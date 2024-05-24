@@ -53,9 +53,9 @@ $borderRadius: 0.75em;
 }
 
 @font-face {
-  font-family: 'Cascadia';
+  font-family: 'Pocketcalculator';
   font-size: medium;
-  src: url('fonts/CascadiaMono.ttf'); // Change font here!
+  src: url('fonts/pocket_calculator.ttf'); // Change font here!
 }
 
-$fontFancy : 'Cascadia', monospace;
+$fontFancy : 'Pocketcalculator', monospace;

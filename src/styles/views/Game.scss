@@ -106,8 +106,10 @@
 
 .target-word {
   margin: 0;
-  padding: 0;
+  padding-top: 30px;
+  padding-bottom: 30px;
   &.text {
+    font-family: $fontFancy;
     font-size: 3em;
     text-align: center;
     display: flex;
