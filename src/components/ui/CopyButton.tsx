@@ -32,10 +32,11 @@ function CopyButton({ copyText }) {
             <div className="text-container">
                 {copyText}
             </div>
-            <div>
+            <div style={{fontSize:"15.5px"}} >
                 <Button
                     onClick={handleCopyClick}>
-                    <span>{isCopied ? "Copied!" : "Copy lobby URL"}</span>
+                    
+                    {isCopied ? "Copied!" : "Copy lobby URL"}
                 </Button>
             </div>
         </div>

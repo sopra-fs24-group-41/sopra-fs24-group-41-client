@@ -75,7 +75,7 @@ const Registration = () => {
                 <form
                     className="login form"
                     onSubmit={(e) => {
-                        e.preventDefault(), doRegistration();
+                        e.preventDefault(); doRegistration();
                     }}
                 >
                     <h2>Registration</h2>
@@ -113,7 +113,7 @@ const Registration = () => {
 
                         <Button width="100%" onClick={() => navigate("/login")}>
                             <span style={{ fontSize: "16px" }}>
-                                Already signed up? Login here
+                                Already signed up?
                             </span>
                         </Button>
                     </div>

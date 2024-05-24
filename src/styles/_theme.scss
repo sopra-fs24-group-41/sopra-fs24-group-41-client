@@ -10,9 +10,9 @@
 
 $accent: #000000;
 $accentDark: #000000;
-$textColor: rgb(73, 65, 112);
+$textColor: rgb(83, 77, 112);
 $background: #9b9b9b;
-$buttonCol: #e9e9e9;
+$buttonCol: #f2f2f2;
 $buttonColDark: #2e2e2e;
 
 /* some constants */
@@ -29,7 +29,7 @@ $SMALL_WIDTH: 768px;
 @font-face {
   font-family: 'Current Font';
   font-size: medium;
-  src: url('fonts/pocket_calculator.ttf'); // Change font here!
+  src: url('fonts/CascadiaMono.ttf'); // Change font here!
 }
 
 /* Fonts */
@@ -53,9 +53,9 @@ $borderRadius: 0.75em;
 }
 
 @font-face {
-  font-family: 'Cascadia';
+  font-family: 'Pocketcalculator';
   font-size: medium;
-  src: url('fonts/CascadiaMono.ttf'); // Change font here!
+  src: url('fonts/pocket_calculator.ttf'); // Change font here!
 }
 
-$fontFancy : 'Cascadia', monospace;
+$fontFancy : 'Pocketcalculator', monospace;

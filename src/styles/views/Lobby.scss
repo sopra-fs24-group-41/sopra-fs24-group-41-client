@@ -9,6 +9,7 @@
 
 .lobbypage {
   &.container {
+    width: 800px;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
@@ -32,11 +33,12 @@
     margin: 0.5em 0;
     text-decoration: underline;
     font-size: 30px;
+    font-family: $fontFancy;
     transform: translateX(15%);
   }
 
   &.game-and-players-container {
-    justify-content: space-evenly;
+    justify-content: space-between;
   }
   @media only screen and (max-width: 780px) {
     &.container {
@@ -56,7 +58,9 @@
     display: block;
     flex-direction: column;
     align-items: center;
-    margin-left: 30px;
+    margin-right: 20px;
+    margin-left: 10px;
+ 
     @media only screen and (max-width: 768px) {
       margin-left: 0;
     }
@@ -109,7 +113,7 @@
   }
 
   &.description {
-    max-width: 200px; /* adjust as needed */
+    max-width: 280px; /* adjust as needed */
     word-wrap: break-word;
     color: $textColor;
     margin-top: 5px;
@@ -134,7 +138,7 @@
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
-    width: 225px;
+    width: 250px;
     height: 60px;
     @media only screen and (max-width: 900px) {
       width: 200px;
@@ -235,12 +239,12 @@
 
 .timer-label {
   position: absolute;
+  margin: 0;
   top: 50px; 
   left: 10px;
-  /* Add your CSS styles here */
-  font-weight: bold;
-  font-weight: 700;
+  width: min-content;
   text-transform: uppercase;
+  font-weight: bold;
   text-align: center;
   height: 35px;
   border: none;
@@ -251,7 +255,7 @@
   background-color: $buttonColDark;
   transition: all 0.3s ease;
   font-family: $fontDefault;
-  font-size: 16px;
+  font-size: 14px;
   &:hover {
     transform: translateY(-2px);
   }

@@ -8,6 +8,7 @@ import bat from "../../assets/icons/bat.png";
 import beaver from "../../assets/icons/beaver.png";
 import buffalo from "../../assets/icons/buffalo.png";
 import camel from "../../assets/icons/camel.png";
+import capybara from "../../assets/icons/capybara.png";
 import chameleon from "../../assets/icons/chameleon.png";
 import cheetah from "../../assets/icons/cheetah.png";
 import chinchilla from "../../assets/icons/chinchilla.png";
@@ -19,7 +20,6 @@ import crow from "../../assets/icons/crow.png";
 import dingo from "../../assets/icons/dingo.png";
 import dinosaur from "../../assets/icons/dinosaur.png";
 import dolphin from "../../assets/icons/dolphin.png";
-import dragon from "../../assets/icons/dragon.png";
 import duck from "../../assets/icons/duck.png";
 import elephant from "../../assets/icons/elephant.png";
 import ferret from "../../assets/icons/ferret.png";
@@ -35,6 +35,7 @@ import ibex from "../../assets/icons/ibex.png";
 import ifrit from "../../assets/icons/ifrit.png";
 import iguana from "../../assets/icons/iguana.png";
 import jackal from "../../assets/icons/jackal.png";
+import kangaroo from "../../assets/icons/kangaroo.png";
 import koala from "../../assets/icons/koala.png";
 import kraken from "../../assets/icons/kraken.png";
 import lemur from "../../assets/icons/lemur.png";
@@ -44,6 +45,7 @@ import llama from "../../assets/icons/llama.png";
 import manatee from "../../assets/icons/manatee.png";
 import mink from "../../assets/icons/mink.png";
 import monkey from "../../assets/icons/monkey.png";
+import moose from "../../assets/icons/moose.png";
 import narwhal from "../../assets/icons/narwhal.png";
 import orangutan from "../../assets/icons/orangutan.png";
 import otter from "../../assets/icons/otter.png";
@@ -60,13 +62,14 @@ import sheep from "../../assets/icons/sheep.png";
 import shrew from "../../assets/icons/shrew.png";
 import skunk from "../../assets/icons/skunk.png";
 import squirrel from "../../assets/icons/squirrel.png";
+import tiger from "../../assets/icons/tiger.png";
 import turtle from "../../assets/icons/turtle.png";
 import walrus from "../../assets/icons/walrus.png";
 import wolf from "../../assets/icons/wolf.png";
 import wolverine from "../../assets/icons/wolverine.png";
 import wombat from "../../assets/icons/wombat.png";
 
-const ICONS = {
+const IMAGES = {
     alligator,
     anteater,
     armadillo,
@@ -77,6 +80,7 @@ const ICONS = {
     beaver,
     buffalo,
     camel,
+    capybara,
     chameleon,
     cheetah,
     chinchilla,
@@ -88,7 +92,6 @@ const ICONS = {
     dingo,
     dinosaur,
     dolphin,
-    dragon,
     duck,
     elephant,
     ferret,
@@ -104,6 +107,7 @@ const ICONS = {
     ifrit,
     iguana,
     jackal,
+    kangaroo,
     koala,
     kraken,
     lemur,
@@ -113,6 +117,7 @@ const ICONS = {
     manatee,
     mink,
     monkey,
+    moose,
     narwhal,
     orangutan,
     otter,
@@ -129,6 +134,7 @@ const ICONS = {
     shrew,
     skunk,
     squirrel,
+    tiger,
     turtle,
     walrus,
     wolf,
@@ -136,4 +142,4 @@ const ICONS = {
     wombat,
 };
 
-export default ICONS;
+export default IMAGES;

@@ -51,7 +51,7 @@ const convertLowercase = (obj) => {
     }, {});
 }
 
-let IMAGES = {
+const tmp  = {
     mary_poppins: mary_poppins,
     PixelShiba: PixelShiba,
     Cat: Cat,
@@ -98,6 +98,7 @@ let IMAGES = {
     Catsy: Catsy,
 };
 
-IMAGES = convertLowercase(IMAGES)
+
+const IMAGES = convertLowercase(tmp)
 
 export default IMAGES;

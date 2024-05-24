@@ -13,8 +13,10 @@ import "../../styles/views/Header.scss";
  */
 const Header = props => (
     <div className="header container" style={{height: props.height}}>
-        <h1 className="header title">Wombo Combo</h1>
+        <h1 className="header title">Wombo</h1>
         <ReactLogo width="60px" height="60px"/>
+        <h1 className="header title">Combo</h1>
+
     </div>
 );
 

@@ -194,7 +194,7 @@ const Profile = () => {
                         width="100%"
                         onClick={() => navigate("/lobbyoverview")}
                     >
-                        Return to Lobby Overview
+                        Return to Overview
                     </Button>
                 </div>
             </div>

@@ -106,7 +106,7 @@ const Login = () => {
                             onClick={() => navigate("/registration")}
                         >
                             <span style={{ fontSize: "16px" }}>
-                                No account? Sign up here
+                                No account?
                             </span>
                         </Button>
                     </div>
