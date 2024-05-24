@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
 import Lobby from "../../models/Lobby.js";
+import Confetti from "react-confetti";
 
 
 const Result = ({ stompWebSocketHook }) => {
@@ -206,7 +207,14 @@ const Result = ({ stompWebSocketHook }) => {
         <BaseContainer className="res-container">
             <div>{userContent}</div>
             <Button onClick={handleBackToLobby}>Back to Lobby</Button>
+            {resultStatus ? <Confetti
+                numberOfPieces={4000}
+                recycle={false}
+                initialVelocityY={20}
+                tweenDuration={10000}
+                /> : null}
         </BaseContainer>
+
     );
 };
 
