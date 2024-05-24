@@ -36,7 +36,7 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
     }
 
     return (
-        <button
+        <div
             className={`lobby container${isSelected ? "-selected" : ""}`}
             onClick={() => onSelect(lobby)}
         >
@@ -51,7 +51,7 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
                 >
                     Rejoin
                 </Button> : null}
-        </button>
+        </div>
     );
 };
 
