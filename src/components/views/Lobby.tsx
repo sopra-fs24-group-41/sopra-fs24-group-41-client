@@ -14,23 +14,15 @@ import IMAGES from "../../assets/images/index1.js";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
 
-const GamemodeItem = ({
-    gamemode,
-    onSelect,
-    isSelected,
-    ownerMode,
-}: {
-    gamemode: Gamemode;
-    onSelect: (gamemode: Gamemode) => void;
-    isSelected: boolean;
-    ownerMode: boolean;
-}) => (
+const GamemodeItem = ({ gamemode, onSelect, isSelected, ownerMode }) => (
     <div
         className={`gamemode container${isSelected ? " selected" : ""}${
-            gamemode.active && ownerMode ? "" : " inactive"
+            gamemode.active === true && ownerMode ? "" : " inactive"
         }`}
         onClick={
-            gamemode.active && ownerMode ? () => onSelect(gamemode) : undefined
+            gamemode.active === true && ownerMode
+                ? () => onSelect(gamemode)
+                : undefined
         }
     >
         <div className="gamemode name">{gamemode.name}</div>
@@ -39,41 +31,21 @@ const GamemodeItem = ({
                 {longerdesc[gamemode.name]}
             </div>
         ) : (
-            <div className="gamemode description">{gamemode.description}</div>
+            <div className="gamemode description">
+                {gamemode.active
+                    ? gamemode.description
+                    : "LOCKED: Please Register OR Have only one player in the lobby."}
+            </div>
         )}
     </div>
 );
 
 GamemodeItem.propTypes = {
     gamemode: PropTypes.object,
+    onSelect: PropTypes.func,
+    isSelected: PropTypes.bool,
+    ownerMode: PropTypes.bool,
 };
-
-const gamemodes = [
-    {
-        name: "Fusion Frenzy",
-        description: "How fast are you?",
-        serverName: "FUSIONFRENZY",
-        active: true,
-    },
-    {
-        name: "Wombo Combo",
-        description: "Make some bomb combos!",
-        serverName: "WOMBOCOMBO",
-        active: true,
-    },
-    {
-        name: "Finite Fusion",
-        description: "Use your resources wisely.",
-        serverName: "FINITEFUSION",
-        active: true,
-    },
-    {
-        name: "Sandbox",
-        description: "Explore infinite combinations.",
-        serverName: "STANDARD",
-        active: true,
-    },
-];
 
 const longerdesc: { [key: string]: string } = {
     "Fusion Frenzy":
@@ -83,6 +55,8 @@ const longerdesc: { [key: string]: string } = {
     "Finite Fusion":
         "You have only a limited number of words to get the target word.",
     Sandbox: "We didn't just clone Neal's Infinite Craft, did we...?",
+    "Daily Challenge":
+        "You get a challenge target word every day, try to get it with the least combinations possible and rise the ranks of the leaderboard to assert your dominance.",
 };
 
 export const LobbyContext = createContext();
@@ -107,34 +81,65 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     const [ownerMode, setOwnerMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [lobbyname, setLobbyname] = useState();
-    const [originalLobbyname, setOriginalLobbyname] = useState("");
     const [publicA, setPublicA] = useState();
     const [selectedTimer, setSelectedTimer] = useState(timerOptions[0].value);
     const { handleError } = useError();
     const navigate = useNavigate();
     const params = useParams();
-    const lobbycode = params.lobbycode;
+    const lobbyCode = params.lobbycode;
     const [editError, setEditError] = useState(false);
     const { resetError } = useError();
+    const [gamemodes, setGamemodes] = useState([
+        {
+            name: "Fusion Frenzy",
+            description: "How fast are you?",
+            serverName: "FUSIONFRENZY",
+            active: true,
+        },
+        {
+            name: "Wombo Combo",
+            description: "Make some bomb combos!",
+            serverName: "WOMBOCOMBO",
+            active: true,
+        },
+        {
+            name: "Finite Fusion",
+            description: "Use your resources wisely.",
+            serverName: "FINITEFUSION",
+            active: true,
+        },
+        {
+            name: "Sandbox",
+            description: "Explore infinite combinations.",
+            serverName: "STANDARD",
+            active: true,
+        },
+        {
+            name: "Daily Challenge",
+            description: "A new challenge every day.",
+            serverName: "DAILYCHALLENGE",
+            active: true,
+        },
+    ]);
 
     useEffect(() => {
         // Fetch lobby and players data
         const fetchLobbyAndPlayers = async () => {
             try {
-                const response = await api.get("/lobbies/" + lobbycode);
+                const response = await api.get("/lobbies/" + lobbyCode);
                 let lobbyData = new Lobby(response.data);
                 setLobby(lobbyData);
                 if (
                     lobbyData.owner.id ===
-                    parseInt(localStorage.getItem("playerId"))
+                    Number(localStorage.getItem("playerId"))
                 )
                     setOwnerMode(true);
+                if (lobbyData.status === "INGAME") {
+                    navigate("/lobby/game");
+                }
             } catch (error) {
                 handleError(error, navigate);
-                localStorage.removeItem("playerId");
-                localStorage.removeItem("playerToken");
-                localStorage.removeItem("lobbyCode");
-                navigate("/lobbyoverview");
+                kick();
             }
         };
         fetchLobbyAndPlayers();
@@ -152,15 +157,15 @@ const LobbyPage = ({ stompWebSocketHook }) => {
     // websocket subscription
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}`);
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}/game`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
         }
 
         return () => {
             if (stompWebSocketHook.connected.current === true) {
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}`);
                 stompWebSocketHook.unsubscribe(
-                    `/topic/lobbies/${lobbycode}/game`
+                    `/topic/lobbies/${lobbyCode}/game`
                 );
             }
             stompWebSocketHook.resetMessagesList();
@@ -175,6 +180,10 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             messagesList.forEach((message) => {
                 if (message.instruction === "update_lobby") {
                     setLobby(new Lobby(message.data));
+                    if (lobby.players.length === 1) {
+                        gamemodes[4].active = true;
+                    }
+                    setGamemodes(gamemodes);
                 }
                 if (message.instruction === "start") {
                     navigate("/lobby/game");
@@ -187,6 +196,31 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             stompWebSocketHook.resetMessagesList();
         }
     }, [stompWebSocketHook.messages]);
+
+    useEffect(() => {
+        setGamemodes((prevGamemodes) => {
+            const updatedGamemodes = [...prevGamemodes]; // create a copy of the gamemodes array
+            if (lobby.players.length === 1) {
+                updatedGamemodes[1].active = true;
+            }
+            
+            return updatedGamemodes; // update the state
+        });
+    }, [lobby.players, selectedGamemode]);
+
+    useEffect(() => {
+        setGamemodes((prevGamemodes) => {
+            const updatedGamemodes = [...prevGamemodes]; // create a copy of the gamemodes array
+            if (lobby.players.length > 1) {
+                updatedGamemodes[4].active = false;
+                if (selectedGamemode === updatedGamemodes[4]) {
+                    setSelectedGamemode(updatedGamemodes[0]);
+                }
+            }
+
+            return updatedGamemodes; // update the state
+        });
+    }, [lobby.players, selectedGamemode]);
 
     const updateLobby = async (
         name: string,
@@ -208,13 +242,13 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             gameTime: gameTime,
         };
         try {
-            await api.put(`/lobbies/${lobbycode}`, body, config);
+            await api.put(`/lobbies/${lobbyCode}`, body, config);
 
             return true;
         } catch (error) {
             handleError(error);
             setEditError(true);
-            
+
             return false;
         }
     };
@@ -243,7 +277,7 @@ const LobbyPage = ({ stompWebSocketHook }) => {
             },
         };
         try {
-            await api.post(`/lobbies/${lobbycode}/games`, {}, config);
+            await api.post(`/lobbies/${lobbyCode}/games`, {}, config);
         } catch (error) {
             handleError(error, navigate);
         }
@@ -311,7 +345,6 @@ const LobbyPage = ({ stompWebSocketHook }) => {
                 null
             );
             if (updateSuccessful) {
-                setOriginalLobbyname(lobbyname);
                 setIsEditing(false);
             }
         } else {

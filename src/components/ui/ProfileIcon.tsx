@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import ImageDropdown from "../popup-ui/ImageDropdown";
 import IMAGES from "../../assets/images/index1.js";
 import PropTypes from "prop-types";
-import { api, handleError } from "helpers/api";
+import { api, useError } from "helpers/api";
 import User from "models/User";
 
 function filterImages(IMAGES, profilePictures) {
@@ -31,6 +31,7 @@ const ProfileIcon = ({ Current, isEditing, SelectedImage }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(filteredImages[Current]);
     const [imageX, setImageX] = useState();
+    const { handleError } = useError()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,7 +44,7 @@ const ProfileIcon = ({ Current, isEditing, SelectedImage }) => {
                     filterImages(IMAGES, getProfilePictures(userAchievements))
                 );
             } catch (error) {
-                console.log(error);
+                handleError(error);
             }
         };
         fetchData();

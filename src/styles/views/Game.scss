@@ -7,7 +7,7 @@
   for more information visit https://sass-lang.com/guide
  */
 
- .game {
+.game {
   &.container {
     margin: 1em;
     border-radius: $borderRadius;
@@ -30,7 +30,7 @@
   }
 
   &.horizontal-container {
-    padding: 0;
+    padding-top: 0;
     flex-direction: row;
     background-color: transparent;
     width: 100%;
@@ -46,6 +46,7 @@
     font-size: 3em;
     text-align: center;
     display: flex;
+    overflow: hidden;
   }
 
   &.word {
@@ -66,7 +67,7 @@
     flex-direction: column;
     overflow: hidden;
     @include center;
-   }
+  }
   &.list {
     list-style: none;
     padding: 0;
@@ -124,6 +125,7 @@
     font-size: 5em;
     text-align: center;
     display: flex;
+    color: $buttonCol
   }
 }
 
@@ -137,8 +139,9 @@
     background-color: #101010;
     margin: 0.5em;
     box-shadow: $dropShadow;
-    max-height: 400px; 
-    overflow: hidden;
+    min-height: 130px;
+    max-height: calc(100vh - 405px);
+    overflow: auto;
   }
 }
 
@@ -151,12 +154,12 @@
   box-shadow: $dropShadow;
 }
 
-.glow {
-  animation: glow 1.5s infinite alternate;
+.glow-bar {
+  animation: glow-bar 1s infinite alternate;
   z-index: 3;
 }
 
-@keyframes glow {
+@keyframes glow-bar {
   0% {
     box-shadow: 0 0 10px 0 rgba($textColor, 0.4);
   }
@@ -190,7 +193,7 @@
   font-size: 20px;
   text-transform: uppercase;
   z-index: 99000;
- }
+}
 
 .player-icon {
   position: relative;
@@ -216,24 +219,30 @@
 }
 
 
-  .search-input-css{
-    border: none;
-    border-radius: $borderRadius;
-    padding: 5px;
-    background: lighten($background, 15);
-    color: inherit;
-  }
+.search-input-css{
+  border: none;
+  border-radius: $borderRadius;
+  padding: 5px;
+  background: lighten($background, 15);
+  color: inherit;
+}
 
-  .word-table {
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    max-height: 285px;
-    overflow-y: auto;
-    overflow-x: hidden;
+.word-table {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  max-height: 285px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-  }
+}
+
+.game-end-button {
+  margin: 0.5em;
+  width: 10%;
+
+}
 
 .spinner-css {
   position: absolute;

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import "styles/ui/Button.scss";
 
-const WordButton = (props) => {
+const WordButton = forwardRef((props, ref) => {
     return (
-        <Button {...props} className={`word ${props.className ?? ""}`}>
+        <Button {...props} ref={ref} className={`word ${props.className ?? ""}`}>
             {props.children}
         </Button>
     );
-};
+});
+
+WordButton.displayName = "WordButton";
 
 WordButton.propTypes = {
     children: PropTypes.node,

@@ -48,9 +48,12 @@ const Login = () => {
             localStorage.setItem("userToken", user.token);
             navigate("/lobbyoverview");
         } catch (error) {
-            setLoginErrorMsg(error.response.data.message);
-            setLoginError(true);
-        }
+            if (error.response === undefined) {
+                navigate("/server-down")
+            } else {
+                setLoginErrorMsg(error.response.data.message);
+                setLoginError(true);
+            }}
     };
 
     return (

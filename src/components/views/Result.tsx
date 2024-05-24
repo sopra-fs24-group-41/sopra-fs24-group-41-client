@@ -9,6 +9,7 @@ import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import ICONS from "../../assets/icons/index.js";
 import hashForAnon from "../../helpers/utils";
+import Lobby from "../../models/Lobby.js";
 
 
 const Result = ({ stompWebSocketHook }) => {
@@ -16,34 +17,30 @@ const Result = ({ stompWebSocketHook }) => {
     const [player, setPlayer] = useState<Player>(new Player);
     const [winner, setWinner] = useState();
     const [players, setPlayers] = useState<Player[]>([]);
-    const playerId = localStorage.getItem("playerId");
+    const playerId = Number(localStorage.getItem("playerId"));
     const playerToken = localStorage.getItem("playerToken");
-    const lobbyCode = localStorage.getItem("lobbyCode");
+    const lobbycode = localStorage.getItem("lobbyCode");
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-    const resultMessage = { WIN: "You Won!", LOSS: "You Lost..." };
+    const resultMessage = { WIN: "You Won!", LOSS: "You Lost...", DAILY: "Daily Challenge Completed!", TIMEOUT: "You Failed To Complete the Challenge in Time!" };
     const [resultStatus, setResultStatus] = useState<boolean>(false);
-    const [pID, setPID] = useState();
     const { handleError } = useError();
+    const [lobby, setLobby] = useState<Lobby>({ players: [] });
+
 
     useEffect(() => {
         const fetchPlayer = async () => {
             try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
+                let response = await api.get(`/lobbies/${lobbycode}/players/${playerId}`, { headers: { "playerToken": playerToken } });
                 let foundPlayer = new Player(response.data);
-                foundPlayer.id = playerId;
-                foundPlayer.token = playerToken;
-                foundPlayer.lobbyCode = lobbyCode;
                 setPlayer(foundPlayer);
-                setPID(foundPlayer.id);
             } catch (error) {
                 handleError(error, navigate);
             }
         };
-        
 
         const fetchOtherPlayers = async () => {
             try {
-                let response = await api.get(`/lobbies/${lobbyCode}/players`,);
+                let response = await api.get(`/lobbies/${lobbycode}/players`,);
                 setPlayers(response.data.map(p => new Player(p)));
             } catch (error) {
                 handleError(error, navigate);
@@ -53,24 +50,40 @@ const Result = ({ stompWebSocketHook }) => {
         fetchOtherPlayers();
     }, []);
 
+
+    useEffect(() => {
+        // Fetch lobby and players data
+        const fetchLobby = async () => {
+            try {
+                const response = await api.get("/lobbies/" + lobbycode);
+                let lobbyData = new Lobby(response.data);
+                setLobby(lobbyData);
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        };
+        fetchLobby();
+    }, []);
+    
+
     useEffect(() => {
         players.sort((a, b) => b.points - a.points);
         setWinner(players.find(player => player.status === "WON"))
     }, [players]);
 
     useEffect(() => {
-        setResultStatus(winner?.id.toString() === playerId.toString());
+        setResultStatus(winner?.id === player.id);
     }, [winner]);
 
     const renderPlayer = (ID) => {
         if (winner && ID === winner.id)return "player-container winner";
-        else if (ID.toString()  === pID)return "player-container loser";
+        else if (ID  === player.id)return "player-container loser";
         else return "player-container";
     };
     
-    const renderIcon = (playerId) => {
-        if (winner && playerId === winner.id) return "winner";
-        if (playerId === player.id) return "loser";
+    const renderIcon = (ID) => {
+        if (winner && ID === winner.id) return "winner";
+        if (ID === player.id) return "loser";
         else return "player-icon-result";
     };
 
@@ -89,20 +102,20 @@ const Result = ({ stompWebSocketHook }) => {
     // websocket subscription
     useEffect(() => {
         if (stompWebSocketHook.connected.current === true) {
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}`);
-            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbyCode}/game`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}`);
+            stompWebSocketHook.subscribe(`/topic/lobbies/${lobbycode}/game`);
         }
 
         return () => {
             if (stompWebSocketHook.connected.current === true) {
-                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbyCode}`);
+                stompWebSocketHook.unsubscribe(`/topic/lobbies/${lobbycode}`);
                 stompWebSocketHook.unsubscribe(
-                    `/topic/lobbies/${lobbyCode}/game`
+                    `/topic/lobbies/${lobbycode}/game`
                 );
             }
             stompWebSocketHook.resetMessagesList();
         };
-    }, [stompWebSocketHook.connectedTrigger]);
+    }, [stompWebSocketHook.connected.current]);
 
     // websocket message interpretation
     useEffect(() => {
@@ -122,14 +135,41 @@ const Result = ({ stompWebSocketHook }) => {
         }
     }, [stompWebSocketHook.messages]);
 
+    useEffect(() => {
+        const handleTabClose = async () => {
+            const config = {
+                headers: {playerToken: playerToken},
+            }
+            try {
+                await api.delete("/lobbies/" + lobbycode + "/players/" + playerId , config);
+                kick()
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
+    }, []);
+
+
+    const renderResMSG = () => {
+        if(lobby.mode === "DAILYCHALLENGE" && resultStatus) return resultMessage.DAILY;
+        if(lobby.mode === "DAILYCHALLENGE" && !resultStatus) return resultMessage.TIMEOUT;
+        else if(resultStatus) return resultMessage.WIN;
+        else return resultMessage.LOSS;
+    }
+
     const userContent = (
         <div className="res">
-            <h2>{resultStatus ? resultMessage.WIN : resultMessage.LOSS}</h2>
+            <h2>{renderResMSG()}</h2>
             <p>Results</p>
             <ul className="res-list">
                 {players.map((player: Player) => (
                     <li
-                        key={player.wordCount}
+                        key={player.id}
                         onMouseEnter={() => setSelectedPlayer(player)}
                         onMouseLeave={() => setSelectedPlayer(null)}
                     >
@@ -179,7 +219,6 @@ Result.propTypes = {
         resetMessagesList: PropTypes.func.isRequired,
         connected: PropTypes.object.isRequired,
         subscriptionsRef: PropTypes.object.isRequired,
-        connectedTrigger: PropTypes.bool.isRequired,
     }).isRequired,
 };
 

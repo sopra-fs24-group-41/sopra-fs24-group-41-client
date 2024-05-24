@@ -14,14 +14,48 @@ const LobbyItem = ({lobby, onSelect, isSelected}: {
     lobby: Lobby;
     onSelect: (lobby: Lobby) => void;
     isSelected: boolean;
-}) => (
-    <button
-        className={`lobby container${isSelected ? "-selected" : ""}`}
-        onClick={() => onSelect(lobby)}
-    >
-        <label className="lobby lobby-name">{lobby.name}</label>
-    </button>
-);
+}) => {
+    const navigate = useNavigate();
+    const { handleError } = useError();
+
+    const reJoinLobby = async (code) => {
+        try {
+            const config = { headers: { userToken: localStorage.getItem("userToken") } };
+            const response = await api.post("/lobbies/" + code + "/players", {}, config);
+            localStorage.setItem("playerToken", response.data.playerToken);
+            localStorage.setItem("playerId", response.data.playerId);
+            localStorage.setItem("lobbyCode", code);
+            navigate("/lobby/" + code);
+        } catch (error) {
+            handleError(error, navigate);
+        }
+    };
+
+    const lobbyOwnerCheck  = () => {
+        return lobby.owner.user.id === Number(localStorage.getItem("userId"));
+    }
+
+    return (
+        <button
+            className={`lobby container${isSelected ? "-selected" : ""}`}
+            onClick={() => onSelect(lobby)}
+        >
+            <label className="lobby lobby-name">{lobby.name}</label>
+            <div>
+                {lobby.status === "PREGAME" || lobbyOwnerCheck()  ? "" : "❌"}
+            </div>
+            {lobbyOwnerCheck() ?
+                <Button
+                    width="20%"
+                    onClick={() => reJoinLobby(lobby.code)}
+                >
+                    Rejoin
+                </Button> : null}
+        </button>
+    );
+};
+
+
 LobbyItem.propTypes = {
     lobby: PropTypes.object,
 };
@@ -35,7 +69,7 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     const userToken = localStorage.getItem("userToken");
     const [createWithoutAccount, setCreateWithoutAccount] = useState(false);
     const { handleError, resetError } = useError();
-    const [lobbyIngameErrorMsg, setlobbyIngameErrorMsg] = useState("");
+    const [lobbyIngameErrorMsg, setLobbyIngameErrorMsg] = useState("");
 
     useEffect(() => {
         const fetchLobbies = async () => {
@@ -98,19 +132,19 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
     };
 
     const joinLobby = async () => {
-        if (!checkLogin()) {
-            try {
-                const lobby = await api.get("/lobbies/" + lobbyCode);
-                if (lobby.data.status !== "PREGAME") {
-                    setlobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
-                    setTimeout(() => setlobbyIngameErrorMsg(""), 3000)
+        try {
+            const lobby = await api.get("/lobbies/" + lobbyCode);
+            if (lobby.data.status !== "PREGAME") {
+                setLobbyIngameErrorMsg(lobby.data.name + " is currently ingame");
+                setTimeout(() => setLobbyIngameErrorMsg(""), 3000)
 
-                    return
-                }
-                navigate("/lobby/" + lobbyCode + "/anonymous");
-            } catch (error) {
-                handleError(error, navigate);
+                return
             }
+        } catch (error) {
+            handleError(error, navigate);
+        }
+        if (!checkLogin()) {
+            navigate("/lobby/" + lobbyCode + "/anonymous");
         } else {
             try {
                 const requestBody = {};
@@ -165,9 +199,9 @@ const LobbyOverview = ({ stompWebSocketHook }) => {
                         </li>
                     ))}
                 </ul>
-                <p className="error-message-lobby-ingame">
+                <div className="error-message-lobby-ingame">
                     {lobbyIngameErrorMsg}
-                </p>
+                </div>
                 <div>
                     <p> Or enter a lobby code: </p>
                     <form>

@@ -49,10 +49,7 @@ const Registration = () => {
                 username,
                 password,
             });
-            const responseRegistration = await api.post(
-                "/users",
-                requestBodyRegistration
-            );
+            await api.post("/users", requestBodyRegistration);
             const requestBodyLogin = JSON.stringify({ username, password });
             const responseLogin = await api.post("/logins", requestBodyLogin);
             // Get the returned user and update a new object.
@@ -64,9 +61,12 @@ const Registration = () => {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             navigate("/lobbyoverview");
         } catch (error) {
-            setRegisterErrorMsg(error.response.data.message);
-            setRegisterError(true);
-        }
+            if (error.response === undefined) {
+                navigate("/server-down")
+            } else {
+                setRegisterErrorMsg(error.response.data.message);
+                setRegisterError(true);
+            }}
     };
 
     return (

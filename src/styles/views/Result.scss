@@ -58,6 +58,7 @@
     width: 200px;
     height: max-content;
     padding: 4px;
+    margin: 0.5em 0;
 
     &.winner {
       z-index: 4;
@@ -95,7 +96,7 @@
       height: max-content;
       z-index: 10;
       transition: all 0.3s ease;
-      transform: scale(1.1)
+      transform: scale(1.1);
     }
 
     .player-details{
