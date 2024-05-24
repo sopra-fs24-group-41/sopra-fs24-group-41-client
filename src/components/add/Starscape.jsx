@@ -12,13 +12,13 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
     const scaleMapperRef = useRef(null);
     const alphaMapperRef = useRef(null);
 
-    const res = 4;
+    const res = 0;
     
     const resChange = (res)=>{
         if(res===1) return [45, 100, 50];
         if(res===2) return [240, 100, 80];
         if(res===3) return [180, 130, 200];
-        if(res===4) return [300, 100, 50];
+        if(res===4) return [300, 100, 80];
         else return [0, 100, 100];
     }
 
@@ -46,9 +46,10 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
         };
 
         const RENDER = () => {
-            contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            contextRef.current.fillStyle = "#0B0010";
+            contextRef.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            
             starsRef.current.forEach(star => {
-                
                 // Construct the HSL color string with the specified values
                 contextRef.current.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${star.alpha})`;
                 
