@@ -4,7 +4,6 @@ import BaseContainer from "components/ui/BaseContainer";
 import "styles/popup-ui/ProfilePopup.scss";
 import { useNavigate } from "react-router-dom";
 import { api, useError } from "helpers/api";
-import Info from "components/views/Info";
 
 
 const ProfilePopup = () => {
@@ -35,10 +34,10 @@ const ProfilePopup = () => {
         <BaseContainer className="profilepopup container">
             <div className="profilepopup profile-button-container">
                 <Button onClick={() => navigate("/profile")}>Profile</Button>{" "}
+                <Button onClick={() => navigate("/info")}>Info</Button>
                 <Button onClick={() => navigate("/achievements")}>Achievements</Button>{" "}
                 <Button onClick={() => navigate("/leaderboard")}>Leaderboard</Button>{" "}
                 <Button onClick={() => doLogout()}>Logout</Button>
-                <Button onClick={() => navigate("/info")}>Info</Button>
             </div>
         </BaseContainer>
     );
