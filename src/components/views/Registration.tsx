@@ -68,7 +68,7 @@ const Registration = () => {
                 setRegisterError(true);
             }}
     };
-    
+
     return (
         <BaseContainer>
             <div className="login container">
@@ -113,7 +113,7 @@ const Registration = () => {
 
                         <Button width="100%" onClick={() => navigate("/login")}>
                             <span style={{ fontSize: "16px" }}>
-                                Already signed up? Login here
+                                Already signed up?
                             </span>
                         </Button>
                     </div>
