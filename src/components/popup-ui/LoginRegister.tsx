@@ -10,6 +10,7 @@ const LoginRegister = () => {
     return (
         <BaseContainer className="loginregister container">
             <div className="loginregister button-container">
+                <Button onClick={() => navigate("/info")}>Info</Button>
                 <Button onClick={() => navigate("/login")}>Login</Button>
                 <Button onClick={() => navigate("/registration")}>Sign up</Button>
             </div>
