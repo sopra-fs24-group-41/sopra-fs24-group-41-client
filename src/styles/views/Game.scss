@@ -67,14 +67,26 @@
       align-items: center;
       width: fit-content;
       height: 100%;
-      white-space: nowrap;
   
       h1 {
         font-size: large;
+        word-wrap: break-word;
+      }
+
+      ul{
+        list-style: none;
+        padding: 0;
+      }
+
+      li{
+        display: flex;
+        align-items: center;
       }
   
        word-wrap: break-word;
       @include center;
+
+
     }
   }
 
@@ -107,27 +119,6 @@
     border-radius: calc(#{$borderRadius}/4);
     font-size: 2em;
     height: 100%;
-  }
-}
-
-.player-list {
-  &.container {
-    margin: 1em;
-    border-radius: $borderRadius;
-    background-color: $background;
-    box-shadow: $dropShadow;
-    height: 100%;
-    flex-direction: column;
-    overflow: hidden;
-    @include center;
-  }
-  &.list {
-    list-style: none;
-    padding: 0;
-  }
-  &.player {
-    display: flex;
-    align-items: center;
   }
 }
 
@@ -252,6 +243,7 @@
   max-height: 80px;
   display: flex;
   align-items: center;
+  word-wrap: break-word;
 
   img {
     width: 40px;
