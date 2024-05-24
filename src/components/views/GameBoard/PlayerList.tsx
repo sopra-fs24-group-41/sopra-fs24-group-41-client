@@ -45,7 +45,7 @@ const PlayerList = ({}) => {
     const { otherPlayers } = useContext(otherPlayersContext);
 
     return (
-        <div className="game vertical-container">
+        <div className="game vertical-container player-list">
             <h1>Players | Recent Word</h1>
             <ul className="player-list list">
                 {otherPlayers.map((p, index) => (

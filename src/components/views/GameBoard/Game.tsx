@@ -260,23 +260,33 @@ const Game = ({ stompWebSocketHook }) => {
                     {achievementMsg}
                 </p>
             )}
-            <Typewriter text={remainingTime}/>
+            <Typewriter text={remainingTime} />
             <BaseContainer className="game vertical-container">
                 <playerContext.Provider value={playerValue}>
-                    <BaseContainer className="game container">
+                    <BaseContainer className="game container halved-top">
                         <BaseContainer className="game horizontal-container">
                             <TargetWord />
-                            {isLoading ? <div className="spinner-css"> <RotateSpinner /> </div> : null}
+                            {isLoading ? (
+                                <div className="spinner-css">
+                                    {" "}
+                                    <RotateSpinner />{" "}
+                                </div>
+                            ) : null}
                             <Button
                                 className="game-end-button"
                                 onClick={() => handleAbort()}
                                 disabled={!isLobbyOwner}
-                            >End Game</Button>
+                            >
+                                End Game
+                            </Button>
                             {abortGamePopup && (
                                 <GameContext.Provider
-                                    value={{abortGamePopup, setAbortGamePopup}}
+                                    value={{
+                                        abortGamePopup,
+                                        setAbortGamePopup,
+                                    }}
                                 >
-                                    <AbortGamePopup/>
+                                    <AbortGamePopup />
                                 </GameContext.Provider>
                             )}
                             <Button onClick={() => handleQuit()}>Quit</Button>
@@ -287,13 +297,16 @@ const Game = ({ stompWebSocketHook }) => {
                             )}
                         </BaseContainer>
                     </BaseContainer>
-                    <BaseContainer className="game horizontal-container">
-                        <BaseContainer className="game container">
-                            <WordBoard playFunction={play}/>
-                        </BaseContainer>
-                        <BaseContainer className="player-list container">
-                            <otherPlayersContext.Provider value={otherPlayersValue}>
-                                <PlayerList/>
+
+                    <BaseContainer className="game flex-container">
+                    <BaseContainer className="game container halved-one">
+                        <WordBoard playFunction={play} />
+                    </BaseContainer>
+                        <BaseContainer className="game container halved-two">
+                            <otherPlayersContext.Provider
+                                value={otherPlayersValue}
+                            >
+                                <PlayerList />
                             </otherPlayersContext.Provider>
                         </BaseContainer>
                     </BaseContainer>

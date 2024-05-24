@@ -12,11 +12,12 @@ const Starscape = ({ densityRatio = 0.7, sizeLimit = 8, defaultAlpha = 0.2, scal
     const scaleMapperRef = useRef(null);
     const alphaMapperRef = useRef(null);
 
-    const res = 0;
+    const res = 2;
     
     const resChange = (res)=>{
         if(res===1) return [45, 100, 50];
         if(res===2) return [240, 100, 80];
+        if(res===3) return [180, 130, 200];
         else return [0, 100, 100];
     }
 

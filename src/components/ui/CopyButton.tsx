@@ -34,7 +34,9 @@ function CopyButton({ copyText }) {
             </div>
             <div>
                 <Button
-                    onClick={handleCopyClick}>
+                    onClick={handleCopyClick}
+                    style={{fontSize:"15.5px"}} >
+                    
                     {isCopied ? "Copied!" : "Copy lobby URL"}
                 </Button>
             </div>

@@ -7,7 +7,13 @@
   for more information visit https://sass-lang.com/guide
  */
 
-.game {
+ .game {
+  &.flex-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   &.container {
     margin: 1em;
     border-radius: $borderRadius;
@@ -17,7 +23,30 @@
     width: 100%;
     overflow: hidden;
     @include center;
+
+    &.halved-top {
+      margin-left: 0;
+      margin-top: 0;
+      margin-bottom: 1em;
+      margin-right: 0;
+      padding: 0;
+      width: calc(100% - 2em); /* Adjust for the margin of the parent container */
+    }
+
+    &.halved-one {
+      width: 76%;
+      padding: 0;
+      margin: 0; /* Ensure no margin */
+    }
+
+    &.halved-two {
+      width: 24%;
+      padding: 0;
+      margin: 0; /* Ensure no margin */
+      margin-left: 1em;
+    }
   }
+
 
   &.vertical-container {
     padding: 0;
@@ -27,7 +56,28 @@
     height: 100%;
     overflow: hidden;
     @include center;
+    &.gameboard{
+      width: 800px;
+    }
+
+
+    &.player-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: fit-content;
+      height: 100%;
+      white-space: nowrap;
+  
+      h1 {
+        font-size: large;
+      }
+  
+       word-wrap: break-word;
+      @include center;
+    }
   }
+
 
   &.horizontal-container {
     padding-top: 0;
@@ -36,9 +86,12 @@
     width: 100%;
     height: 100%;
     overflow:hidden;
+    margin-left: 15px;
+    margin-right: 15px;
     @include center;
   }
 }
+
 .target-word {
   margin: 0;
   padding: 0;
@@ -196,13 +249,9 @@
 }
 
 .player-icon {
-  position: relative;
-  left: 12.5%;
-  width: 200px;
   max-height: 80px;
   display: flex;
   align-items: center;
-  margin-right: 10px;
 
   img {
     width: 40px;
